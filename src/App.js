@@ -1,11 +1,12 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import Form from './components/Form';
-import Menu from './components/Menu';
-import './App.css';
+import AppBarMenu from './components/AppBarMenu';
+import './react-app.css';
 
 
 function App() {
+  // This active page stuff is very light routing - Bryan's work may overwrite this, but now it shows the functional toolbar
+  const [activePage, setActivePage] = useState('inventory');
   const theme = createTheme({
     palette: {
       primary: {
@@ -32,9 +33,7 @@ function App() {
   return (
     <ThemeProvider theme={theme} >
       <div className="App">
-        <Menu />
-        <Form />
-
+        <AppBarMenu activePage={activePage} setActivePage={setActivePage} />
       </div>
     </ThemeProvider>
   );
