@@ -65,15 +65,15 @@ function App() {
     <ThemeProvider theme={theme} >
       <div className="wrapper">
         <AppBarMenu />
-      <BrowserRouter>
-        <Routes>
-        <Route path='/' element={<Login/>} />
-        <Route path='/add' element={<AddLaptopPage/>} />
-        <Route path='/inventory' element={<Inventory/>} />
-        <Route path='/settings' element={<Settings/>} />
-        </Routes>
-      </BrowserRouter>
-    </div>
+        <BrowserRouter>
+          <Routes>
+            <Route path='/' element={<Login />} />
+            <Route path='/add' element={<AddLaptopPage />} />
+            <Route path='/inventory' element={<Inventory />} />
+            <Route path='/settings' element={<Settings />} />
+          </Routes>
+        </BrowserRouter>
+      </div>
 
     </ThemeProvider>
   );
