@@ -21,13 +21,13 @@ import {
 import {
     Launch as Launch,
     Info as InfoIcon,
-    Clear as DiscardIcon,
+    Clear as CancelIcon,
     Save as SaveIcon,
 } from '@mui/icons-material'
 
 
 function LaptopForm(props) {
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState(props.laptopData || {
         serial_number: '',
         manufacturer: '',
         laptop_id: '',
@@ -41,14 +41,11 @@ function LaptopForm(props) {
         disk_size: '',
         condition: '',
         charger_type: '',
-        charger_included: '',
+        charger_included: false,
         trade_in_value: '',
         list_price: '',
         sold_price: '',
         notes: '',
-        created_date: '',
-        last_updates: '',
-        archived_date: '',
     });
     const options = {
         manufacturer: ['Apple', 'PC'],
@@ -113,7 +110,7 @@ function LaptopForm(props) {
                         target='_blank'
                         endIcon={<Launch />}
                         size='small'
-                    >Find on EveryMac.com</Button>
+                    >Search EveryMac.com</Button>
                     : <></>
                 }
             </Box>
@@ -215,22 +212,6 @@ function LaptopForm(props) {
                 </FormControl>
 
                 <FormControl size='small' >
-                    <InputLabel id='condition-select-label'>Condition</InputLabel>
-                    <Select
-                        required
-                        labelId='condition-select-label'
-                        id='condition-select'
-                        value={formData.condition}
-                        label='Condition'
-                        onChange={(event) => handleInputChange(event.target.value, 'condition')}
-                    >
-                        {options.condition.map(option => (
-                            <MenuItem value={option}>{option}</MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
-
-                <FormControl size='small' >
                     <InputLabel id='disk-size-select-label'>Disk Size</InputLabel>
                     <Select
                         required
@@ -241,6 +222,22 @@ function LaptopForm(props) {
                         onChange={(event) => handleInputChange(event.target.value, 'disk_size')}
                     >
                         {options.disk_size.map(option => (
+                            <MenuItem value={option}>{option}</MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
+
+                <FormControl size='small' >
+                    <InputLabel id='condition-select-label'>Condition</InputLabel>
+                    <Select
+                        required
+                        labelId='condition-select-label'
+                        id='condition-select'
+                        value={formData.condition}
+                        label='Condition'
+                        onChange={(event) => handleInputChange(event.target.value, 'condition')}
+                    >
+                        {options.condition.map(option => (
                             <MenuItem value={option}>{option}</MenuItem>
                         ))}
                     </Select>
@@ -264,8 +261,12 @@ function LaptopForm(props) {
                 } />
 
             </Box>
-            <Box sx={{ display: 'grid', gap: 2, mb: 2, gridTemplateColumns: 'repeat(4, 1fr)' }} >
-                <Typography color='secondary' variant='caption' component='a' href='https://www.pcexchange.com/blog/all-about-the-grading-system-of-refurbished-laptops/' target='_blank' sx={{ textDecoration: 'none' }} >
+            <Box sx={{ display: 'grid', gap: 2, mb: 1, gridTemplateColumns: 'repeat(4, 1fr)' }} >
+                <Typography variant='caption' >
+                    {/* Spacer */}
+                </Typography>
+
+                <Typography color='secondary' variant='caption' component='a' href='https://www.pcexchange.com/blog/all-about-the-grading-system-of-refurbished-laptops/' target='_blank' sx={{ textDecoration: 'none', pl: 1 }} >
                     <InfoIcon sx={{ fontSize: 10, mr: 0.5 }} />
                     Read about the grading system
                 </Typography>
@@ -312,15 +313,21 @@ function LaptopForm(props) {
                     size='small'
                     onChange={(event) => handleInputChange(event.target.value, 'notes')}
                 />
+
+                <Box sx={{ display: 'flex', flexDirection: 'column' }} >
+                    {formData.created_date && <Typography sx={{ fontSize: '12px', color: 'primary.light' }} >Record Created: {formData.created_date}</Typography>}
+                    {formData.last_updated && <Typography sx={{ fontSize: '12px', color: 'primary.light' }} >Last Updated: {formData.last_updated}</Typography>}
+                    {formData.archived_date && <Typography sx={{ fontSize: '12px', color: 'primary.light' }} >Archived: {formData.archived_date}</Typography>}
+                </Box>
             </Box>
 
-            <Box sx={{ display: 'flex', flexDirection: 'row', gap: '16px', justifyContent: 'flex-end', alignItems: 'flex-end' }} >
+            <Box sx={{ mb: 2, display: 'flex', flexDirection: 'row', gap: '16px', justifyContent: 'flex-end', alignItems: 'flex-end' }} >
                 <Button
-                    variant='outlined'
+                    variant='text'
                     color='error'
-                    onClick={props.discard}
-                    startIcon={<DiscardIcon />}
-                >{props.discardMessage}</Button>
+                    onClick={props.cancel}
+                    startIcon={<CancelIcon />}
+                >{props.cancelMessage}</Button>
                 <Button
                     variant='contained'
                     color='secondary'

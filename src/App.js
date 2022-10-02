@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import AppBarMenu from './components/AppBarMenu';
-import LaptopForm from './components/LaptopForm';
+import AddLaptopPage from './components/AddLaptopPage';
+import EditLaptopPage from './components/EditLaptopPage';
 import './react-app.css';
 
 
@@ -31,21 +32,38 @@ function App() {
     },
   });
 
+  const dummyDataLaptop = {
+    archived_date: "",
+    charger_included: true,
+    charger_type: "87W USB-C",
+    condition: "A",
+    cpu_type: "2.6GHz i7",
+    created_date: "2022-09-30",
+    date_donated: "2022-03-08",
+    disk_size: "256 GB",
+    donor: "OrderMyGear",
+    laptop_id: "L6Q3",
+    last_updated: "2022-10-01",
+    list_price: "",
+    manufacturer: "Apple",
+    memory: "16 GB",
+    model: "MacBook Pro",
+    notes: "",
+    screen_size: "15\"",
+    serial_number: "C02YL6Q3LVCF",
+    sold_price: "",
+    status: "READY",
+    trade_in_value: "800.00",
+  }
+
   return (
     <ThemeProvider theme={theme} >
       <div className="App">
         <AppBarMenu activePage={activePage} setActivePage={setActivePage} />
-        {activePage === 'add' &&
-        // This implementation of the form is for testing - once the Add & Edit pages are assembled it will be called from those components!
-          <div style={{ maxWidth: '1220px', margin: '24px auto 0' }} >
-            <LaptopForm
-              save={(object) => console.log(object)}
-              saveMessage='Create Laptop'
-              discard={() => console.log('discard')}
-              discardMessage='Discard'
-            />
-          </div>
-        }
+
+        {/* This is dummy routing for testing - once the router is added Add Laptop will be called there, and once Inventory page/laptop modal exist Edit will be called there! */}
+        {activePage === 'add' && <AddLaptopPage />}
+        {activePage === 'settings' && <EditLaptopPage laptopData={dummyDataLaptop} />}
       </div>
     </ThemeProvider>
   );
