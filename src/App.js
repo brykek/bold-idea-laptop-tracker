@@ -1,8 +1,11 @@
 import * as React from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import Form from './components/Form';
-import Menu from './components/Menu';
 import './App.css';
+import Form from './components/Form';
+import Inventory from './components/Inventory';
+import Settings from './components/Settings';
+import Login from './components/Login';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 
 function App() {
@@ -31,11 +34,16 @@ function App() {
 
   return (
     <ThemeProvider theme={theme} >
-      <div className="App">
-        <Menu />
-        <Form />
-
-      </div>
+      <div className="wrapper">
+      <BrowserRouter>
+        <Routes>
+        <Route path='/' element={<Login/>} />
+        <Route path='/form' element={<Form/>} />
+        <Route path='/inventory' element={<Inventory/>} />
+        <Route path='/settings' element={<Settings/>} />
+        </Routes>
+      </BrowserRouter>
+    </div>
     </ThemeProvider>
   );
 }
