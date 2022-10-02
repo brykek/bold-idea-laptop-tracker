@@ -1,6 +1,9 @@
+import Menu from "./Menu";
+
 const Form = () => {
     return (
     <div>
+    <Menu/>
      <form class="container">
         <h1>Add New Laptop</h1>
             <h2 class="sectionHeading">Identification</h2>

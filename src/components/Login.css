@@ -1,0 +1,16 @@
+.login-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.loginForm{
+    width: 20%;
+}
+.forgot{
+    color:white;
+    font-size: 0.75rem;
+}
+.forgot:hover{
+    color:orange;
+    transition: 200ms ease-in-out;
+}

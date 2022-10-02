@@ -1,14 +1,19 @@
 import React, { useState } from 'react';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+
 import AppBarMenu from './components/AppBarMenu';
 import AddLaptopPage from './components/AddLaptopPage';
 import EditLaptopPage from './components/EditLaptopPage';
+import Inventory from './components/Inventory';
+import Settings from './components/Settings';
+import Login from './components/Login';
+
+import './App.css';
 import './react-app.css';
 
 
 function App() {
-  // This active page stuff is very light routing - Bryan's work may overwrite this, but now it shows the functional toolbar
-  const [activePage, setActivePage] = useState('inventory');
   const theme = createTheme({
     palette: {
       primary: {
@@ -58,13 +63,18 @@ function App() {
 
   return (
     <ThemeProvider theme={theme} >
-      <div className="App">
-        <AppBarMenu activePage={activePage} setActivePage={setActivePage} />
+      <div className="wrapper">
+        <AppBarMenu />
+      <BrowserRouter>
+        <Routes>
+        <Route path='/' element={<Login/>} />
+        <Route path='/add' element={<AddLaptopPage/>} />
+        <Route path='/inventory' element={<Inventory/>} />
+        <Route path='/settings' element={<Settings/>} />
+        </Routes>
+      </BrowserRouter>
+    </div>
 
-        {/* This is dummy routing for testing - once the router is added Add Laptop will be called there, and once Inventory page/laptop modal exist Edit will be called there! */}
-        {activePage === 'add' && <AddLaptopPage />}
-        {activePage === 'settings' && <EditLaptopPage laptopData={dummyDataLaptop} />}
-      </div>
     </ThemeProvider>
   );
 }
