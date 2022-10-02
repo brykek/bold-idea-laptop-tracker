@@ -41,7 +41,7 @@ function AppBarMenu(props) {
             <Toolbar>
                 {/* LOGO & APP TITLE */}
                 <div style={{ backgroundColor: '#ffffff', borderRadius: '10px', height: '72px', width: '72px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '12px 0' }} >
-                    <img src={logo} style={{ height: '64px' }} />
+                    <img src={logo} alt='logo' style={{ height: '64px' }} />
                 </div>
                 <Typography variant='h5' component='div' sx={{ ml: 2, flexGrow: 1 }}>
                     Laptop Inventory Tracker

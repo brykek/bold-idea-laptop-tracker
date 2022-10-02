@@ -1,6 +1,9 @@
 import React from 'react';
-import LaptopForm from './LaptopForm';
-import { Typography } from '@mui/material';
+import LaptopForm from '../components/LaptopForm';
+import {
+    Container,
+    Typography,
+} from '@mui/material';
 
 
 function AddLaptopPage(props) {
@@ -11,14 +14,14 @@ function AddLaptopPage(props) {
         console.log('Laptop Data:', laptopData)
         // Invoke the create api function
     }
-    
+
     function discardEntry() {
         console.log('Discard laptop.')
         // Route back to View Inventory page
     }
 
     return (
-        <div className='page-container'>
+        <Container sx={{ maxWidth: '1220px', margin: '24px auto 0;' }} >
             <Typography variant='h4' align='center' sx={{ color: 'primary.main', fontWeight: 'bold' }} gutterBottom >Add Laptop</Typography>
             <LaptopForm
                 save={createLaptop}
@@ -26,7 +29,7 @@ function AddLaptopPage(props) {
                 cancel={discardEntry}
                 cancelMessage='Discard Entry'
             />
-        </div>
+        </Container>
     );
 }
 
