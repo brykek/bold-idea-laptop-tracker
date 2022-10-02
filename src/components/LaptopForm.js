@@ -15,6 +15,7 @@ import {
     FormControlLabel,
     Switch,
     InputAdornment,
+    Paper,
 } from '@mui/material';
 
 // MATERIAL ICONS
@@ -94,7 +95,7 @@ function LaptopForm(props) {
     }
 
     return (
-        <>
+        <Paper sx={{ p: 4, pt: 2, mb: 4 }}>
             <Typography variant='h6' sx={{ color: 'primary.main', fontWeight: 'bold', }} gutterBottom >Identification</Typography>
             <Box sx={{ display: 'grid', gap: 2, mb: 2, gridTemplateColumns: 'repeat(4, 1fr)' }} >
                 <ToggleButtonGroup
@@ -345,7 +346,7 @@ function LaptopForm(props) {
                 </Box>
             </Box>
 
-            <Box sx={{ mb: 2, display: 'flex', flexDirection: 'row', gap: '16px', justifyContent: 'flex-end', alignItems: 'flex-end' }} >
+            <Box sx={{ display: 'flex', flexDirection: 'row', gap: '16px', justifyContent: 'flex-end', alignItems: 'flex-end' }} >
                 <Button
                     variant='text'
                     color='error'
@@ -359,7 +360,7 @@ function LaptopForm(props) {
                     startIcon={<SaveIcon />}
                 >{props.saveMessage}</Button>
             </Box>
-        </>
+        </Paper>
     );
 }
 

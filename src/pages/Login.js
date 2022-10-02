@@ -23,8 +23,8 @@ function Login() {
 
   return (<>
     <Container sx={{ display: 'flex', alignContent: 'center', justifyContent: 'center', maxWidth: '1220px', margin: '24px auto 0;' }} >
-      <Paper sx={{ mt: 4, p: 3, display: 'flex', flexDirection: 'column', gap: 2, minWidth: '300px' }} >
-        <Typography variant='h5' color='primary' >Welcome Back</Typography>
+      <Paper sx={{ mt: 4, p: 3, display: 'flex', flexDirection: 'column', gap: 2, minWidth: '375px' }} >
+        <Typography variant='h5' color='primary' >Log In</Typography>
 
         <Box component="form" onSubmit={handleSubmit} noValidate sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
           <TextField
@@ -52,11 +52,11 @@ function Login() {
             fullWidth
             variant='contained'
             type='submit'
-            color='primary'
+            color='secondary'
             sx={{ mt: 2 }}
-          >Sign In</Button>
+          >Log In</Button>
 
-          <Typography color='secondary' component='a' href='/reset-password' >Forgot your password?</Typography>
+          <Typography color='primary' component='a' href='/reset-password' >Forgot your password?</Typography>
         </Box>
       </Paper>
     </Container>
