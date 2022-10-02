@@ -64,7 +64,7 @@ function App() {
   return (
     <ThemeProvider theme={theme} >
       <div className="wrapper">
-        <AppBarMenu activePage={activePage} setActivePage={setActivePage} />
+        <AppBarMenu />
       <BrowserRouter>
         <Routes>
         <Route path='/' element={<Login/>} />
