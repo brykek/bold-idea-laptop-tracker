@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 // MATERIAL-UI COMPONENTS
 import {
@@ -15,11 +15,12 @@ import {
     FormControlLabel,
     Switch,
     InputAdornment,
+    Paper,
 } from '@mui/material';
 
 // MATERIAL ICONS
 import {
-    Launch as Launch,
+    Launch as LaunchIcon,
     Info as InfoIcon,
     Clear as CancelIcon,
     Save as SaveIcon,
@@ -27,33 +28,57 @@ import {
 
 
 function LaptopForm(props) {
-    const [formData, setFormData] = useState(props.laptopData || {
-        serial_number: '',
+    const [formData, setFormData] = useState({
+        serialNumber: '',
         manufacturer: '',
-        laptop_id: '',
+        laptopId: '',
         status: 'UNPROCESSED',
         donor: '',
-        date_donated: '',
+        dateDonated: '',
         model: '',
-        screen_size: '',
-        cpu_type: '',
+        screenSize: '',
+        cpuType: '',
         memory: '',
-        disk_size: '',
+        diskSize: '',
         condition: '',
-        charger_type: '',
-        charger_included: false,
-        trade_in_value: '',
-        list_price: '',
-        sold_price: '',
+        chargerType: '',
+        chargerIncluded: false,
+        tradeInValue: '',
+        listPrice: '',
+        soldPrice: '',
         notes: '',
     });
+
+    useEffect(() => {
+        setFormData({
+            serialNumber: props.laptopData?.serialNumber,
+            manufacturer: props.laptopData?.manufacturer,
+            laptopId: props.laptopData?.laptopId,
+            status: props.laptopData?.status,
+            donor: props.laptopData?.donor,
+            dateDonated: props.laptopData?.dateDonated,
+            model: props.laptopData?.model,
+            screenSize: props.laptopData?.screenSize,
+            cpuType: props.laptopData?.cpuType,
+            memory: props.laptopData?.memory,
+            diskSize: props.laptopData?.diskSize,
+            condition: props.laptopData?.condition,
+            chargerType: props.laptopData?.chargerType,
+            chargerIncluded: props.laptopData?.chargerIncluded,
+            tradeInValue: props.laptopData?.tradeInValue,
+            listPrice: props.laptopData?.listPrice,
+            soldPrice: props.laptopData?.soldPrice,
+            notes: props.laptopData?.notes,
+        });
+    }, [props.laptopData])
+    
     const options = {
         manufacturer: ['Apple', 'PC'],
         status: ['UNPROCESSED', 'DONATED', 'READY', 'INTERNAL', 'RECYCLE', 'REINSTALL', 'SOLD'],
         donor: ['BetterUP', 'OrderMyGear'],
-        screen_size: ['12"', '13"', '15"', '16"'],
+        screenSize: ['12"', '13"', '15"', '16"'],
         memory: ['8 GB', '16 GB', '32 GB'],
-        disk_size: ['128 GB', '256 GB', '512 GB', '1024 GB', '1 TB'],
+        diskSize: ['128 GB', '256 GB', '512 GB', '1024 GB', '1 TB'],
         condition: ['A', 'B', 'C'],
     };
 
@@ -64,13 +89,13 @@ function LaptopForm(props) {
     }
 
     function populateLaptopId() {
-        if (formData.serial_number.length === 12 && formData.laptop_id === '') {
-            setFormData({ ...formData, laptop_id: formData.serial_number.substring(4, 8) });
+        if (formData.serialNumber.length === 12 && formData.laptopId === '') {
+            setFormData({ ...formData, laptopId: formData.serialNumber.substring(4, 8) });
         }
     }
 
     return (
-        <>
+        <Paper sx={{ p: 4, pt: 2, mb: 4 }}>
             <Typography variant='h6' sx={{ color: 'primary.main', fontWeight: 'bold', }} gutterBottom >Identification</Typography>
             <Box sx={{ display: 'grid', gap: 2, mb: 2, gridTemplateColumns: 'repeat(4, 1fr)' }} >
                 <ToggleButtonGroup
@@ -87,28 +112,28 @@ function LaptopForm(props) {
 
                 <TextField
                     id='serial-field'
-                    value={formData.serial_number}
+                    value={formData.serialNumber}
                     label='Serial'
                     size='small'
-                    onChange={(event) => handleInputChange(event.target.value, 'serial_number')}
+                    onChange={(event) => handleInputChange(event.target.value, 'serialNumber')}
                     onBlur={populateLaptopId}
                 />
 
                 <TextField
                     id='laptop-id-field'
-                    value={formData.laptop_id}
+                    value={formData.laptopId}
                     label='Laptop ID'
                     size='small'
-                    onChange={(event) => handleInputChange(event.target.value, 'laptop_id')}
+                    onChange={(event) => handleInputChange(event.target.value, 'laptopId')}
                 />
 
-                {formData.manufacturer === 'Apple' && formData.serial_number !== '' ?
+                {formData.manufacturer === 'Apple' && formData.serialNumber !== '' ?
                     <Button
                         variant='contained'
                         color='secondary'
-                        href={`https://everymac.com/ultimate-mac-lookup/?search_keywords=${formData.serial_number}`}
+                        href={`https://everymac.com/ultimate-mac-lookup/?search_keywords=${formData.serialNumber}`}
                         target='_blank'
-                        endIcon={<Launch />}
+                        endIcon={<LaunchIcon />}
                         size='small'
                     >Search EveryMac.com</Button>
                     : <></>
@@ -153,10 +178,10 @@ function LaptopForm(props) {
                     id='date'
                     label='Date Donated'
                     type='date'
-                    value={formData.date_donated}
+                    value={formData.dateDonated}
                     InputLabelProps={{ shrink: true }}
                     size='small'
-                    onChange={(event) => handleInputChange(event.target.value, 'date_donated')}
+                    onChange={(event) => handleInputChange(event.target.value, 'dateDonated')}
                 />
 
             </Box>
@@ -177,11 +202,11 @@ function LaptopForm(props) {
                         required
                         labelId='screen-size-select-label'
                         id='screen-size-select'
-                        value={formData.screen_size}
+                        value={formData.screenSize}
                         label='Screen Size'
-                        onChange={(event) => handleInputChange(event.target.value, 'screen_size')}
+                        onChange={(event) => handleInputChange(event.target.value, 'screenSize')}
                     >
-                        {options.screen_size.map(option => (
+                        {options.screenSize.map(option => (
                             <MenuItem value={option}>{option}</MenuItem>
                         ))}
                     </Select>
@@ -189,10 +214,10 @@ function LaptopForm(props) {
 
                 <TextField
                     id='cpu-type-field'
-                    value={formData.cpu_type}
+                    value={formData.cpuType}
                     label='CPU Type'
                     size='small'
-                    onChange={(event) => handleInputChange(event.target.value, 'cpu_type')}
+                    onChange={(event) => handleInputChange(event.target.value, 'cpuType')}
                 />
 
                 <FormControl size='small' >
@@ -217,11 +242,11 @@ function LaptopForm(props) {
                         required
                         labelId='disk-size-select-label'
                         id='disk-size-select'
-                        value={formData.disk_size}
+                        value={formData.diskSize}
                         label='Disk Size'
-                        onChange={(event) => handleInputChange(event.target.value, 'disk_size')}
+                        onChange={(event) => handleInputChange(event.target.value, 'diskSize')}
                     >
-                        {options.disk_size.map(option => (
+                        {options.diskSize.map(option => (
                             <MenuItem value={option}>{option}</MenuItem>
                         ))}
                     </Select>
@@ -245,18 +270,18 @@ function LaptopForm(props) {
 
                 <TextField
                     id='charger-type-field'
-                    value={formData.charger_type}
+                    value={formData.chargerType}
                     label='Charger Type'
                     size='small'
-                    onChange={(event) => handleInputChange(event.target.value, 'charger_type')}
+                    onChange={(event) => handleInputChange(event.target.value, 'chargerType')}
                 />
 
                 <FormControlLabel label='Charger Included' control={
                     <Switch
-                        checked={formData.charger_included}
+                        checked={formData.chargerIncluded}
                         size='small'
                         color='secondary'
-                        onChange={(event) => handleInputChange(event.target.checked, 'charger_included')}
+                        onChange={(event) => handleInputChange(event.target.checked, 'chargerIncluded')}
                     />
                 } />
 
@@ -285,19 +310,19 @@ function LaptopForm(props) {
 
                 <TextField
                     id='list-price-field'
-                    value={formData.list_price}
+                    value={formData.listPrice}
                     label='List Price'
                     size='small'
-                    onChange={(event) => handleInputChange(event.target.value, 'list_price')}
+                    onChange={(event) => handleInputChange(event.target.value, 'listPrice')}
                     InputProps={{ startAdornment: <InputAdornment position='start'>$</InputAdornment> }}
                 />
 
                 <TextField
                     id='sold-price-field'
-                    value={formData.sold_price}
+                    value={formData.soldPrice}
                     label='Sold Price'
                     size='small'
-                    onChange={(event) => handleInputChange(event.target.value, 'sold_price')}
+                    onChange={(event) => handleInputChange(event.target.value, 'soldPrice')}
                     InputProps={{ startAdornment: <InputAdornment position='start'>$</InputAdornment> }}
                 />
 
@@ -321,7 +346,7 @@ function LaptopForm(props) {
                 </Box>
             </Box>
 
-            <Box sx={{ mb: 2, display: 'flex', flexDirection: 'row', gap: '16px', justifyContent: 'flex-end', alignItems: 'flex-end' }} >
+            <Box sx={{ display: 'flex', flexDirection: 'row', gap: '16px', justifyContent: 'flex-end', alignItems: 'flex-end' }} >
                 <Button
                     variant='text'
                     color='error'
@@ -335,7 +360,7 @@ function LaptopForm(props) {
                     startIcon={<SaveIcon />}
                 >{props.saveMessage}</Button>
             </Box>
-        </>
+        </Paper>
     );
 }
 

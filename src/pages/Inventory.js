@@ -1,4 +1,4 @@
-import FilterFields from './FilterFields';
+import FilterFields from '../components/FilterFields';
 
 
 const Inventory = () => {

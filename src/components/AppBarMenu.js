@@ -3,11 +3,11 @@ import logo from '../assets/logo.png'
 
 // MATERIAL-UI COMPONENTS
 import {
+    Box,
     AppBar,
     Toolbar,
     Typography,
     Button,
-    Box,
     Avatar,
     Menu,
     MenuItem,
@@ -40,9 +40,9 @@ function AppBarMenu(props) {
         <AppBar position='sticky'>
             <Toolbar>
                 {/* LOGO & APP TITLE */}
-                <div style={{ backgroundColor: '#ffffff', borderRadius: '10px', height: '72px', width: '72px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '12px 0' }} >
-                    <img src={logo} style={{ height: '64px' }} />
-                </div>
+                <Box sx={{ backgroundColor: 'rgba(255,255,255, 0.5)', borderRadius: '10px', height: '50px', width: '50px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '12px 0' }} >
+                    <img src={logo} alt='logo' style={{ height: '42px' }} />
+                </Box>
                 <Typography variant='h5' component='div' sx={{ ml: 2, flexGrow: 1 }}>
                     Laptop Inventory Tracker
                 </Typography>
