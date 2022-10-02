@@ -23,6 +23,7 @@ import {
 
 function AppBarMenu(props) {
     const [anchorElUser, setAnchorElUser] = useState(null);
+    const page = window.location.pathname.split('/')[1];
 
     const handleOpenUserMenu = (e) => setAnchorElUser(e.currentTarget);
     const handleCloseUserMenu = () => setAnchorElUser(null);
@@ -47,34 +48,34 @@ function AppBarMenu(props) {
                 </Typography>
 
                 {/* NAVIGATION BUTTONS */}
-                <Box sx={props.activePage === 'add' ? { borderBottom: '1px solid #EA9722', mr: 2 } : { mr: 2 }}>
+                <Box sx={page === 'add' ? { borderBottom: '1px solid #EA9722', mr: 2 } : { mr: 2 }}>
                     <Button
-                        disabled={props.activePage === 'add'}
+                        disabled={page === 'add'}
                         variant='outline'
                         startIcon={<AddIcon />}
-                        onClick={() => props.setActivePage('add')}
+                        href='/add'
                     >
                         Add Laptop
                     </Button>
                 </Box>
 
-                <Box sx={props.activePage === 'inventory' ? { borderBottom: '1px solid #EA9722', mr: 2 } : { mr: 2 }}>
+                <Box sx={page === 'inventory' ? { borderBottom: '1px solid #EA9722', mr: 2 } : { mr: 2 }}>
                     <Button
-                        disabled={props.activePage === 'inventory'}
+                        disabled={page === 'inventory'}
                         variant='outline'
                         startIcon={<InventoryIcon />}
-                        onClick={() => props.setActivePage('inventory')}
+                        href='/inventory'
                     >
                         View Inventory
                     </Button>
                 </Box>
 
-                <Box sx={props.activePage === 'settings' ? { borderBottom: '1px solid #EA9722', mr: 2 } : { mr: 2 }}>
+                <Box sx={page === 'settings' ? { borderBottom: '1px solid #EA9722', mr: 2 } : { mr: 2 }}>
                     <Button
-                        disabled={props.activePage === 'settings'}
+                        disabled={page === 'settings'}
                         variant='outline'
                         startIcon={<SettingsIcon />}
-                        onClick={() => props.setActivePage('settings')}
+                        href='/settings'
                     >
                         Settings
                     </Button>
