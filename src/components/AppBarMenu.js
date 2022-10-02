@@ -47,33 +47,38 @@ function AppBarMenu(props) {
                 </Typography>
 
                 {/* NAVIGATION BUTTONS */}
-                <Button
-                    disabled={props.activePage === 'add'}
-                    variant='outline'
-                    startIcon={<AddIcon />}
-                    onClick={() => props.setActivePage('add')}
-                    sx={{ mr: 2 }}
-                >
-                    Add Laptop
-                </Button>
-                <Button
-                    disabled={props.activePage === 'inventory'}
-                    variant='outline'
-                    startIcon={<InventoryIcon />}
-                    onClick={() => props.setActivePage('inventory')}
-                    sx={{ mr: 2 }}
-                >
-                    View Inventory
-                </Button>
-                <Button
-                    disabled={props.activePage === 'settings'}
-                    variant='outline'
-                    startIcon={<SettingsIcon />}
-                    onClick={() => props.setActivePage('settings')}
-                    sx={{ mr: 2 }}
-                >
-                    Settings
-                </Button>
+                <Box sx={props.activePage === 'add' ? { borderBottom: '1px solid #EA9722', mr: 2 } : { mr: 2 }}>
+                    <Button
+                        disabled={props.activePage === 'add'}
+                        variant='outline'
+                        startIcon={<AddIcon />}
+                        onClick={() => props.setActivePage('add')}
+                    >
+                        Add Laptop
+                    </Button>
+                </Box>
+
+                <Box sx={props.activePage === 'inventory' ? { borderBottom: '1px solid #EA9722', mr: 2 } : { mr: 2 }}>
+                    <Button
+                        disabled={props.activePage === 'inventory'}
+                        variant='outline'
+                        startIcon={<InventoryIcon />}
+                        onClick={() => props.setActivePage('inventory')}
+                    >
+                        View Inventory
+                    </Button>
+                </Box>
+
+                <Box sx={props.activePage === 'settings' ? { borderBottom: '1px solid #EA9722', mr: 2 } : { mr: 2 }}>
+                    <Button
+                        disabled={props.activePage === 'settings'}
+                        variant='outline'
+                        startIcon={<SettingsIcon />}
+                        onClick={() => props.setActivePage('settings')}
+                    >
+                        Settings
+                    </Button>
+                </Box>
 
                 {/* AVATAR & MENU DROPDOWN */}
                 <Box sx={{ flexGrow: 0 }}>
