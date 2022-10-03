@@ -16,29 +16,95 @@ import Paper from '@mui/material/Paper';
 import { visuallyHidden } from '@mui/utils';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 
+const dummyLaptopData =  [
+    {
+        serialNum: '1234567898',
+        originalDonor: 'BetterUp',
+        status: "Unprocessed",
+        model: "Macbook Air",
+        value: 600
+    },
+    {
+      serialNum: '1234567898',
+      originalDonor: 'OrderMyGear',
+      status: "Unprocessed",
+      model: "Macbook Air",
+      value: 600
+    },    {
+      serialNum: '1234567898',
+      originalDonor: 'BetterUp',
+      status: "Unprocessed",
+      model: "Macbook Air",
+      value: 600
+  },    {
+      serialNum: '1234567898',
+      originalDonor: 'BetterUp',
+      status: "Unprocessed",
+      model: "Macbook Air",
+      value: 600
+    },    {
+      serialNum: '1234567898',
+      originalDonor: 'BetterUp',
+      status: "Damaged",
+      model: "Macbook Air",
+      value: 600
+    },    {
+      serialNum: '1234560898',
+      originalDonor: 'BetterUp',
+      status: "Donated",
+      model: "Macbook Pro",
+      value: 900
+    },    {
+      serialNum: '1234567898',
+      originalDonor: 'BetterUp',
+      status: "Unprocessed",
+      model: "Macbook Pro",
+      value: 600
+    },    {
+      serialNum: '1234777898',
+      originalDonor: 'BetterUp',
+      status: "Unprocessed",
+      model: "Macbook Pro",
+      value: 400
+    },    {
+      serialNum: '1234567898',
+      originalDonor: 'OrderMyGear',
+      status: "Donated",
+      model: "Macbook Air",
+      value: 600
+    },    {
+      serialNum: '1234567598',
+      originalDonor: 'BetterUp',
+      status: "Sold",
+      model: "Dell XPS",
+      value: 1200
+    },    {
+      serialNum: '1334567898',
+      originalDonor: 'OrderMyGear',
+      status: "Sold",
+      model: "Macbook Air",
+      value: 700
+    }
+]
 
-function createData(serialNum, originalDonor, status, model, value) {
-    return { serialNum, originalDonor, status, model, value };
-  }
-
-  const rows = [
-    createData('1234567898', "BetterUp", "Unprocessed", "Macbook Air", 1200),
-    createData('1237567898', "BetterUp", "Sold", "Macbook Pro", 900),
-    createData('1234567898', "OrderMyGear", "Donated", "Macbook Pro", 600),
-    createData('1234567888', "BetterUp", "Ready", "Dell XPS", 750),
-    createData('1234557898', "OrderMyGear", "Damaged", "Macbook Air", 800),
-    createData('1234557898', "OrderMyGear", "Unprocessed", "Macbook Air", 800),
-    createData('1234557898', "OrderMyGear", "Unprocessed", "Macbook Air", 800),
-    createData('1234557898', "OrderMyGear", "Unprocessed", "Macbook Air", 800),
-    createData('1234557898', "OrderMyGear", "Unprocessed", "Macbook Air", 800),
-    createData('1234557898', "OrderMyGear", "Unprocessed", "Macbook Air", 800),
-    createData('1234557898', "OrderMyGear", "Unprocessed", "Macbook Air", 800),
-    createData('1234557898', "OrderMyGear", "Unprocessed", "Macbook Air", 800),
-    createData('1234557898', "OrderMyGear", "Unprocessed", "Macbook Air", 800),
-    createData('1234557898', "OrderMyGear", "Unprocessed", "Macbook Air", 800),
-    createData('1234557898', "OrderMyGear", "Unprocessed", "Macbook Air", 800),
+  // const rows = [
+  //   createData('1234567898', "BetterUp", "Unprocessed", "Macbook Air", 1200),
+  //   createData('1237567898', "BetterUp", "Sold", "Macbook Pro", 900),
+  //   createData('1234567898', "OrderMyGear", "Donated", "Macbook Pro", 600),
+  //   createData('1234567888', "BetterUp", "Ready", "Dell XPS", 750),
+  //   createData('1234557898', "OrderMyGear", "Damaged", "Macbook Air", 800),
+  //   createData('1234557898', "OrderMyGear", "Unprocessed", "Macbook Air", 800),
+  //   createData('1234557898', "OrderMyGear", "Unprocessed", "Macbook Air", 800),
+  //   createData('1234557898', "OrderMyGear", "Unprocessed", "Macbook Air", 800),
+  //   createData('1234557898', "OrderMyGear", "Unprocessed", "Macbook Air", 800),
+  //   createData('1234557898', "OrderMyGear", "Unprocessed", "Macbook Air", 800),
+  //   createData('1234557898', "OrderMyGear", "Unprocessed", "Macbook Air", 800),
+  //   createData('1234557898', "OrderMyGear", "Unprocessed", "Macbook Air", 800),
+  //   createData('1234557898', "OrderMyGear", "Unprocessed", "Macbook Air", 800),
+  //   createData('1234557898', "OrderMyGear", "Unprocessed", "Macbook Air", 800),
+  //   createData('1234557898', "OrderMyGear", "Unprocessed", "Macbook Air", 800),
   
-  ];
+  // ];
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -110,12 +176,10 @@ const headCells = [
 ];
 
 function EnhancedTableHead(props) {
-  const {order, orderBy, onRequestSort } =
-    props;
+  const {order, orderBy, onRequestSort } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
-
   return (
     <TableHead>
       <TableRow>
@@ -210,7 +274,7 @@ export default function EnhancedTable() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelected = rows.map((n) => n.name);
+      const newSelected = dummyLaptopData.map((n) => n.serialNum);
       setSelected(newSelected);
       return;
     }
@@ -231,7 +295,7 @@ export default function EnhancedTable() {
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - dummyLaptopData.length) : 0;
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -249,12 +313,12 @@ export default function EnhancedTable() {
               orderBy={orderBy}
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
-              rowCount={rows.length}
+              rowCount={dummyLaptopData.length}
             />
             <TableBody>
               {/* if you don't need to support IE11, you can replace the `stableSort` call with:
                  rows.slice().sort(getComparator(order, orderBy)) */}
-              {stableSort(rows, getComparator(order, orderBy))
+              {stableSort(dummyLaptopData, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
                   const labelId = `enhanced-table-checkbox-${index}`;
@@ -297,7 +361,7 @@ export default function EnhancedTable() {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={rows.length}
+          count={dummyLaptopData.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
