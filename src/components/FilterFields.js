@@ -8,6 +8,7 @@ import {
     InputLabel,
     Select,
     MenuItem,
+    TextField,
 } from '@mui/material';
 
 function FilterFields(props) {
@@ -32,6 +33,12 @@ function FilterFields(props) {
         <>
             <Typography variant='h6' sx={{ color: 'primary.main', fontWeight: 'bold', }} gutterBottom >Filter By:</Typography>
             <Box sx={{ display: 'grid', gap: 2, mb: 2, gridTemplateColumns: 'repeat(4, 1fr)' }} > 
+            <TextField
+                    id='search'
+                    label='Seach'
+                    size='small'
+                    onChange={(event) => handleInputChange(event.target.value, 'Search')}
+                />
             <FormControl size='small' >
                     <InputLabel id='status-select-label'>Status</InputLabel>
                     <Select
