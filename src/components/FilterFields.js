@@ -12,24 +12,17 @@ import {
 } from '@mui/material';
 
 function FilterFields(props) {
-    const [formData, setFormData] = useState(props.laptopData || {
-        status: '',
-        donor: '',
-        condition: '',
-    });
+    const [q, setQ] = useState("");
+    const [status, setStatus] = useState("");
+    const [donor, setDonor] = useState("");
     const options = {
         status: ['UNPROCESSED', 'DONATED', 'READY', 'INTERNAL', 'RECYCLE', 'REINSTALL', 'SOLD'],
         donor: ['BetterUP', 'OrderMyGear'],
         condition: ['A', 'B', 'C'],
     };
 
-    function handleInputChange(value, field) {
-        const updatedData = { ...formData };
-        updatedData[field] = value;
-        setFormData(updatedData);
-    }
-
     return (
+        
         <>
             <Typography variant='h6' sx={{ color: 'primary.main', fontWeight: 'bold', }} gutterBottom >Filter By:</Typography>
             <Box sx={{ display: 'grid', gap: 2, mb: 2, gridTemplateColumns: 'repeat(4, 1fr)' }} > 
@@ -37,7 +30,8 @@ function FilterFields(props) {
                     id='search'
                     label='Search'
                     size='small'
-                    onChange={(event) => handleInputChange(event.target.value, 'Search')}
+                    value={q}
+                    onChange={(e) => setQ(e.target.value)}
                 />
             <FormControl size='small' >
                     <InputLabel id='status-select-label'>Status</InputLabel>
@@ -45,10 +39,10 @@ function FilterFields(props) {
                         required
                         labelId='status-select-label'
                         id='status-select'
-                        value={formData.status}
+                        value={status}
                         label='Status'
-                        onChange={(event) => handleInputChange(event.target.value, 'status')}
-                    >
+                        onChange={(e) => setStatus(e.target.value)}
+                        >
                         {options.status.map(option => (
                             <MenuItem value={option}>{option}</MenuItem>
                         ))}
@@ -60,34 +54,24 @@ function FilterFields(props) {
                         required
                         labelId='donor-select-label'
                         id='donor-select'
-                        value={formData.donor}
+                        value={donor}
                         label='Donated By'
-                        onChange={(event) => handleInputChange(event.target.value, 'donor')}
+                        onChange={(e) => setDonor(e.target.value)}
                     >
                         {options.donor.map(option => (
                             <MenuItem value={option}>{option}</MenuItem>
                         ))}
                     </Select>
                 </FormControl>
-                <FormControl size='small' >
-                    <InputLabel id='condition-select-label'>Condition</InputLabel>
-                    <Select
-                        required
-                        labelId='condition-select-label'
-                        id='condition-select'
-                        value={formData.condition}
-                        label='Condition'
-                        onChange={(event) => handleInputChange(event.target.value, 'condition')}
-                    >
-                        {options.condition.map(option => (
-                            <MenuItem value={option}>{option}</MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
-
             </Box>
         </>
     );
 }
 
 export default FilterFields;
+
+
+
+
+
+
