@@ -19,7 +19,7 @@ import {
 
 // MATERIAL ICONS
 import {
-    Launch as Launch,
+    Launch,
     Info as InfoIcon,
     Clear as CancelIcon,
     Save as SaveIcon,
