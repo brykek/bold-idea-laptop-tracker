@@ -6,7 +6,7 @@ import AppBarMenu from './components/AppBarMenu';
 import AddLaptopPage from './pages/AddLaptopPage';
 import EditLaptopPage from './pages/EditLaptopPage';
 import Inventory from './pages/Inventory';
-import Settings from './pages/Settings';
+import SettingsPage from './pages/SettingsPage';
 import Login from './pages/Login';
 
 import './App.css';
@@ -48,7 +48,7 @@ function App() {
             <Route path='/add' element={<AddLaptopPage />} />
             <Route path='/edit/:make/:serial' element={<EditLaptopPage />} />
             <Route path='/inventory' element={<Inventory />} />
-            <Route path='/settings' element={<Settings />} />
+            <Route path='/settings' element={<SettingsPage />} />
           </Routes>
         </BrowserRouter>
       </div>
