@@ -24,7 +24,7 @@ import {
     Info as InfoIcon,
     Clear as CancelIcon,
     Save as SaveIcon,
-} from '@mui/icons-material'
+} from '@mui/icons-material';
 
 
 function LaptopForm(props) {
