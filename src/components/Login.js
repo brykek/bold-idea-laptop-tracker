@@ -1,24 +1,50 @@
-import './Login.css';
+import React, { useState } from 'react';
 
-export default function Login() {
+// MATERIAL-UI COMPONENTS
+import {
+    Typography,
+    TextField,
+    Button,
+    Box,
+} from '@mui/material';
+
+
+export default function Login(props) {
+    const [formData, setFormData] = useState(props.laptopData || {
+        username: '',
+        password: ''
+    });
+
+    function handleInputChange(value, field) {
+        const updatedData = { ...formData };
+        updatedData[field] = value;
+        setFormData(updatedData);
+    }
 
   return(
-    <form className='loginForm'>
-        <h2>Log Into Your Account</h2>
-      <label>
-        <p>Username</p>
-        <input type="text"/>
-      </label>
-      <label>
-        <p>Password</p>
-        <input type="password" />
-      </label>
-      <div>
-        <button type="submit">Submit</button>
-      </div>
-      <div>
-        <p><a className='forgot' href='https://www.login.gov/help/trouble-signing-in/forgot-your-password/'>Forgot your password?</a></p>
-      </div>
-    </form>
+    <div className='page-container'>
+    <Box sx={{ display: 'grid', gap: 2, width: 300,  gridTemplateColumns: 'repeat(1, 1fr)' }} >
+    <Typography variant='h4' align='center' sx={{ color: 'primary.main', fontWeight: 'bold' }} gutterBottom >Login</Typography>
+    <TextField
+    id='username'
+    value={formData.username}
+    label='Username'
+    size='small'
+    onChange={(event) => handleInputChange(event.target.value, 'username')}
+    />
+    <TextField
+    id='password'
+    value={formData.password}
+    label='Password'
+    size='small'
+    onChange={(event) => handleInputChange(event.target.value, 'password')}
+    />
+        <Button
+        variant='contained'
+        color='secondary'
+        onClick={() => props.save(formData)}
+    >Submit</Button>
+            </Box>
+    </div>
   )
 }
