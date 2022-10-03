@@ -35,7 +35,7 @@ function FilterFields(props) {
             <Box sx={{ display: 'grid', gap: 2, mb: 2, gridTemplateColumns: 'repeat(4, 1fr)' }} > 
             <TextField
                     id='search'
-                    label='Seach'
+                    label='Search'
                     size='small'
                     onChange={(event) => handleInputChange(event.target.value, 'Search')}
                 />
