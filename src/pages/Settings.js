@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import DropdownManager from '../components/DropdownManager';
 
 // MATERIAL-UI COMPONENTS
 import {
@@ -36,7 +37,17 @@ const dummyUserData = [
         name: 'Accountant',
         isAdmin: false,
     },
-]
+];
+
+const options = {
+    manufacturer: ['Apple', 'PC'],
+    status: ['UNPROCESSED', 'DONATED', 'READY', 'INTERNAL', 'RECYCLE', 'REINSTALL', 'SOLD'],
+    donatedBy: ['BetterUP', 'OrderMyGear'],
+    screenSize: ['12"', '13"', '15"', '16"'],
+    memory: ['8 GB', '16 GB', '32 GB'],
+    diskSize: ['128 GB', '256 GB', '512 GB', '1024 GB', '1 TB'],
+    condition: ['A', 'B', 'C'],
+};
 
 function Settings() {
     const [users, setUsers] = useState();
@@ -54,8 +65,6 @@ function Settings() {
 
     useEffect(() => {
         if (currentUserEmail && users) {
-            console.log(users)
-            console.log(users.find(user => user.email === currentUserEmail));
             setIsAdmin(users.find(user => user.email === currentUserEmail)?.isAdmin)
         }
     }, [currentUserEmail, users]);
@@ -85,8 +94,16 @@ function Settings() {
         // Open modal to add user?
     }
 
+    function addOption(newValue, category) {
+        console.log(`Adding ${newValue} to the list of ${category} options...`)
+    }
+
+    function removeOption(value, category) {
+        console.log(`Removing ${value} from the list of ${category} options...`)
+    }
+
     return (
-        <Container sx={{ maxWidth: '1220px', margin: '24px auto 0;' }} >
+        <Container sx={{ maxWidth: '1220px', margin: '24px auto 24px;' }} >
             <Typography variant='h4' align='center' sx={{ color: 'primary.main', fontWeight: 'bold' }} gutterBottom >Settings</Typography>
 
             {isAdmin && <>
@@ -138,6 +155,57 @@ function Settings() {
             </>}
 
             <Typography variant='h6' sx={{ color: 'primary.dark', fontWeight: 'bold' }} gutterBottom >Manage Dropdown Options</Typography>
+            <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: 'repeat(5, 1fr)' }} >
+                <DropdownManager
+                    header='Status'
+                    id='status'
+                    options={options.status}
+                    addOption={addOption}
+                    removeOption={removeOption}
+                />
+                <DropdownManager
+                    header='Disk Size'
+                    id='diskSize'
+                    options={options.diskSize}
+                    addOption={addOption}
+                    removeOption={removeOption}
+                />
+                <DropdownManager
+                    header='Screen Size'
+                    id='screenSize'
+                    options={options.screenSize}
+                    addOption={addOption}
+                    removeOption={removeOption}
+                />
+                <DropdownManager
+                    header='Memory'
+                    id='memory'
+                    options={options.memory}
+                    addOption={addOption}
+                    removeOption={removeOption}
+                />
+                <DropdownManager
+                    header='Condition'
+                    id='condition'
+                    options={options.condition}
+                    addOption={addOption}
+                    removeOption={removeOption}
+                />
+                <DropdownManager
+                    header='Manufacturer'
+                    id='manufacturer'
+                    options={options.manufacturer}
+                    addOption={addOption}
+                    removeOption={removeOption}
+                />
+                <DropdownManager
+                    header='Donated By'
+                    id='donatedBy'
+                    options={options.donatedBy}
+                    addOption={addOption}
+                    removeOption={removeOption}
+                />
+            </Box>
 
         </Container>
     )
