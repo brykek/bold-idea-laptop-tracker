@@ -29,11 +29,11 @@ import {
 
 function LaptopForm(props) {
     const [formData, setFormData] = useState({
-        serialNumber: '',
+        serial: '',
         manufacturer: '',
         laptopId: '',
         status: 'UNPROCESSED',
-        donor: '',
+        donatedBy: '',
         dateDonated: '',
         model: '',
         screenSize: '',
@@ -43,7 +43,7 @@ function LaptopForm(props) {
         condition: '',
         chargerType: '',
         chargerIncluded: false,
-        tradeInValue: '',
+        value: '',
         listPrice: '',
         soldPrice: '',
         notes: '',
@@ -51,11 +51,11 @@ function LaptopForm(props) {
 
     useEffect(() => {
         setFormData({
-            serialNumber: props.laptopData?.serialNumber,
+            serial: props.laptopData?.serial,
             manufacturer: props.laptopData?.manufacturer,
             laptopId: props.laptopData?.laptopId,
             status: props.laptopData?.status,
-            donor: props.laptopData?.donor,
+            donatedBy: props.laptopData?.donatedBy,
             dateDonated: props.laptopData?.dateDonated,
             model: props.laptopData?.model,
             screenSize: props.laptopData?.screenSize,
@@ -65,7 +65,7 @@ function LaptopForm(props) {
             condition: props.laptopData?.condition,
             chargerType: props.laptopData?.chargerType,
             chargerIncluded: props.laptopData?.chargerIncluded,
-            tradeInValue: props.laptopData?.tradeInValue,
+            value: props.laptopData?.value,
             listPrice: props.laptopData?.listPrice,
             soldPrice: props.laptopData?.soldPrice,
             notes: props.laptopData?.notes,
@@ -75,7 +75,7 @@ function LaptopForm(props) {
     const options = {
         manufacturer: ['Apple', 'PC'],
         status: ['UNPROCESSED', 'DONATED', 'READY', 'INTERNAL', 'RECYCLE', 'REINSTALL', 'SOLD'],
-        donor: ['BetterUP', 'OrderMyGear'],
+        donatedBy: ['BetterUP', 'OrderMyGear'],
         screenSize: ['12"', '13"', '15"', '16"'],
         memory: ['8 GB', '16 GB', '32 GB'],
         diskSize: ['128 GB', '256 GB', '512 GB', '1024 GB', '1 TB'],
@@ -89,8 +89,8 @@ function LaptopForm(props) {
     }
 
     function populateLaptopId() {
-        if (formData.serialNumber.length === 12 && formData.laptopId === '') {
-            setFormData({ ...formData, laptopId: formData.serialNumber.substring(4, 8) });
+        if (formData.serial.length === 12 && formData.laptopId === '') {
+            setFormData({ ...formData, laptopId: formData.serial.substring(4, 8) });
         }
     }
 
@@ -112,10 +112,10 @@ function LaptopForm(props) {
 
                 <TextField
                     id='serial-field'
-                    value={formData.serialNumber}
+                    value={formData.serial}
                     label='Serial'
                     size='small'
-                    onChange={(event) => handleInputChange(event.target.value, 'serialNumber')}
+                    onChange={(event) => handleInputChange(event.target.value, 'serial')}
                     onBlur={populateLaptopId}
                 />
 
@@ -127,11 +127,11 @@ function LaptopForm(props) {
                     onChange={(event) => handleInputChange(event.target.value, 'laptopId')}
                 />
 
-                {formData.manufacturer === 'Apple' && formData.serialNumber !== '' ?
+                {formData.manufacturer === 'Apple' && formData.serial !== '' ?
                     <Button
                         variant='contained'
                         color='secondary'
-                        href={`https://everymac.com/ultimate-mac-lookup/?search_keywords=${formData.serialNumber}`}
+                        href={`https://everymac.com/ultimate-mac-lookup/?search_keywords=${formData.serial}`}
                         target='_blank'
                         endIcon={<LaunchIcon />}
                         size='small'
@@ -159,16 +159,16 @@ function LaptopForm(props) {
                 </FormControl>
 
                 <FormControl size='small' >
-                    <InputLabel id='donor-select-label'>Donated By</InputLabel>
+                    <InputLabel id='donatedBy-select-label'>Donated By</InputLabel>
                     <Select
                         required
-                        labelId='donor-select-label'
-                        id='donor-select'
-                        value={formData.donor}
+                        labelId='donatedBy-select-label'
+                        id='donatedBy-select'
+                        value={formData.donatedBy}
                         label='Donated By'
-                        onChange={(event) => handleInputChange(event.target.value, 'donor')}
+                        onChange={(event) => handleInputChange(event.target.value, 'donatedBy')}
                     >
-                        {options.donor.map(option => (
+                        {options.donatedBy.map(option => (
                             <MenuItem value={option}>{option}</MenuItem>
                         ))}
                     </Select>
