@@ -46,7 +46,7 @@ const dummyOptionData = {
     condition: ['A', 'B', 'C'],
 };
 
-function Settings() {
+function SettingsPage() {
     const [users, setUsers] = useState();
     const [isAdmin, setIsAdmin] = useState()
     const [options, setOptions] = useState();
@@ -109,7 +109,7 @@ function Settings() {
     }
 
     function removeUser(email) {
-        let updatedUserList = [ ...users ];
+        let updatedUserList = [...users];
         updatedUserList = updatedUserList.filter(user => user.email !== email);
         setUsers(updatedUserList);
         setShowRemoveUserModal(false);
@@ -133,7 +133,7 @@ function Settings() {
     }
 
     function createUser() {
-        const updatedUserList = [ ...users ];
+        const updatedUserList = [...users];
         updatedUserList.push(newUserData);
         setUsers(updatedUserList);
         // Make api call to add user
@@ -256,6 +256,7 @@ function Settings() {
                         required
                         id='password-field'
                         type='password'
+                        autoComplete="new-password"
                         value={newUserData.password}
                         label='Temporary Password'
                         size='small'
@@ -365,4 +366,4 @@ function Settings() {
         </Modal>
     </>;
 }
-export default Settings;
+export default SettingsPage;

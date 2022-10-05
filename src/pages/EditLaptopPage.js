@@ -16,7 +16,7 @@ const dummyDataLaptop = {
     created_date: "2022-09-30",
     dateDonated: "2022-03-08",
     diskSize: "256 GB",
-    donor: "OrderMyGear",
+    donatedBy: "OrderMyGear",
     laptopId: "L6Q3",
     last_updated: "2022-10-01",
     listPrice: "",
@@ -25,23 +25,23 @@ const dummyDataLaptop = {
     model: "MacBook Pro",
     notes: "",
     screenSize: "15\"",
-    serialNumber: "C02YL6Q3LVCF",
+    serial: "C02YL6Q3LVCF",
     soldPrice: "",
     status: "READY",
-    tradeInValue: "800.00",
+    value: "800.00",
   }
 
 function EditLaptopPage(props) {
     const [laptopData, setLaptopData] = useState(null);
-    const { make, serial } = useParams();
+    const { serial } = useParams();
 
     useEffect(() => {
         if (!laptopData) {
-            // invoke get api call with make & serial
-            console.log(`Getting ${make} laptop with serial number ${serial}...`)
+            // invoke get api call with serial
+            console.log(`Getting laptop with serial number ${serial}...`)
             setLaptopData(dummyDataLaptop);
         }
-    }, [laptopData, make, serial])
+    }, [laptopData, serial])
 
     function updateLaptop(laptopData) {
         const today = new Date().toISOString().slice(0, 10);

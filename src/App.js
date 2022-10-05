@@ -5,8 +5,8 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import AppBarMenu from './components/AppBarMenu';
 import AddLaptopPage from './pages/AddLaptopPage';
 import EditLaptopPage from './pages/EditLaptopPage';
-import Inventory from './pages/Inventory';
-import Settings from './pages/Settings';
+import InventoryPage from './pages/InventoryPage';
+import SettingsPage from './pages/SettingsPage';
 import Login from './pages/Login';
 
 import './App.css';
@@ -46,9 +46,9 @@ function App() {
           <Routes>
             <Route path='/' element={<Login />} />
             <Route path='/add' element={<AddLaptopPage />} />
-            <Route path='/edit/:make/:serial' element={<EditLaptopPage />} />
-            <Route path='/inventory' element={<Inventory />} />
-            <Route path='/settings' element={<Settings />} />
+            <Route path='/edit/:serial' element={<EditLaptopPage />} />
+            <Route path='/inventory' element={<InventoryPage />} />
+            <Route path='/settings' element={<SettingsPage />} />
           </Routes>
         </BrowserRouter>
       </div>
