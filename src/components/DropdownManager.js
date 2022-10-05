@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 // MATERIAL-UI COMPONENTS
 import {
@@ -12,26 +12,33 @@ import {
 
 // MATERIAL ICONS
 import {
-    AddBox as AddIcon,
+    AddCircle as AddIcon,
 } from '@mui/icons-material'
 
 
 function DropdownManager(props) {
+    const [options, setOptions] = useState(props.options);
     const [newOption, setNewOption] = useState('');
 
-    function handleSubmit(event) {
-        event.preventDefault();
+    useEffect(() => {
+        setOptions(props.options)
+    }, [props.options])
+
+    function handleSubmit() {
+        setOptions([ ...options, newOption ]);
         props.addOption(newOption, props.id);
+        setNewOption('');
     }
 
-    function handleDelete(option) {
-        props.removeOption(option, props.id)
+    function handleDelete(value) {
+        const newOptions = options.filter(option => option !== value);
+        setOptions(newOptions);
+        props.removeOption(value, props.id)
     }
 
     return (
         <Paper sx={{ display: 'flex', flexDirection: 'column', p: 2, borderRadius: '16px', gap: 1 }} >
             <Typography align='center' color='primary.dark' fontWeight='bold' gutterBottom >{props.header}</Typography>
-
             <Box sx={{ display: 'flex', flexDirection: 'row' }} >
                 <TextField
                     id={props.id}
@@ -39,17 +46,19 @@ function DropdownManager(props) {
                     variant='outlined'
                     size='small'
                     value={newOption}
+                    sx={{ [`& fieldset`]:{ borderRadius: 20 } }}
                     onChange={event => setNewOption(event.target.value)}
-                    onSubmit={event => handleSubmit(event)}
+                    onKeyPress={ev => {ev.key === 'Enter' && handleSubmit()} }
                 />
-                <IconButton color='secondary' component="label">
+                <IconButton color='primary' component='label' onClick={handleSubmit} >
                     <AddIcon />
                 </IconButton>
             </Box>
 
             <Box sx={{ display: 'flex', flexDirection: 'column' }} >
-                {props.options && props.options.map(option => (
+                {options && options.map((option, index) => (
                     <Chip
+                        key={option + index}
                         label={option}
                         variant='outlined'
                         color='secondary'
@@ -58,7 +67,7 @@ function DropdownManager(props) {
                     />
                 ))}
             </Box>
-        </Paper>
+        </Paper >
     );
 }
 
