@@ -4,7 +4,7 @@ import {
     Container,
     Typography,
 } from '@mui/material';
-
+import axios from "axios";
 
 function AddLaptopPage(props) {
     function createLaptop(laptopData) {
@@ -12,7 +12,12 @@ function AddLaptopPage(props) {
         laptopData.created_date = today;
         console.log('Creating new laptop...');
         console.log('Laptop Data:', laptopData)
-        // Invoke the create api function
+        
+        // axios.post('http://localhost:3000/add', laptopData).then(res => {
+        //     if (res.status === 200)
+        //         alert('Laptop added successfully!');
+        // })
+        // .catch(err => alert("Something went wrong."))
     }
 
     function discardEntry() {
