@@ -2,9 +2,12 @@ const express = require("express");
 const app = express();
 const mysql = require("mysql");
 const bodyParser = require('body-parser');
+const cors = require('cors');
+const { dblClick } = require("@testing-library/user-event/dist/click");
 
 app.use(bodyParser.json())
 app.use(express.json());
+app.use(cors);
 
 const con = mysql.createConnection({
     host: 'localhost',
@@ -14,8 +17,35 @@ const con = mysql.createConnection({
 });
 
 con.connect((err) => {
-    if(err) throw err;
+    if (err) {
+        console.log(err);
+    } 
     console.log("MySQL db connected");
+})
+
+app.post('/signup', (req, res) => {
+    const username = app.body.username
+    const password = app.body.password
+
+    db.query('INSERT INTO users (username, password) VALUES (?,?)', [username, password], (err, result) => {
+        console.log(err)
+    })
+})
+
+app.post('/login', (req, res) => {
+    const username = app.body.username
+    const password = app.body.password
+
+    db.query( "SELECT * FROM users WHERE username = ? AND password = ?", [username, password], (err, result) => {
+        if (err){
+            res.send({err:err})
+        } 
+        if (result) {
+            res.send(result)
+        } else {
+            res.send({message: "Wrong username/password."})
+        }  
+    })
 })
 
 // Get all laptops

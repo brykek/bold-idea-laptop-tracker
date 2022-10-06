@@ -8,6 +8,8 @@ import EditLaptopPage from './pages/EditLaptopPage';
 import InventoryPage from './pages/InventoryPage';
 import SettingsPage from './pages/SettingsPage';
 import Login from './pages/Login';
+import Signup from './pages/Signup';
+
 
 import './App.css';
 import './react-app.css';
@@ -49,6 +51,7 @@ function App() {
             <Route path='/edit/:serial' element={<EditLaptopPage />} />
             <Route path='/inventory' element={<InventoryPage />} />
             <Route path='/settings' element={<SettingsPage />} />
+            <Route path='/signup' element={<Signup />} />
           </Routes>
         </BrowserRouter>
       </div>

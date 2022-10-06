@@ -4,7 +4,6 @@ import {
     Container,
     Typography,
 } from '@mui/material';
-import axios from "axios";
 
 function AddLaptopPage(props) {
     function createLaptop(laptopData) {

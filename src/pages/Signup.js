@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import Axios from 'axios';
-
 import {
   Container,
   Paper,
@@ -10,33 +9,27 @@ import {
   Button,
 } from '@mui/material';
 
+function Signup() {
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
 
-function Login() {
+    const register = () => {
+        Axios.post('http://localhost:3000/signup', {
+            username:username,
+            password:password
+        }).then((response) => {
+            console.log(response)
+        });
+    }
+      
 
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-
-  const [loginStatus, setLoginStatus] = useState('');
-
-  const login = () => {
-      Axios.post('http://localhost:3000/login', {
-          username:username,
-          password:password
-      }).then((response) => {
-        if (response.data.message) {
-          setLoginStatus(response.data.message)
-        } else {
-          setLoginStatus(response.data[0].username)
-        }
-      });
-  }
-
-  return (<>
+  return (
+  <>
     <Container sx={{ display: 'flex', alignContent: 'center', justifyContent: 'center', maxWidth: '1220px', margin: '24px auto 0;' }} >
       <Paper sx={{ mt: 4, p: 3, display: 'flex', flexDirection: 'column', gap: 2, minWidth: '375px' }} >
-        <Typography variant='h5' color='primary' >Log In</Typography>
+        <Typography variant='h5' color='primary' >Sign Up</Typography>
 
-        <Box component="form" sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+        <Box component="form"  sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
           <TextField
             label='Email'
             required
@@ -46,7 +39,6 @@ function Login() {
             autocomplete='email'
             autofocus
             onChange={(e) => setUsername(e.target.value)}
-
           />
 
           <TextField
@@ -59,7 +51,6 @@ function Login() {
             autocomplete='current-password'
             autofocus
             onChange={(e) => setPassword(e.target.value)}
-
           />
 
           <Button
@@ -68,17 +59,12 @@ function Login() {
             type='submit'
             color='secondary'
             sx={{ mt: 2 }}
-            onClick={login}
-
-          >Log In</Button>
-
-          <Typography color='primary' component='a' href='/reset-password' >Forgot your password?</Typography>
-          <Typography color='primary' component='a' href='/signup' >Don't have an account?</Typography>
-          <Typography color='primary' >{loginStatus}</Typography>
+            onClick={register}
+          >Sign Up</Button>
         </Box>
       </Paper>
     </Container>
   </>);
 }
 
-export default Login;
+export default Signup;
