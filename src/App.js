@@ -11,7 +11,7 @@ import Login from './pages/Login';
 
 import './App.css';
 import './react-app.css';
-
+import Axios from 'axios';
 
 function App() {
   const theme = createTheme({
@@ -36,6 +36,23 @@ function App() {
       },
     },
   });
+
+
+
+  // const addLaptop = () => {
+  //   Axios.post('http://localhost:3001/create', {
+  //     //insert variables here
+  //   }). then(() => {
+  //     console.log("success");
+  //     set laptop list can be done here with array destructuring
+  //   });
+  // };
+
+  const getLaptops = () => {
+    Axios.get('http://localhost:3001/laptops').then((response) => {
+      console.log("success");
+    });
+  }
 
   return (
     <ThemeProvider theme={theme} >
