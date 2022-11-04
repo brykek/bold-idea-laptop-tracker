@@ -7,6 +7,7 @@ import {
     ToggleButtonGroup,
     ToggleButton,
     FormControl,
+    FormHelperText,
     InputLabel,
     Select,
     MenuItem,
@@ -16,6 +17,7 @@ import {
     Switch,
     InputAdornment,
     Paper,
+    Alert
 } from '@mui/material';
 
 // MATERIAL ICONS
@@ -48,6 +50,10 @@ function LaptopForm(props) {
         soldPrice: '',
         notes: '',
     });
+    const [missingSerial, setMissingSerial] = useState(!formData.serial);
+    const [missingDonor, setMissingDonor] = useState(!formData.donatedBy);
+    const [missingStatus, setMissingStatus] = useState(!formData.status);
+    const [showError, setShowError] = useState(false);
 
     useEffect(() => {
         setFormData({
@@ -70,8 +76,8 @@ function LaptopForm(props) {
             soldPrice: props.laptopData?.soldPrice,
             notes: props.laptopData?.notes,
         });
-    }, [props.laptopData])
-    
+    }, [props.laptopData]);
+
     const options = {
         manufacturer: ['Apple', 'PC'],
         status: ['UNPROCESSED', 'DONATED', 'READY', 'INTERNAL', 'RECYCLE', 'REINSTALL', 'SOLD'],
@@ -81,6 +87,12 @@ function LaptopForm(props) {
         diskSize: ['128 GB', '256 GB', '512 GB', '1024 GB', '1 TB'],
         condition: ['A', 'B', 'C'],
     };
+    
+    function checkRequiredFields() {
+        setMissingSerial(!formData.serial);
+        setMissingDonor(!formData.donatedBy);
+        setMissingStatus(!formData.status);
+    }
 
     function handleInputChange(value, field) {
         const updatedData = { ...formData };
@@ -91,6 +103,16 @@ function LaptopForm(props) {
     function populateLaptopId() {
         if (formData.serial.length === 12 && formData.laptopId === '') {
             setFormData({ ...formData, laptopId: formData.serial.substring(4, 8) });
+        }
+    }
+
+    function handleSaveClick() {
+        checkRequiredFields();
+        if (missingSerial || missingDonor || missingStatus) {
+            setShowError(true);
+        } else {
+            setShowError(false);
+            props.save(formData);
         }
     }
 
@@ -125,6 +147,7 @@ function LaptopForm(props) {
                     label='Laptop ID'
                     size='small'
                     onChange={(event) => handleInputChange(event.target.value, 'laptopId')}
+                    onBlur={(event) => handleInputChange(event.target.value, 'laptopId')}
                 />
 
                 {formData.manufacturer === 'Apple' && formData.serial !== '' ?
@@ -153,9 +176,13 @@ function LaptopForm(props) {
                         onChange={(event) => handleInputChange(event.target.value, 'status')}
                     >
                         {options.status.map(option => (
-                            <MenuItem value={option}>{option}</MenuItem>
+                            <MenuItem
+                                value={option}
+                                disabled={['ready', 'donated', 'sold'].includes(option.toLowerCase()) && !formData.value}
+                            >{option}</MenuItem>
                         ))}
                     </Select>
+                    <FormHelperText sx={formData.value && { display: 'none' }} >Value field must be populated before selecting "Ready"</FormHelperText>
                 </FormControl>
 
                 <FormControl size='small' >
@@ -346,7 +373,7 @@ function LaptopForm(props) {
                 </Box>
             </Box>
 
-            <Box sx={{ display: 'flex', flexDirection: 'row', gap: '16px', justifyContent: 'flex-end', alignItems: 'flex-end' }} >
+            <Box sx={{ display: 'flex', flexDirection: 'row', gap: '16px', justifyContent: 'flex-end', alignItems: 'flex-end', marginBottom: '16px' }} >
                 <Button
                     variant='text'
                     color='error'
@@ -356,10 +383,15 @@ function LaptopForm(props) {
                 <Button
                     variant='contained'
                     color='secondary'
-                    onClick={() => props.save(formData)}
+                    onClick={handleSaveClick}
                     startIcon={<SaveIcon />}
                 >{props.saveMessage}</Button>
             </Box>
+
+            <Alert severity="error" sx={showError && missingSerial ? {} : { display: 'none' }} >'Serial' is a required field.</Alert>
+            <Alert severity="error" sx={showError && missingDonor ? {} : { display: 'none' }} >'Donor' is a required field.</Alert>
+            <Alert severity="error" sx={showError && missingStatus ? {} : { display: 'none' }} >'Status' is a required field.</Alert>
+
         </Paper>
     );
 }
