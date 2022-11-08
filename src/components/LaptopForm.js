@@ -7,7 +7,7 @@ import {
     ToggleButtonGroup,
     ToggleButton,
     FormControl,
-    FormHelperText,
+    Tooltip,
     InputLabel,
     Select,
     MenuItem,
@@ -50,9 +50,9 @@ function LaptopForm(props) {
         soldPrice: '',
         notes: '',
     });
-    const [missingSerial, setMissingSerial] = useState(!formData.serial);
-    const [missingDonor, setMissingDonor] = useState(!formData.donatedBy);
-    const [missingStatus, setMissingStatus] = useState(!formData.status);
+    const [missingSerial, setMissingSerial] = useState(false);
+    const [missingDonor, setMissingDonor] = useState(false);
+    const [missingStatus, setMissingStatus] = useState(false);
     const [showError, setShowError] = useState(false);
 
     useEffect(() => {
@@ -87,7 +87,7 @@ function LaptopForm(props) {
         diskSize: ['128 GB', '256 GB', '512 GB', '1024 GB', '1 TB'],
         condition: ['A', 'B', 'C'],
     };
-    
+
     function checkRequiredFields() {
         setMissingSerial(!formData.serial);
         setMissingDonor(!formData.donatedBy);
@@ -108,7 +108,7 @@ function LaptopForm(props) {
 
     function handleSaveClick() {
         checkRequiredFields();
-        if (missingSerial || missingDonor || missingStatus) {
+        if (!formData.serial || !formData.donatedBy || !formData.status) {
             setShowError(true);
         } else {
             setShowError(false);
@@ -124,6 +124,7 @@ function LaptopForm(props) {
                     exclusive
                     fullWidth
                     size='small'
+                    variant='contained'
                     color='secondary'
                     value={formData.manufacturer}
                     onChange={(event) => handleInputChange(event.target.value, 'manufacturer')}
@@ -136,6 +137,8 @@ function LaptopForm(props) {
                     id='serial-field'
                     value={formData.serial}
                     label='Serial'
+                    required
+                    error={missingSerial}
                     size='small'
                     onChange={(event) => handleInputChange(event.target.value, 'serial')}
                     onBlur={populateLaptopId}
@@ -165,27 +168,39 @@ function LaptopForm(props) {
 
             <Typography variant='h6' sx={{ color: 'primary.main', fontWeight: 'bold', }} gutterBottom >Donation Info</Typography>
             <Box sx={{ display: 'grid', gap: 2, mb: 2, gridTemplateColumns: 'repeat(4, 1fr)' }} >
-                <FormControl size='small' >
+                <FormControl size='small' required error={missingStatus} >
                     <InputLabel id='status-select-label'>Status</InputLabel>
                     <Select
-                        required
                         labelId='status-select-label'
                         id='status-select'
                         value={formData.status}
                         label='Status'
                         onChange={(event) => handleInputChange(event.target.value, 'status')}
                     >
-                        {options.status.map(option => (
-                            <MenuItem
-                                value={option}
-                                disabled={['ready', 'donated', 'sold'].includes(option.toLowerCase()) && !formData.value}
-                            >{option}</MenuItem>
-                        ))}
+                        {options.status.map(option => {
+                            if (['ready', 'donated', 'sold'].includes(option.toLowerCase()) && !formData.value) {
+                                return (
+                                    <Tooltip followCursor title={`${option} requires Trade-In Value`} >
+                                        <span>
+                                            <MenuItem
+                                                value={option}
+                                                disabled
+                                            >{option}</MenuItem>
+                                        </span>
+                                    </Tooltip>
+                                );
+                            } else {
+                                return (
+                                    <MenuItem
+                                        value={option}
+                                    >{option}</MenuItem>
+                                );
+                            }
+                        })}
                     </Select>
-                    <FormHelperText sx={formData.value && { display: 'none' }} >Value field must be populated before selecting "Ready"</FormHelperText>
                 </FormControl>
 
-                <FormControl size='small' >
+                <FormControl size='small' required error={missingDonor} >
                     <InputLabel id='donatedBy-select-label'>Donated By</InputLabel>
                     <Select
                         required
@@ -373,6 +388,12 @@ function LaptopForm(props) {
                 </Box>
             </Box>
 
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: '4px', marginBottom: '16px' }} >
+                <Alert severity="error" sx={showError && missingSerial ? {} : { display: 'none' }} >'Serial' is a required field.</Alert>
+                <Alert severity="error" sx={showError && missingDonor ? {} : { display: 'none' }} >'Donated By' is a required field.</Alert>
+                <Alert severity="error" sx={showError && missingStatus ? {} : { display: 'none' }} >'Status' is a required field.</Alert>
+            </Box>
+
             <Box sx={{ display: 'flex', flexDirection: 'row', gap: '16px', justifyContent: 'flex-end', alignItems: 'flex-end', marginBottom: '16px' }} >
                 <Button
                     variant='text'
@@ -387,10 +408,6 @@ function LaptopForm(props) {
                     startIcon={<SaveIcon />}
                 >{props.saveMessage}</Button>
             </Box>
-
-            <Alert severity="error" sx={showError && missingSerial ? {} : { display: 'none' }} >'Serial' is a required field.</Alert>
-            <Alert severity="error" sx={showError && missingDonor ? {} : { display: 'none' }} >'Donor' is a required field.</Alert>
-            <Alert severity="error" sx={showError && missingStatus ? {} : { display: 'none' }} >'Status' is a required field.</Alert>
 
         </Paper>
     );
