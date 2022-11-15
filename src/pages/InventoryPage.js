@@ -2112,7 +2112,7 @@ const InventoryPage = () => {
             if (opts.chargerIncluded.indexOf(laptop.chargerIncluded) === -1) opts.chargerIncluded.push(laptop.chargerIncluded);
         });
         setOptions(opts);
-    }, [allLaptops, options]);
+    }, [allLaptops]);
 
     useEffect(() => {
         let newList = [...allLaptops];
@@ -2199,8 +2199,56 @@ const InventoryPage = () => {
     }
 
     function exportData() {
-        // Add functionality to export filteredLaptops as a .csv file
-        console.log(`Exporting data as CSV...`)
+        const csvContent = [
+            [
+                'Serial',
+                'Manufacturer',
+                'Laptop ID',
+                'Status',
+                'Donated By',
+                'Date Donated',
+                'Model',
+                'Screen Size',
+                'CPU Type',
+                'Memory',
+                'Disk Size',
+                'Condition',
+                'Charger Type',
+                'Charger Included',
+                'Trade-In Value',
+                'List Price',
+                'Sold Price',
+                'Notes',
+            ],
+            ...filteredLaptops.map(laptop => [
+                `"${laptop.serial?.replace(`"`, `""`)}"`,
+                `"${laptop.manufacturer?.replace(`"`, `""`)}"`,
+                `"${laptop.laptopId?.replace(`"`, `""`)}"`,
+                `"${laptop.status?.replace(`"`, `""`)}"`,
+                `"${laptop.donatedBy?.replace(`"`, `""`)}"`,
+                `"${laptop.dateDonated?.replace(`"`, `""`)}"`,
+                `"${laptop.model?.replace(`"`, `""`)}"`,
+                `"${laptop.screenSize?.replace(`"`, `""`)}"`,
+                `"${laptop.cpuType?.replace(`"`, `""`)}"`,
+                `"${laptop.memory?.replace(`"`, `""`)}"`,
+                `"${laptop.diskSize?.replace(`"`, `""`)}"`,
+                `"${laptop.condition?.replace(`"`, `""`)}"`,
+                `"${laptop.chargerType?.replace(`"`, `""`)}"`,
+                `"${laptop.chargerIncluded}"`,
+                `"${laptop.value?.replace(`"`, `""`)}"`,
+                `"${laptop.listPrice?.replace(`"`, `""`)}"`,
+                `"${laptop.soldPrice?.replace(`"`, `""`)}"`,
+                `"${laptop.notes?.replace(`"`, `""`)}"`,
+            ])
+        ]
+            .map(item => item.join(","))
+            .join("\n");
+
+        let downloadLink = document.createElement('a');
+        downloadLink.href = 'data:text/csv;charset=utf-8,' + encodeURI(csvContent);
+        downloadLink.target = '_blank';
+        downloadLink.download = 'filtered_laptop_inventory.csv';
+        downloadLink.click();
     }
 
     return <>
