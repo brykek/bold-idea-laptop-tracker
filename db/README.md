@@ -11,7 +11,9 @@ Before you get started, make sure you have the following installed:
 ## Installation Steps
 1. Open the MySQL Command Line Client and log in to your MySQL server using your username and password.
 
-    `mysql -u [username] -p`
+    `mysql.server start`
+    
+    `mysql -h localhost -u root -p`
 
 2. Create a new database named "LaptopTracker" using the following command:
 
