@@ -12,7 +12,7 @@ app.use(cors);
 const con = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: '123456789',
+    password: '[redacted]',
     database: 'LaptopTracker'
 });
 
