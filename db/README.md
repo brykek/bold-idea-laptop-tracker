@@ -9,7 +9,7 @@ Before you get started, make sure you have the following installed:
 - MySQL Command Line Client
 
 ## Installation Steps
-1. Open the MySQL Command Line Client and log in to your MySQL server using your username and password.
+1. Open the MySQL Command Line Client and log in to your MySQL server using your username and password. Note: root user pass needs to match pass in backend `index.js`
 
     `mysql.server start`
 
