@@ -80,15 +80,15 @@ function FilterFields(props) {
                 </FormControl>
 
                 <FormControl variant='outlined' size='small' >
-                    <InputLabel id='screenSize-select-label'>Screen Size</InputLabel>
+                    <InputLabel id='screen_size-select-label'>Screen Size</InputLabel>
                     <Select
-                        labelId='screenSize-select-label'
-                        id='screenSize-select'
-                        value={props.filters.screenSize}
+                        labelId='screen_size-select-label'
+                        id='screen_size-select'
+                        value={props.filters.screen_size}
                         label='Screen Size'
-                        onChange={(event) => handleChange(event.target.value, 'screenSize')}
+                        onChange={(event) => handleChange(event.target.value, 'screen_size')}
                     >
-                        {props.options?.screenSize.map(option => (
+                        {props.options?.screen_size.map(option => (
                             <MenuItem value={option}>{option}</MenuItem>
                         ))}
                     </Select>
@@ -110,15 +110,15 @@ function FilterFields(props) {
                 </FormControl>
 
                 <FormControl variant='outlined' size='small' >
-                    <InputLabel id='diskSize-select-label'>Disk Size</InputLabel>
+                    <InputLabel id='disk_size-select-label'>Disk Size</InputLabel>
                     <Select
-                        labelId='diskSize-select-label'
-                        id='diskSize-select'
-                        value={props.filters.diskSize}
+                        labelId='disk_size-select-label'
+                        id='disk_size-select'
+                        value={props.filters.disk_size}
                         label='Disk Size'
-                        onChange={(event) => handleChange(event.target.value, 'diskSize')}
+                        onChange={(event) => handleChange(event.target.value, 'disk_size')}
                     >
-                        {props.options?.diskSize.map(option => (
+                        {props.options?.disk_size.map(option => (
                             <MenuItem value={option}>{option}</MenuItem>
                         ))}
                     </Select>
@@ -129,26 +129,26 @@ function FilterFields(props) {
                     <Select
                         labelId='condition-select-label'
                         id='condition-select'
-                        value={props.filters.condition}
+                        value={props.filters.laptop_condition}
                         label='Condition'
                         onChange={(event) => handleChange(event.target.value, 'condition')}
                     >
-                        {props.options?.condition.map(option => (
+                        {props.options?.laptop_condition.map(option => (
                             <MenuItem value={option}>{option}</MenuItem>
                         ))}
                     </Select>
                 </FormControl>
 
                 <FormControl variant='outlined' size='small' >
-                    <InputLabel id='chargerIncluded-select-label'>Charger Included</InputLabel>
+                    <InputLabel id='charger_included-select-label'>Charger Included</InputLabel>
                     <Select
-                        labelId='chargerIncluded-select-label'
-                        id='chargerIncluded-select'
-                        value={props.filters.chargerIncluded}
+                        labelId='charger_included-select-label'
+                        id='charger_included-select'
+                        value={props.filters.charger_included}
                         label='Charger Included'
-                        onChange={(event) => handleChange(event.target.value, 'chargerIncluded')}
+                        onChange={(event) => handleChange(event.target.value, 'charger_included')}
                     >
-                        {props.options?.chargerIncluded.map(option => (
+                        {props.options?.charger_included.map(option => (
                             <MenuItem value={option === true ? 'Yes' : 'No'}>{option === true ? 'Yes' : 'No'}</MenuItem>
                         ))}
                     </Select>

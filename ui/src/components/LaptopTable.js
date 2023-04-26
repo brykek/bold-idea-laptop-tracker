@@ -47,7 +47,7 @@ function EnhancedTableHead(props) {
   const headCells = [
     { id: 'status', label: 'Status' },
     { id: 'model', label: 'Model' },
-    { id: 'screenSize', label: 'Screen Size' },
+    { id: 'screen_size', label: 'Screen Size' },
     { id: 'donatedBy', label: 'Donated By' },
     { id: 'value', label: 'Value' },
   ];
@@ -115,7 +115,7 @@ function LaptopTable(props) {
                       <TableCell>{laptop.serial}</TableCell>
                       <TableCell>{laptop.status}</TableCell>
                       <TableCell>{laptop.model}</TableCell>
-                      <TableCell>{laptop.screenSize}</TableCell>
+                      <TableCell>{laptop.screen_size}</TableCell>
                       <TableCell>{laptop.donatedBy}</TableCell>
                       <TableCell>${laptop.value}</TableCell>
                       <TableCell>

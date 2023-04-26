@@ -6,27 +6,27 @@ USE LaptopTracker;
 
 -- Create the laptops table
 CREATE TABLE laptops (
-  serialNumber VARCHAR(255) NOT NULL,
+  serial_number VARCHAR(255) NOT NULL,
   manufacturer VARCHAR(255),
-  laptopId VARCHAR(255),
+  laptop_id VARCHAR(255),
   status VARCHAR(255),
   donor VARCHAR(255),
-  dateDonated DATE,
+  date_donated DATE,
   model VARCHAR(255),
-  screenSize INT,
-  cpuType VARCHAR(255),
+  screen_size INT,
+  cpu_type VARCHAR(255),
   memory INT,
-  diskSize INT,
-  condition VARCHAR(255),
-  chargerType VARCHAR(255),
-  chargerIncluded TINYINT,
-  tradeInValue DECIMAL(10,2),
-  listPrice DECIMAL(10,2),
-  soldPrice DECIMAL(10,2),
+  disk_size INT,
+  laptop_condition VARCHAR(255),
+  charger_type VARCHAR(255),
+  charger_included TINYINT,
+  trade_in_value DECIMAL(10,2),
+  list_price DECIMAL(10,2),
+  sold_price DECIMAL(10,2),
   notes VARCHAR(255),
-  createdDate DATE,
-  lastEdited DATE,
-  archivedDate DATE
+  created_date DATE,
+  last_edited DATE,
+  archived_date DATE
 );
 
 -- Create the users table

@@ -53,13 +53,13 @@ function FilterChips(props) {
                     onDelete={() => handleDelete('donatedBy')}
                 />
             }
-            {props.filters.screenSize &&
+            {props.filters.screen_size &&
                 <Chip
-                    label={<span>Screen Size: <strong>{props.filters.screenSize}</strong></span>}
+                    label={<span>Screen Size: <strong>{props.filters.screen_size}</strong></span>}
                     variant='contained'
                     color='primary'
                     sx={{ mr: 1, mb: 1, width: 'fit-content' }}
-                    onDelete={() => handleDelete('screenSize')}
+                    onDelete={() => handleDelete('screen_size')}
                 />
             }
             {props.filters.memory &&
@@ -71,31 +71,31 @@ function FilterChips(props) {
                     onDelete={() => handleDelete('memory')}
                 />
             }
-            {props.filters.diskSize &&
+            {props.filters.disk_size &&
                 <Chip
-                    label={<span>Disk Size: <strong>{props.filters.diskSize}</strong></span>}
+                    label={<span>Disk Size: <strong>{props.filters.disk_size}</strong></span>}
                     variant='contained'
                     color='primary'
                     sx={{ mr: 1, mb: 1, width: 'fit-content' }}
-                    onDelete={() => handleDelete('diskSize')}
+                    onDelete={() => handleDelete('disk_size')}
                 />
             }
-            {props.filters.condition &&
+            {props.filters.laptop_condition &&
                 <Chip
-                    label={<span>Condition: <strong>{props.filters.condition}</strong></span>}
+                    label={<span>Condition: <strong>{props.filters.laptop_condition}</strong></span>}
                     variant='contained'
                     color='primary'
                     sx={{ mr: 1, mb: 1, width: 'fit-content' }}
                     onDelete={() => handleDelete('condition')}
                 />
             }
-            {props.filters.chargerIncluded &&
+            {props.filters.charger_included &&
                 <Chip
-                    label={<span>Charger Included: <strong>{props.filters.chargerIncluded}</strong></span>}
+                    label={<span>Charger Included: <strong>{props.filters.charger_included}</strong></span>}
                     variant='contained'
                     color='primary'
                     sx={{ mr: 1, mb: 1, width: 'fit-content' }}
-                    onDelete={() => handleDelete('chargerIncluded')}
+                    onDelete={() => handleDelete('charger_included')}
                 />
             }
         </Box>

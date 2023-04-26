@@ -2,17 +2,19 @@ const express = require("express");
 const app = express();
 const mysql = require("mysql");
 const bodyParser = require('body-parser');
+
+// Add cors
 const cors = require('cors');
-const { dblClick } = require("@testing-library/user-event/dist/click");
+app.use(cors());
+app.options('*', cors());  // enable pre-flight
 
 app.use(bodyParser.json())
 app.use(express.json());
-app.use(cors);
 
 const con = mysql.createConnection({
-    host: 'localhost',
+    host: '127.0.0.1',
     user: 'root',
-    password: '[redacted]',
+    password: 'Pariveda1!',
     database: 'LaptopTracker'
 });
 
@@ -20,7 +22,9 @@ con.connect((err) => {
     if (err) {
         console.log(err);
     } 
-    console.log("MySQL db connected");
+    else {
+        console.log("MySQL db connected");
+    }
 })
 
 app.post('/signup', (req, res) => {
@@ -61,27 +65,27 @@ app.get('/inventory', (req, res) => {
 // Create laptop
 app.post('/add', (req, res) => {
     let data = {
-    serialNumber: req.body.serialNumber,
-    manufacturer: req.body.manufacturer,
-    laptopId: req.body.laptopId,
-    status: req.body.status,
-    donor: req.body.donor,
-    dateDonated: req.body.dateDonated,
-    model: req.body.model,
-    screenSize: req.body.screenSize,
-    cpuType: req.body.cpuType,
-    memory: req.body.memory,
-    diskSize: req.body.diskSize,
-    condition: req.body.condition,
-    chargerType: req.body.chargerType,
-    chargerIncluded: req.body.chargerIncluded,
-    tradeInValue: req.body.tradeInValue,
-    listPrice: req.body.listPrice,
-    soldPrice: req.body.soldPrice,
-    notes: req.body.notes,
-    createdDate:  req.body.createdDate,
-    lastEdited: req.body.createdDate,
-    archivedDate: null
+        serial_number: req.body.serial_number,
+        manufacturer: req.body.manufacturer,
+        laptop_id: req.body.laptop_id,
+        status: req.body.status,
+        donor: req.body.donor,
+        date_donated: req.body.date_donated,
+        model: req.body.model,
+        screen_size: req.body.screen_size,
+        cpu_type: req.body.cpu_type,
+        memory: req.body.memory,
+        disk_size: req.body.disk_size,
+        laptop_condition: req.body.laptop_condition,
+        charger_type: req.body.charger_type,
+        charger_included: req.body.charger_included,
+        trade_in_value: req.body.trade_in_value,
+        list_price: req.body.list_price,
+        sold_price: req.body.sold_price,
+        notes: req.body.notes,
+        created_date:  req.body.created_date,
+        last_edited: req.body.created_date,
+        archived_date: null
     };
     
     let sqlQuery = "INSERT INTO laptops SET ?";
@@ -93,27 +97,27 @@ app.post('/add', (req, res) => {
 });
 
 // Updates laptop
-app.put('/edit/apple/:serialnumber', (req, res) => {
-    let sqlQuery = "UPDATE laptops SET serial_number='"+req.body.serialNumber+
+app.put('/edit/laptop/:serial_number', (req, res) => {
+    let sqlQuery = "UPDATE laptops SET serial_number='"+req.body.serial_number+
     "', manufacturer="+req.body.manufacturer+
-    "', laptop_id="+req.body.laptopId+
+    "', laptop_id="+req.body.laptop_id+
     "', status="+req.body.status+
     "', donor="+req.body.donor+
-    "', date_donated="+req.body.dateDonated+
+    "', date_donated="+req.body.date_donated+
     "', model="+req.body.model+
-    "', screen_size="+req.body.screenSize+
-    "', cpu_type="+req.body.cpuType+
+    "', screen_size="+req.body.screen_size+
+    "', cpu_type="+req.body.cpu_type+
     "', memory="+req.body.memory+
-    "', disk_size="+req.body.diskSize+
-    "', condition="+req.body.condition+
-    "', charger_type="+req.body.chargerType+
-    "', charger_included="+req.body.chargerIncluded+
-    "', trade_in_value="+req.body.tradeInValue+
-    "', list_price="+req.body.listPrice+
-    "', sold_price="+req.body.soldPrice+
+    "', disk_size="+req.body.disk_size+
+    "', laptop_condition="+req.body.laptop_condition+
+    "', charger_type="+req.body.charger_type+
+    "', charger_included="+req.body.charger_included+
+    "', trade_in_value="+req.body.trade_in_value+
+    "', list_price="+req.body.list_price+
+    "', sold_price="+req.body.sold_price+
     "', notes="+req.body.notes+
-    "', last_edited="+req.body.lastEdited+
-    "', archived_date="+req.body.archivedDate;
+    "', last_edited="+req.body.last_edited+
+    "', archived_date="+req.body.archived_date;
 
     let query = con.query(sqlQuery, (err, results) => {
         if(err) throw err;
