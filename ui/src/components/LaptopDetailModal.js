@@ -32,8 +32,8 @@ function LaptopDetailModal(props) {
                         <Typography color={props.laptop?.serial ? 'primary.dark' : 'default.light'} >
                             Serial: <strong>{props.laptop?.serial}</strong>
                         </Typography>
-                        <Typography color={props.laptop?.laptopId ? 'primary.dark' : 'default.light'} >
-                            Laptop ID: <strong>{props.laptop?.laptopId}</strong>
+                        <Typography color={props.laptop?.laptop_id ? 'primary.dark' : 'default.light'} >
+                            Laptop ID: <strong>{props.laptop?.laptop_id}</strong>
                         </Typography>
                         <Typography color={props.laptop?.manufacturer ? 'primary.dark' : 'default.light'} >
                             Manufacturer: <Chip color='primary' label={props.laptop?.manufacturer} />
@@ -48,8 +48,8 @@ function LaptopDetailModal(props) {
                         <Typography color={props.laptop?.donatedBy ? 'primary.dark' : 'default.light'} >
                             Donated By: <Chip color='primary' label={props.laptop?.donatedBy} />
                         </Typography>
-                        <Typography color={props.laptop?.dateDonated ? 'primary.dark' : 'default.light'} >
-                            Date Donated: <strong>{props.laptop?.dateDonated}</strong>
+                        <Typography color={props.laptop?.date_donated ? 'primary.dark' : 'default.light'} >
+                            Date Donated: <strong>{props.laptop?.date_donated}</strong>
                         </Typography>
                     </Box>
 
@@ -58,25 +58,25 @@ function LaptopDetailModal(props) {
                         <Typography color={props.laptop?.model ? 'primary.dark' : 'default.light'} >
                             Model: <strong>{props.laptop?.model}</strong>
                         </Typography>
-                        <Typography color={props.laptop?.screenSize ? 'primary.dark' : 'default.light'} >
-                            Screen Size: <Chip color='primary' label={props.laptop?.screenSize} />
+                        <Typography color={props.laptop?.screen_size ? 'primary.dark' : 'default.light'} >
+                            Screen Size: <Chip color='primary' label={props.laptop?.screen_size} />
                         </Typography>
-                        <Typography color={props.laptop?.cpuType ? 'primary.dark' : 'default.light'} >
-                            CPU Type: <strong>{props.laptop?.cpuType}</strong>
+                        <Typography color={props.laptop?.cpu_type ? 'primary.dark' : 'default.light'} >
+                            CPU Type: <strong>{props.laptop?.cpu_type}</strong>
                         </Typography>
                         <Typography color={props.laptop?.memory ? 'primary.dark' : 'default.light'} >
                             Memory: <Chip color='primary' label={props.laptop?.memory} />
                         </Typography>
-                        <Typography color={props.laptop?.diskSize ? 'primary.dark' : 'default.light'} >
-                            Disk Size: <Chip color='primary' label={props.laptop?.diskSize} />
+                        <Typography color={props.laptop?.disk_size ? 'primary.dark' : 'default.light'} >
+                            Disk Size: <Chip color='primary' label={props.laptop?.disk_size} />
                         </Typography>
-                        <Typography color={props.laptop?.condition ? 'primary.dark' : 'default.light'} >
-                            Condition: <Chip color='primary' label={props.laptop?.condition} />
+                        <Typography color={props.laptop?.laptop_condition ? 'primary.dark' : 'default.light'} >
+                            Condition: <Chip color='primary' label={props.laptop?.laptop_condition} />
                         </Typography>
-                        <Typography color={props.laptop?.chargerType ? 'primary.dark' : 'default.light'} >
-                            Charger Type: <strong>{props.laptop?.chargerType}</strong>
+                        <Typography color={props.laptop?.charger_type ? 'primary.dark' : 'default.light'} >
+                            Charger Type: <strong>{props.laptop?.charger_type}</strong>
                         </Typography>
-                        <Chip color='primary' sx={{ width: 'fit-content' }} label={props.laptop?.chargerIncluded ? 'Has Charger' : "Does Not Have Charger"} />
+                        <Chip color='primary' sx={{ width: 'fit-content' }} label={props.laptop?.charger_included ? 'Has Charger' : "Does Not Have Charger"} />
                     </Box>
 
                     <Typography variant='h6' sx={{ color: 'secondary.dark', fontWeight: 'bold', }} gutterBottom >Value & Sale</Typography>
@@ -84,11 +84,11 @@ function LaptopDetailModal(props) {
                         <Typography color={props.laptop?.value ? 'primary.dark' : 'default.light'} >
                             Trade In Value: <strong>${props.laptop?.value}</strong>
                         </Typography>
-                        <Typography color={props.laptop?.listPrice ? 'primary.dark' : 'default.light'} >
-                            List Price: <strong>${props.laptop?.listPrice}</strong>
+                        <Typography color={props.laptop?.list_price ? 'primary.dark' : 'default.light'} >
+                            List Price: <strong>${props.laptop?.list_price}</strong>
                         </Typography>
-                        <Typography color={props.laptop?.soldPrice ? 'primary.dark' : 'default.light'} >
-                            Sold Price: <strong>${props.laptop?.soldPrice}</strong>
+                        <Typography color={props.laptop?.sold_price ? 'primary.dark' : 'default.light'} >
+                            Sold Price: <strong>${props.laptop?.sold_price}</strong>
                         </Typography>
                     </Box>
 

@@ -33,21 +33,21 @@ function LaptopForm(props) {
     const [formData, setFormData] = useState({
         serial: '',
         manufacturer: '',
-        laptopId: '',
+        laptop_id: '',
         status: 'UNPROCESSED',
         donatedBy: '',
-        dateDonated: '',
+        date_donated: '',
         model: '',
-        screenSize: '',
-        cpuType: '',
+        screen_size: '',
+        cpu_type: '',
         memory: '',
-        diskSize: '',
+        disk_size: '',
         condition: '',
-        chargerType: '',
-        chargerIncluded: false,
+        charger_type: '',
+        charger_included: false,
         value: '',
-        listPrice: '',
-        soldPrice: '',
+        list_price: '',
+        sold_price: '',
         notes: '',
     });
     const [missingSerial, setMissingSerial] = useState(false);
@@ -59,21 +59,21 @@ function LaptopForm(props) {
         setFormData({
             serial: props.laptopData?.serial,
             manufacturer: props.laptopData?.manufacturer,
-            laptopId: props.laptopData?.laptopId,
+            laptop_id: props.laptopData?.laptop_id,
             status: props.laptopData?.status,
             donatedBy: props.laptopData?.donatedBy,
-            dateDonated: props.laptopData?.dateDonated,
+            date_donated: props.laptopData?.date_donated,
             model: props.laptopData?.model,
-            screenSize: props.laptopData?.screenSize,
-            cpuType: props.laptopData?.cpuType,
+            screen_size: props.laptopData?.screen_size,
+            cpu_type: props.laptopData?.cpu_type,
             memory: props.laptopData?.memory,
-            diskSize: props.laptopData?.diskSize,
-            condition: props.laptopData?.condition,
-            chargerType: props.laptopData?.chargerType,
-            chargerIncluded: props.laptopData?.chargerIncluded,
+            disk_size: props.laptopData?.disk_size,
+            condition: props.laptopData?.laptop_condition,
+            charger_type: props.laptopData?.charger_type,
+            charger_included: props.laptopData?.charger_included,
             value: props.laptopData?.value,
-            listPrice: props.laptopData?.listPrice,
-            soldPrice: props.laptopData?.soldPrice,
+            list_price: props.laptopData?.list_price,
+            sold_price: props.laptopData?.sold_price,
             notes: props.laptopData?.notes,
         });
     }, [props.laptopData]);
@@ -82,9 +82,9 @@ function LaptopForm(props) {
         manufacturer: ['Apple', 'PC'],
         status: ['UNPROCESSED', 'DONATED', 'READY', 'INTERNAL', 'RECYCLE', 'REINSTALL', 'SOLD'],
         donatedBy: ['BetterUP', 'OrderMyGear'],
-        screenSize: ['12"', '13"', '15"', '16"'],
+        screen_size: ['12"', '13"', '15"', '16"'],
         memory: ['8 GB', '16 GB', '32 GB'],
-        diskSize: ['128 GB', '256 GB', '512 GB', '1024 GB', '1 TB'],
+        disk_size: ['128 GB', '256 GB', '512 GB', '1024 GB', '1 TB'],
         condition: ['A', 'B', 'C'],
     };
 
@@ -100,9 +100,9 @@ function LaptopForm(props) {
         setFormData(updatedData);
     }
 
-    function populateLaptopId() {
-        if (formData.serial.length === 12 && formData.laptopId === '') {
-            setFormData({ ...formData, laptopId: formData.serial.substring(4, 8) });
+    function populatelaptop_id() {
+        if (formData.serial.length === 12 && formData.laptop_id === '') {
+            setFormData({ ...formData, laptop_id: formData.serial.substring(4, 8) });
         }
     }
 
@@ -141,16 +141,16 @@ function LaptopForm(props) {
                     error={missingSerial}
                     size='small'
                     onChange={(event) => handleInputChange(event.target.value, 'serial')}
-                    onBlur={populateLaptopId}
+                    onBlur={populatelaptop_id}
                 />
 
                 <TextField
                     id='laptop-id-field'
-                    value={formData.laptopId}
+                    value={formData.laptop_id}
                     label='Laptop ID'
                     size='small'
-                    onChange={(event) => handleInputChange(event.target.value, 'laptopId')}
-                    onBlur={(event) => handleInputChange(event.target.value, 'laptopId')}
+                    onChange={(event) => handleInputChange(event.target.value, 'laptop_id')}
+                    onBlur={(event) => handleInputChange(event.target.value, 'laptop_id')}
                 />
 
                 {formData.manufacturer === 'Apple' && formData.serial !== '' ?
@@ -220,10 +220,10 @@ function LaptopForm(props) {
                     id='date'
                     label='Date Donated'
                     type='date'
-                    value={formData.dateDonated}
+                    value={formData.date_donated}
                     InputLabelProps={{ shrink: true }}
                     size='small'
-                    onChange={(event) => handleInputChange(event.target.value, 'dateDonated')}
+                    onChange={(event) => handleInputChange(event.target.value, 'date_donated')}
                 />
 
             </Box>
@@ -244,11 +244,11 @@ function LaptopForm(props) {
                         required
                         labelId='screen-size-select-label'
                         id='screen-size-select'
-                        value={formData.screenSize}
+                        value={formData.screen_size}
                         label='Screen Size'
-                        onChange={(event) => handleInputChange(event.target.value, 'screenSize')}
+                        onChange={(event) => handleInputChange(event.target.value, 'screen_size')}
                     >
-                        {options.screenSize.map(option => (
+                        {options.screen_size.map(option => (
                             <MenuItem value={option}>{option}</MenuItem>
                         ))}
                     </Select>
@@ -256,10 +256,10 @@ function LaptopForm(props) {
 
                 <TextField
                     id='cpu-type-field'
-                    value={formData.cpuType}
+                    value={formData.cpu_type}
                     label='CPU Type'
                     size='small'
-                    onChange={(event) => handleInputChange(event.target.value, 'cpuType')}
+                    onChange={(event) => handleInputChange(event.target.value, 'cpu_type')}
                 />
 
                 <FormControl size='small' >
@@ -284,11 +284,11 @@ function LaptopForm(props) {
                         required
                         labelId='disk-size-select-label'
                         id='disk-size-select'
-                        value={formData.diskSize}
+                        value={formData.disk_size}
                         label='Disk Size'
-                        onChange={(event) => handleInputChange(event.target.value, 'diskSize')}
+                        onChange={(event) => handleInputChange(event.target.value, 'disk_size')}
                     >
-                        {options.diskSize.map(option => (
+                        {options.disk_size.map(option => (
                             <MenuItem value={option}>{option}</MenuItem>
                         ))}
                     </Select>
@@ -300,11 +300,11 @@ function LaptopForm(props) {
                         required
                         labelId='condition-select-label'
                         id='condition-select'
-                        value={formData.condition}
+                        value={formData.laptop_condition}
                         label='Condition'
                         onChange={(event) => handleInputChange(event.target.value, 'condition')}
                     >
-                        {options.condition.map(option => (
+                        {options.laptop_condition.map(option => (
                             <MenuItem value={option}>{option}</MenuItem>
                         ))}
                     </Select>
@@ -312,18 +312,18 @@ function LaptopForm(props) {
 
                 <TextField
                     id='charger-type-field'
-                    value={formData.chargerType}
+                    value={formData.charger_type}
                     label='Charger Type'
                     size='small'
-                    onChange={(event) => handleInputChange(event.target.value, 'chargerType')}
+                    onChange={(event) => handleInputChange(event.target.value, 'charger_type')}
                 />
 
                 <FormControlLabel label='Charger Included' control={
                     <Switch
-                        checked={formData.chargerIncluded}
+                        checked={formData.charger_included}
                         size='small'
                         color='secondary'
-                        onChange={(event) => handleInputChange(event.target.checked, 'chargerIncluded')}
+                        onChange={(event) => handleInputChange(event.target.checked, 'charger_included')}
                     />
                 } />
 
@@ -352,19 +352,19 @@ function LaptopForm(props) {
 
                 <TextField
                     id='list-price-field'
-                    value={formData.listPrice}
+                    value={formData.list_price}
                     label='List Price'
                     size='small'
-                    onChange={(event) => handleInputChange(event.target.value, 'listPrice')}
+                    onChange={(event) => handleInputChange(event.target.value, 'list_price')}
                     InputProps={{ startAdornment: <InputAdornment position='start'>$</InputAdornment> }}
                 />
 
                 <TextField
                     id='sold-price-field'
-                    value={formData.soldPrice}
+                    value={formData.sold_price}
                     label='Sold Price'
                     size='small'
-                    onChange={(event) => handleInputChange(event.target.value, 'soldPrice')}
+                    onChange={(event) => handleInputChange(event.target.value, 'sold_price')}
                     InputProps={{ startAdornment: <InputAdornment position='start'>$</InputAdornment> }}
                 />
 

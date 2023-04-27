@@ -40,9 +40,9 @@ const dummyOptionData = {
     manufacturer: ['Apple', 'PC'],
     status: ['UNPROCESSED', 'DONATED', 'READY', 'INTERNAL', 'RECYCLE', 'REINSTALL', 'SOLD'],
     donatedBy: ['BetterUP', 'OrderMyGear'],
-    screenSize: ['12"', '13"', '15"', '16"'],
+    screen_size: ['12"', '13"', '15"', '16"'],
     memory: ['8 GB', '16 GB', '32 GB'],
-    diskSize: ['128 GB', '256 GB', '512 GB', '1024 GB', '1 TB'],
+    disk_size: ['128 GB', '256 GB', '512 GB', '1024 GB', '1 TB'],
     condition: ['A', 'B', 'C'],
 };
 
@@ -186,15 +186,15 @@ function SettingsPage() {
                 />
                 <DropdownManager
                     header='Disk Size'
-                    id='diskSize'
-                    options={options?.diskSize}
+                    id='disk_size'
+                    options={options?.disk_size}
                     addOption={addOption}
                     removeOption={removeOption}
                 />
                 <DropdownManager
                     header='Screen Size'
-                    id='screenSize'
-                    options={options?.screenSize}
+                    id='screen_size'
+                    options={options?.screen_size}
                     addOption={addOption}
                     removeOption={removeOption}
                 />
@@ -208,7 +208,7 @@ function SettingsPage() {
                 <DropdownManager
                     header='Condition'
                     id='condition'
-                    options={options?.condition}
+                    options={options?.laptop_condition}
                     addOption={addOption}
                     removeOption={removeOption}
                 />
