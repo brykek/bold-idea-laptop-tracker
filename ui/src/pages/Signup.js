@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import Axios from 'axios';
 import {
   Container,
   Paper,
@@ -8,13 +7,14 @@ import {
   TextField,
   Button,
 } from '@mui/material';
+import axios from 'axios';
 
 function Signup() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
     const register = () => {
-        Axios.post('http://localhost:3001/signup', {
+        axios.post('http://localhost:3001/signup', {
             username:username,
             password:password
         }).then((response) => {

@@ -112,12 +112,12 @@ function LaptopTable(props) {
 
                   return (
                     <TableRow hover tabIndex={-1} key={laptop.name} >
-                      <TableCell>{laptop.serial}</TableCell>
+                      <TableCell>{laptop.serial_number}</TableCell>
                       <TableCell>{laptop.status}</TableCell>
                       <TableCell>{laptop.model}</TableCell>
                       <TableCell>{laptop.screen_size}</TableCell>
-                      <TableCell>{laptop.donatedBy}</TableCell>
-                      <TableCell>${laptop.value}</TableCell>
+                      <TableCell>{laptop.donor}</TableCell>
+                      <TableCell>{laptop.trade_in_value?'$'+laptop.trade_in_value:''}</TableCell>
                       <TableCell>
                         <IconButton
                           size='small'
