@@ -1,6 +1,4 @@
 import React, { useState } from 'react';
-import Axios from 'axios';
-
 import {
   Container,
   Paper,
@@ -9,25 +7,23 @@ import {
   TextField,
   Button,
 } from '@mui/material';
+import axios from 'axios';
 
 
-function Login() {
-
+function Login(e) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
   const [loginStatus, setLoginStatus] = useState('');
 
   const login = () => {
-      Axios.post('http://localhost:3001/login', {
+      axios.post('http://localhost:3001/login', {
           username:username,
           password:password
       }).then((response) => {
-        if (response.data.message) {
-          setLoginStatus(response.data.message)
-        } else {
           setLoginStatus(response.data[0].username)
-        }
+      }).catch((err)=>{
+        setLoginStatus(err.response.data)
       });
   }
 
@@ -65,7 +61,6 @@ function Login() {
           <Button
             fullWidth
             variant='contained'
-            type='submit'
             color='secondary'
             sx={{ mt: 2 }}
             onClick={login}

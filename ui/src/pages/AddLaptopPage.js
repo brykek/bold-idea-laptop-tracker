@@ -1,27 +1,34 @@
 import React from 'react';
 import LaptopForm from '../components/LaptopForm';
+import { useNavigate } from "react-router-dom";
 import {
     Container,
     Typography,
 } from '@mui/material';
+import axios from 'axios';
 
 function AddLaptopPage(props) {
+    const navigate = useNavigate()
     function createLaptop(laptopData) {
         const today = new Date().toISOString().slice(0, 10);
-        laptopData.created_date = today;
+        let laptopObj = {}
+        for (const [key, value] of Object.entries(laptopData)) {
+            laptopObj[key] = value!==''&& value !==null?value:undefined
+          }
+        laptopObj.created_date = today;
         console.log('Creating new laptop...');
-        console.log('Laptop Data:', laptopData)
+        console.log('Laptop Data:', laptopObj)
         
-        // axios.post('http://localhost:3000/add', laptopData).then(res => {
-        //     if (res.status === 200)
-        //         alert('Laptop added successfully!');
-        // })
-        // .catch(err => alert("Something went wrong."))
+        axios.post('http://localhost:3001/add', laptopObj).then(res => {
+                alert('Laptop added successfully!');
+        })
+        .catch(err => alert("Something went wrong."))
     }
 
     function discardEntry() {
         console.log('Discard laptop.')
-        // Route back to View Inventory page
+        navigate('/inventory')
+        
     }
 
     return (

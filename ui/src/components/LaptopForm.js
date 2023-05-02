@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState,useEffect } from 'react';
 
 // MATERIAL-UI COMPONENTS
 import {
@@ -31,21 +31,21 @@ import {
 
 function LaptopForm(props) {
     const [formData, setFormData] = useState({
-        serial: '',
+        serial_number: '',
         manufacturer: '',
         laptop_id: '',
         status: 'UNPROCESSED',
-        donatedBy: '',
+        donor: '',
         date_donated: '',
         model: '',
         screen_size: '',
         cpu_type: '',
         memory: '',
         disk_size: '',
-        condition: '',
+        laptop_condition: '',
         charger_type: '',
         charger_included: false,
-        value: '',
+        trade_in_value: '',
         list_price: '',
         sold_price: '',
         notes: '',
@@ -56,22 +56,23 @@ function LaptopForm(props) {
     const [showError, setShowError] = useState(false);
 
     useEffect(() => {
-        setFormData({
-            serial: props.laptopData?.serial,
+        if(!props.laptopData){return}
+      setFormData({
+            serial_number: props.laptopData?.serial_number,
             manufacturer: props.laptopData?.manufacturer,
             laptop_id: props.laptopData?.laptop_id,
             status: props.laptopData?.status,
-            donatedBy: props.laptopData?.donatedBy,
+            donor: props.laptopData?.donor,
             date_donated: props.laptopData?.date_donated,
             model: props.laptopData?.model,
             screen_size: props.laptopData?.screen_size,
             cpu_type: props.laptopData?.cpu_type,
             memory: props.laptopData?.memory,
             disk_size: props.laptopData?.disk_size,
-            condition: props.laptopData?.laptop_condition,
+            laptop_condition: props.laptopData?.laptop_condition,
             charger_type: props.laptopData?.charger_type,
             charger_included: props.laptopData?.charger_included,
-            value: props.laptopData?.value,
+            trade_in_value: props.laptopData?.trade_in_value,
             list_price: props.laptopData?.list_price,
             sold_price: props.laptopData?.sold_price,
             notes: props.laptopData?.notes,
@@ -84,13 +85,13 @@ function LaptopForm(props) {
         donatedBy: ['BetterUP', 'OrderMyGear'],
         screen_size: ['12"', '13"', '15"', '16"'],
         memory: ['8 GB', '16 GB', '32 GB'],
-        disk_size: ['128 GB', '256 GB', '512 GB', '1024 GB', '1 TB'],
-        condition: ['A', 'B', 'C'],
+        disk_size: ['128 GB', '256 GB', '512 GB', '1024 GB'],
+        laptop_condition: ['A', 'B', 'C'],
     };
 
     function checkRequiredFields() {
-        setMissingSerial(!formData.serial);
-        setMissingDonor(!formData.donatedBy);
+        setMissingSerial(!formData.serial_number);
+        setMissingDonor(!formData.donor);
         setMissingStatus(!formData.status);
     }
 
@@ -101,14 +102,15 @@ function LaptopForm(props) {
     }
 
     function populatelaptop_id() {
-        if (formData.serial.length === 12 && formData.laptop_id === '') {
-            setFormData({ ...formData, laptop_id: formData.serial.substring(4, 8) });
+        if (formData.serial_number.length === 12 && formData.laptop_id === '') {
+            setFormData({ ...formData, laptop_id: formData.serial_number.substring(4, 8) });
         }
     }
 
     function handleSaveClick() {
+        console.log('attempting')
         checkRequiredFields();
-        if (!formData.serial || !formData.donatedBy || !formData.status) {
+        if (!formData.serial_number || !formData.donor || !formData.status) {
             setShowError(true);
         } else {
             setShowError(false);
@@ -135,12 +137,12 @@ function LaptopForm(props) {
 
                 <TextField
                     id='serial-field'
-                    value={formData.serial}
+                    value={formData.serial_number}
                     label='Serial'
                     required
                     error={missingSerial}
                     size='small'
-                    onChange={(event) => handleInputChange(event.target.value, 'serial')}
+                    onChange={(event) => handleInputChange(event.target.value, 'serial_number')}
                     onBlur={populatelaptop_id}
                 />
 
@@ -153,11 +155,11 @@ function LaptopForm(props) {
                     onBlur={(event) => handleInputChange(event.target.value, 'laptop_id')}
                 />
 
-                {formData.manufacturer === 'Apple' && formData.serial !== '' ?
+                {formData.manufacturer === 'Apple' && formData.serial_number!== '' ?
                     <Button
                         variant='contained'
                         color='secondary'
-                        href={`https://everymac.com/ultimate-mac-lookup/?search_keywords=${formData.serial}`}
+                        href={`https://everymac.com/ultimate-mac-lookup/?search_keywords=${formData.serial_number}`}
                         target='_blank'
                         endIcon={<LaunchIcon />}
                         size='small'
@@ -206,9 +208,9 @@ function LaptopForm(props) {
                         required
                         labelId='donatedBy-select-label'
                         id='donatedBy-select'
-                        value={formData.donatedBy}
+                        value={formData.donor}
                         label='Donated By'
-                        onChange={(event) => handleInputChange(event.target.value, 'donatedBy')}
+                        onChange={(event) => handleInputChange(event.target.value, 'donor')}
                     >
                         {options.donatedBy.map(option => (
                             <MenuItem value={option}>{option}</MenuItem>
@@ -249,7 +251,7 @@ function LaptopForm(props) {
                         onChange={(event) => handleInputChange(event.target.value, 'screen_size')}
                     >
                         {options.screen_size.map(option => (
-                            <MenuItem value={option}>{option}</MenuItem>
+                            <MenuItem value={option.slice(0,-1)}>{option}</MenuItem>
                         ))}
                     </Select>
                 </FormControl>
@@ -273,7 +275,7 @@ function LaptopForm(props) {
                         onChange={(event) => handleInputChange(event.target.value, 'memory')}
                     >
                         {options.memory.map(option => (
-                            <MenuItem value={option}>{option}</MenuItem>
+                            <MenuItem value={option.slice(0,-3)}>{option}</MenuItem>
                         ))}
                     </Select>
                 </FormControl>
@@ -289,7 +291,7 @@ function LaptopForm(props) {
                         onChange={(event) => handleInputChange(event.target.value, 'disk_size')}
                     >
                         {options.disk_size.map(option => (
-                            <MenuItem value={option}>{option}</MenuItem>
+                            <MenuItem value={option.slice(0,-3)}>{option}</MenuItem>
                         ))}
                     </Select>
                 </FormControl>
@@ -302,7 +304,7 @@ function LaptopForm(props) {
                         id='condition-select'
                         value={formData.laptop_condition}
                         label='Condition'
-                        onChange={(event) => handleInputChange(event.target.value, 'condition')}
+                        onChange={(event) => handleInputChange(event.target.value, 'laptop_condition')}
                     >
                         {options.laptop_condition.map(option => (
                             <MenuItem value={option}>{option}</MenuItem>
@@ -343,10 +345,10 @@ function LaptopForm(props) {
             <Box sx={{ display: 'grid', gap: 2, mb: 2, gridTemplateColumns: 'repeat(4, 1fr)' }} >
                 <TextField
                     id='value-field'
-                    value={formData.value}
+                    value={formData.trade_in_value}
                     label='Trade-In Value'
                     size='small'
-                    onChange={(event) => handleInputChange(event.target.value, 'value')}
+                    onChange={(event) => handleInputChange(event.target.value, 'trade_in_value')}
                     InputProps={{ startAdornment: <InputAdornment position='start'>$</InputAdornment> }}
                 />
 

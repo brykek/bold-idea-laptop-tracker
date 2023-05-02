@@ -29,8 +29,8 @@ function LaptopDetailModal(props) {
                 <Box sx={{ overflowY: 'scroll', ml: 2, mr: 2, mb: 2 }}>
                     <Typography variant='h6' sx={{ color: 'secondary.dark', fontWeight: 'bold', }} gutterBottom >Identification</Typography>
                     <Box sx={{ display: 'grid', gap: 1, mb: 1, gridTemplateColumns: 'repeat(3, 1fr)' }} >
-                        <Typography color={props.laptop?.serial ? 'primary.dark' : 'default.light'} >
-                            Serial: <strong>{props.laptop?.serial}</strong>
+                        <Typography color={props.laptop?.serial_number ? 'primary.dark' : 'default.light'} >
+                            Serial: <strong>{props.laptop?.serial_number}</strong>
                         </Typography>
                         <Typography color={props.laptop?.laptop_id ? 'primary.dark' : 'default.light'} >
                             Laptop ID: <strong>{props.laptop?.laptop_id}</strong>
@@ -45,8 +45,8 @@ function LaptopDetailModal(props) {
                         <Typography color={props.laptop?.status ? 'primary.dark' : 'default.light'} >
                             Status: <Chip color='primary' label={props.laptop?.status} />
                         </Typography>
-                        <Typography color={props.laptop?.donatedBy ? 'primary.dark' : 'default.light'} >
-                            Donated By: <Chip color='primary' label={props.laptop?.donatedBy} />
+                        <Typography color={props.laptop?.donor ? 'primary.dark' : 'default.light'} >
+                            Donated By: <Chip color='primary' label={props.laptop?.donor} />
                         </Typography>
                         <Typography color={props.laptop?.date_donated ? 'primary.dark' : 'default.light'} >
                             Date Donated: <strong>{props.laptop?.date_donated}</strong>
@@ -81,8 +81,8 @@ function LaptopDetailModal(props) {
 
                     <Typography variant='h6' sx={{ color: 'secondary.dark', fontWeight: 'bold', }} gutterBottom >Value & Sale</Typography>
                     <Box sx={{ display: 'grid', gap: 1, mb: 1, gridTemplateColumns: 'repeat(3, 1fr)' }} >
-                        <Typography color={props.laptop?.value ? 'primary.dark' : 'default.light'} >
-                            Trade In Value: <strong>${props.laptop?.value}</strong>
+                        <Typography color={props.laptop?.trade_in_value ? 'primary.dark' : 'default.light'} >
+                            Trade In Value: <strong>${props.laptop?.trade_in_value}</strong>
                         </Typography>
                         <Typography color={props.laptop?.list_price ? 'primary.dark' : 'default.light'} >
                             List Price: <strong>${props.laptop?.list_price}</strong>
@@ -107,7 +107,7 @@ function LaptopDetailModal(props) {
                             variant='contained'
                             align='center'
                             color='secondary'
-                            href={`/edit/${props.laptop?.serial}`}
+                            href={`/edit/${props.laptop?.serial_number}`}
                         >Edit Laptop</Button>
                     </Box>
                 </Box>
