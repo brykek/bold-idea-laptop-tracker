@@ -27,6 +27,7 @@ db.connect((err) => {
   }
 });
 
+// Sign up user (should be put?)
 app.post("/signup", (req, res, next) => {
   const username = req.body.username;
   const password = req.body.password;
@@ -45,6 +46,12 @@ app.post("/signup", (req, res, next) => {
   );
 });
 
+// Toggle admin flag
+app.post("/:userId/", (req,res,) => {
+
+});
+
+// Login user
 app.post("/login", (req, res) => {
   const username = req.body.username;
   const password = req.body.password;
@@ -112,7 +119,7 @@ function createLaptopBody(req){
 
 // Create laptop
 app.post("/add", (req, res, next) => {
-  let data = createLaptopBody(req)
+  let data = createLaptopBody(req);
 
   let sqlQuery = "INSERT INTO laptops SET ?";
 
@@ -124,10 +131,40 @@ app.post("/add", (req, res, next) => {
 
 // Updates laptop
 app.put("/edit/:serial_number", (req, res, next) => {
-    let body = createLaptopBody(req)
+  let body = createLaptopBody(req);
     
-    let sqlQuery = "UPDATE laptops SET ? WHERE serial_number=?"
+  let sqlQuery = "UPDATE laptops SET ? WHERE serial_number=?";
   db.query(sqlQuery,[body,req.params.serial_number], (err, results) => {
+    if (err) next(err)
+    else res.status(204).send(results);
+  });
+});
+
+// Get dropdown options
+app.get("/:dropdown", (req, res) => {
+  let sqlQuery = "SELECT * FROM " + req.params.dropdown;
+
+  db.query(sqlQuery, (err, results) => {
+    if (err) next(err)
+    res.send(results);
+  });
+});
+
+// Add dropdown option
+app.put("/:dropdown/:option", (req, res, next) => {    
+  let sqlQuery = `INSERT INTO ${req.params.dropdown}(options) VALUES (\'${req.params.option}\')`;
+
+  db.query(sqlQuery, (err, results) => {
+    if (err) next(err)
+    else res.status(204).send(results);
+  });
+});
+
+// Delete dropdown option
+app.delete("/:dropdown/:option", (req, res, next) => {    
+  let sqlQuery = `DELETE FROM ${req.params.dropdown} WHERE options = \'${req.params.option}\'`;
+
+  db.query(sqlQuery, (err, results) => {
     if (err) next(err)
     else res.status(204).send(results);
   });
