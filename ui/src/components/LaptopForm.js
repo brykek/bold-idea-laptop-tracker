@@ -66,7 +66,7 @@ function LaptopForm(props) {
         for (const [key, value] of Object.entries(props.laptopData)) {
             data[key]=value??''
           }
-      setFormData({...data,date_donated:data.date_donated?dayjs(data.date_donated).format('YYYY-MM-DD'):data.date_donated});
+      setFormData({...data,date_donated:data.date_donated?formatDateString(data.date_donated):''});
     }, [props.laptopData]);
 
     const options = {
@@ -89,6 +89,10 @@ function LaptopForm(props) {
         const updatedData = { ...formData };
         updatedData[field] = value;
         setFormData(updatedData);
+    }
+
+    function formatDateString(str){
+        return dayjs(str).format('YYYY-MM-DD')
     }
 
     function populatelaptop_id() {
@@ -218,7 +222,7 @@ function LaptopForm(props) {
                     id='date'
                     label='Date Donated'
                     type='date'
-                    inputProps={{max:dayjs().format('YYYY-MM-DD')}}
+                    inputProps={{max:formatDateString(undefined)}}
                     value={formData.date_donated}
                     InputLabelProps={{ shrink: true }}
                     size='small'
@@ -381,7 +385,7 @@ function LaptopForm(props) {
                 />
 
                 <Box sx={{ display: 'flex', flexDirection: 'column' }} >
-                    {formData.created_date && <Typography sx={{ fontSize: '12px', color: 'primary.light' }} >Record Created: {formData.created_date}</Typography>}
+                    {formData.created_date && <Typography sx={{ fontSize: '12px', color: 'primary.light' }} >Record Created: {dayjs(formData.created_date).format('MM/DD/YYYY')}</Typography>}
                     {formData.last_updated && <Typography sx={{ fontSize: '12px', color: 'primary.light' }} >Last Updated: {formData.last_updated}</Typography>}
                     {formData.archived_date && <Typography sx={{ fontSize: '12px', color: 'primary.light' }} >Archived: {formData.archived_date}</Typography>}
                 </Box>
