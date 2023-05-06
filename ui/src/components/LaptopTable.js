@@ -121,7 +121,7 @@ function LaptopTable(props) {
                       <TableCell>
                         <IconButton
                           size='small'
-                          onClick={() => props.openModal(laptop.serial)}
+                          onClick={() => props.openModal(laptop.id)}
                         >
                           <OpenInNewIcon fontSize='small' />
                         </IconButton>
