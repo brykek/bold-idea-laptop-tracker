@@ -29,6 +29,7 @@ import {
     Clear as CancelIcon,
     Save as SaveIcon,
 } from '@mui/icons-material';
+import dayjs from 'dayjs';
 
 import DropdownManagement from './DropdownManagement';
 
@@ -43,26 +44,7 @@ const emptyOptionsData = {
 };
 
 function LaptopForm(props) {
-    const [formData, setFormData] = useState({
-        serial_number: '',
-        manufacturer: '',
-        laptop_id: '',
-        status: 'UNPROCESSED',
-        donor: '',
-        date_donated: '',
-        model: '',
-        screen_size: '',
-        cpu_type: '',
-        memory: '',
-        disk_size: '',
-        laptop_condition: '',
-        charger_type: '',
-        charger_included: false,
-        trade_in_value: '',
-        list_price: '',
-        sold_price: '',
-        notes: '',
-    });
+    const [formData, setFormData] = useState(createDefaultForm);
     const [missingSerial, setMissingSerial] = useState(false);
     const [missingDonor, setMissingDonor] = useState(false);
     const [missingStatus, setMissingStatus] = useState(false);
@@ -97,28 +79,36 @@ function LaptopForm(props) {
     }
     // ------------------------------------------------------------------
 
+    function createDefaultForm(){
+        return JSON.parse(JSON.stringify({
+            serial_number: '',
+            manufacturer: '',
+            laptop_id: '',
+            status: 'UNPROCESSED',
+            donor: '',
+            date_donated: '',
+            model: '',
+            screen_size: '',
+            cpu_type: '',
+            memory: '',
+            disk_size: '',
+            laptop_condition: '',
+            charger_type: '',
+            charger_included: false,
+            trade_in_value: '',
+            list_price: '',
+            sold_price: '',
+            notes: '',
+        }))
+    }
+
     useEffect(() => {
         if(!props.laptopData){return}
-        setFormData({
-            serial_number: props.laptopData?.serial_number,
-            manufacturer: props.laptopData?.manufacturer,
-            laptop_id: props.laptopData?.laptop_id,
-            status: props.laptopData?.status,
-            donor: props.laptopData?.donor,
-            date_donated: props.laptopData?.date_donated,
-            model: props.laptopData?.model,
-            screen_size: props.laptopData?.screen_size,
-            cpu_type: props.laptopData?.cpu_type,
-            memory: props.laptopData?.memory,
-            disk_size: props.laptopData?.disk_size,
-            laptop_condition: props.laptopData?.laptop_condition,
-            charger_type: props.laptopData?.charger_type,
-            charger_included: props.laptopData?.charger_included,
-            trade_in_value: props.laptopData?.trade_in_value,
-            list_price: props.laptopData?.list_price,
-            sold_price: props.laptopData?.sold_price,
-            notes: props.laptopData?.notes,
-        });
+        let data = {}
+        for (const [key, value] of Object.entries(props.laptopData)) {
+            data[key]=value??''
+          }
+      setFormData({...data,date_donated:data.date_donated?formatDateString(data.date_donated):''});
     }, [props.laptopData]);
 
     // const options = {
@@ -143,6 +133,10 @@ function LaptopForm(props) {
         setFormData(updatedData);
     }
 
+    function formatDateString(str){
+        return dayjs(str).format('YYYY-MM-DD')
+    }
+
     function populatelaptop_id() {
         if (formData.serial_number.length === 12 && formData.laptop_id === '') {
             setFormData({ ...formData, laptop_id: formData.serial_number.substring(4, 8) });
@@ -156,7 +150,14 @@ function LaptopForm(props) {
             setShowError(true);
         } else {
             setShowError(false);
-            props.save(formData);
+            let laptopObj = {}
+            for (const [key, value] of Object.entries(formData)) {
+                laptopObj[key] = value!==''&& value !==null?value:undefined
+            }
+            props.save(laptopObj,()=>{
+                if(!props.isEdit){
+                setFormData(createDefaultForm())}
+            });
         }
     }
 
@@ -177,8 +178,7 @@ function LaptopForm(props) {
                     <ToggleButton disableRipple value={option}>{option}</ToggleButton>
                 ))}
                 </ToggleButtonGroup>
-
-                <TextField
+             <TextField
                     id='serial-field'
                     value={formData.serial_number}
                     label='Serial'
@@ -265,6 +265,7 @@ function LaptopForm(props) {
                     id='date'
                     label='Date Donated'
                     type='date'
+                    inputProps={{max:formatDateString(undefined)}}
                     value={formData.date_donated}
                     InputLabelProps={{ shrink: true }}
                     size='small'
@@ -427,7 +428,7 @@ function LaptopForm(props) {
                 />
 
                 <Box sx={{ display: 'flex', flexDirection: 'column' }} >
-                    {formData.created_date && <Typography sx={{ fontSize: '12px', color: 'primary.light' }} >Record Created: {formData.created_date}</Typography>}
+                    {formData.created_date && <Typography sx={{ fontSize: '12px', color: 'primary.light' }} >Record Created: {dayjs(formData.created_date).format('MM/DD/YYYY')}</Typography>}
                     {formData.last_updated && <Typography sx={{ fontSize: '12px', color: 'primary.light' }} >Last Updated: {formData.last_updated}</Typography>}
                     {formData.archived_date && <Typography sx={{ fontSize: '12px', color: 'primary.light' }} >Archived: {formData.archived_date}</Typography>}
                 </Box>

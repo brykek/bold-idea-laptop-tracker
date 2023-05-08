@@ -6,6 +6,7 @@ USE LaptopTracker;
 
 -- Create the laptops table
 CREATE TABLE laptops (
+  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   serial_number VARCHAR(255) NOT NULL,
   manufacturer VARCHAR(255),
   laptop_id VARCHAR(255),

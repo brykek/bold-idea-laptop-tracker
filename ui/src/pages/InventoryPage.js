@@ -157,9 +157,9 @@ const InventoryPage = () => {
     return false;
   }
 
-  function openModal(targetSerial) {
+  function openModal(targetId) {
     setModalLaptopData(
-      allLaptops.find((laptop) => laptop.serial === targetSerial)
+      allLaptops.find((laptop) => laptop.id === targetId)
     );
     setModalOpen(true);
   }

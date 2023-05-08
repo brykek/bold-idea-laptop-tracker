@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import LaptopForm from '../components/LaptopForm';
 import { useNavigate } from "react-router-dom";
 import {
@@ -9,18 +9,13 @@ import axios from 'axios';
 
 function AddLaptopPage(props) {
     const navigate = useNavigate()
-    function createLaptop(laptopData) {
-        const today = new Date().toISOString().slice(0, 10);
-        let laptopObj = {}
-        for (const [key, value] of Object.entries(laptopData)) {
-            laptopObj[key] = value!==''&& value !==null?value:undefined
-          }
-        laptopObj.created_date = today;
+    function createLaptop(laptopData,cb) {
         console.log('Creating new laptop...');
-        console.log('Laptop Data:', laptopObj)
+        console.log('Laptop Data:', laptopData)
         
-        axios.post('http://localhost:3001/add', laptopObj).then(res => {
-                alert('Laptop added successfully!');
+        axios.post('http://localhost:3001/add', laptopData).then(res => {
+                alert('Laptop Added Successfully!');
+                cb()
         })
         .catch(err => alert("Something went wrong."))
     }
