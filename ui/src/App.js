@@ -48,7 +48,7 @@ function App() {
           <Routes>
             <Route path='/' element={<Login />} />
             <Route path='/add' element={<AddLaptopPage />} />
-            <Route path='/edit/:serial' element={<EditLaptopPage />} />
+            <Route path='/edit/:id' element={<EditLaptopPage />} />
             <Route path='/inventory' element={<InventoryPage />} />
             <Route path='/settings' element={<SettingsPage />} />
             <Route path='/signup' element={<Signup />} />

@@ -74,13 +74,18 @@ app.get("/inventory", (req, res) => {
   });
 });
 
-// Get all laptops
-app.get("/inventory/:serial_number", (req, res) => {
-  let sqlQuery = "SELECT * FROM laptops where serial_number = ? limit 1";
 
-  db.query(sqlQuery, [req.params.serial_number], (err, results) => {
-    if (err) next(err)
-    res.send(results);
+app.get("/inventory/:id", (req, res) => {
+  let sqlQuery = "SELECT * FROM laptops where id = ? limit 1";
+
+  db.query(sqlQuery, [req.params.id], (err, results) => {
+    if (err) return next(err)
+
+    if(results.length ===0) return res.status(404).send('Laptop with serial number',req.params.id,'not found')
+    
+      return res.send(results[0]);
+    
+    
   });
 });
 
@@ -104,7 +109,6 @@ function createLaptopBody(req){
     list_price: req.body.list_price,
     sold_price: req.body.sold_price,
     notes: req.body.notes,
-    created_date: new Date(),
     last_edited: new Date(),
     archived_date: req.body.archived_date??null,
   }
@@ -112,7 +116,7 @@ function createLaptopBody(req){
 
 // Create laptop
 app.post("/add", (req, res, next) => {
-  let data = createLaptopBody(req)
+  let data = {...createLaptopBody(req),created_date:new Date()}
 
   let sqlQuery = "INSERT INTO laptops SET ?";
 
@@ -123,11 +127,10 @@ app.post("/add", (req, res, next) => {
 });
 
 // Updates laptop
-app.put("/edit/:serial_number", (req, res, next) => {
+app.put("/edit/:id", (req, res, next) => {
     let body = createLaptopBody(req)
-    
-    let sqlQuery = "UPDATE laptops SET ? WHERE serial_number=?"
-  db.query(sqlQuery,[body,req.params.serial_number], (err, results) => {
+    let sqlQuery = "UPDATE laptops SET ? WHERE id=?"
+  db.query(sqlQuery,[body,req.params.id], (err, results) => {
     if (err) next(err)
     else res.status(204).send(results);
   });

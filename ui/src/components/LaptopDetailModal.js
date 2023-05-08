@@ -9,7 +9,7 @@ import {
     Button,
     IconButton,
 } from '@mui/material';
-
+import dayjs from 'dayjs'
 // MATERIAL ICONS
 import {
     Close as CloseIcon,
@@ -36,7 +36,7 @@ function LaptopDetailModal(props) {
                             Laptop ID: <strong>{props.laptop?.laptop_id}</strong>
                         </Typography>
                         <Typography color={props.laptop?.manufacturer ? 'primary.dark' : 'default.light'} >
-                            Manufacturer: <Chip color='primary' label={props.laptop?.manufacturer} />
+                            Manufacturer: {props.laptop?.manufacturer&&<Chip color='primary' label={props.laptop?.manufacturer} />}
                         </Typography>
                     </Box>
 
@@ -49,7 +49,7 @@ function LaptopDetailModal(props) {
                             Donated By: <Chip color='primary' label={props.laptop?.donor} />
                         </Typography>
                         <Typography color={props.laptop?.date_donated ? 'primary.dark' : 'default.light'} >
-                            Date Donated: <strong>{props.laptop?.date_donated}</strong>
+                            Date Donated: {props.laptop.date_donated&&<strong>{dayjs(props.laptop?.date_donated).format('MM/DD/YYYY')}</strong>}
                         </Typography>
                     </Box>
 
@@ -59,19 +59,19 @@ function LaptopDetailModal(props) {
                             Model: <strong>{props.laptop?.model}</strong>
                         </Typography>
                         <Typography color={props.laptop?.screen_size ? 'primary.dark' : 'default.light'} >
-                            Screen Size: <Chip color='primary' label={props.laptop?.screen_size} />
+                            Screen Size: {!!props.laptop?.screen_size &&<Chip color='primary' label={props.laptop?.screen_size} />}
                         </Typography>
                         <Typography color={props.laptop?.cpu_type ? 'primary.dark' : 'default.light'} >
                             CPU Type: <strong>{props.laptop?.cpu_type}</strong>
                         </Typography>
                         <Typography color={props.laptop?.memory ? 'primary.dark' : 'default.light'} >
-                            Memory: <Chip color='primary' label={props.laptop?.memory} />
+                            Memory: {props.laptop?.memory&&<Chip color='primary' label={props.laptop?.memory} />}
                         </Typography>
                         <Typography color={props.laptop?.disk_size ? 'primary.dark' : 'default.light'} >
-                            Disk Size: <Chip color='primary' label={props.laptop?.disk_size} />
+                            Disk Size: {props.laptop?.disk_size&&<Chip color='primary' label={props.laptop?.disk_size} />}
                         </Typography>
                         <Typography color={props.laptop?.laptop_condition ? 'primary.dark' : 'default.light'} >
-                            Condition: <Chip color='primary' label={props.laptop?.laptop_condition} />
+                            Condition: {props.laptop?.laptop_condition&&<Chip color='primary' label={props.laptop?.laptop_condition} />}
                         </Typography>
                         <Typography color={props.laptop?.charger_type ? 'primary.dark' : 'default.light'} >
                             Charger Type: <strong>{props.laptop?.charger_type}</strong>
@@ -107,7 +107,7 @@ function LaptopDetailModal(props) {
                             variant='contained'
                             align='center'
                             color='secondary'
-                            href={`/edit/${props.laptop?.serial_number}`}
+                            href={`/edit/${props.laptop?.id}`}
                         >Edit Laptop</Button>
                     </Box>
                 </Box>

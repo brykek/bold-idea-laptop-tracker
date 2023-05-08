@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams,useNavigate } from 'react-router-dom';
 import LaptopForm from '../components/LaptopForm';
 import {
     Container,
     Typography,
 } from '@mui/material';
+import axios from 'axios';
 
 
 const dummyDataLaptop = {
@@ -32,36 +33,44 @@ const dummyDataLaptop = {
   }
 
 function EditLaptopPage(props) {
+    const navigate = useNavigate()
+    const [loading,setLoading] = useState(true)
     const [laptopData, setLaptopData] = useState(null);
-    const { serial } = useParams();
-
+    const {id}  = useParams();
     useEffect(() => {
         if (!laptopData) {
-            // invoke get api call with serial
-            console.log(`Getting laptop with serial number ${serial}...`)
-            setLaptopData(dummyDataLaptop);
+            axios.get(`http://localhost:3001/inventory/${id}`).then((res)=>{
+                console.log('setting to',res.data)
+                setLaptopData(res.data);
+                setLoading(false)
+            }).catch(err=>{
+                navigate('/inventory')
+            })
+            
         }
-    }, [laptopData, serial])
+    }, [id])
 
     function updateLaptop(laptopData) {
-        const today = new Date().toISOString().slice(0, 10);
-        laptopData.last_updated = today;
         console.log('Updating laptop...');
         console.log('Laptop Data:', laptopData)
-        // Invoke the update api function
+        axios.put(`http://localhost:3001/edit/${id}`,laptopData).then((res)=>{
+            alert('Laptop Updated Successfully!')
+            navigate('/inventory')
+        }).catch(err=>{ alert("Something went wrong.")})
     }
 
     function discardChanges() {
         console.log('Discard changes.')
-        // Route back to View Inventory page
+        navigate('/inventory')
     }
 
     return (
-        <Container sx={{ maxWidth: '1220px', margin: '24px auto 0;' }} >
+        !loading && <Container sx={{ maxWidth: '1220px', margin: '24px auto 0;' }} >
             <Typography variant='h4' align='center' sx={{ color: 'primary.main', fontWeight: 'bold' }} gutterBottom >Edit Laptop</Typography>
             <LaptopForm
                 laptopData={laptopData}
                 save={updateLaptop}
+                isEdit={true}
                 saveMessage='Save Changes'
                 cancel={discardChanges}
                 cancelMessage='Discard Changes'
