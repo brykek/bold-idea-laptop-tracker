@@ -11,6 +11,7 @@ app.options("*", cors()); // enable pre-flight
 app.use(bodyParser.json());
 app.use(express.json());
 
+// Note: Backend is vulnerable to SQL Injection
 
 const db = mysql.createConnection({
   host: "127.0.0.1",
@@ -47,7 +48,7 @@ app.post("/signup", (req, res, next) => {
 });
 
 // Toggle admin flag
-app.post("/:userId/", (req,res,) => {
+app.post("/:username/", (req,res,) => {
 
 });
 
@@ -143,7 +144,7 @@ app.put("/edit/:serial_number", (req, res, next) => {
 // Get dropdown options
 app.get("/:dropdown", (req, res) => {
   let sqlQuery = "SELECT * FROM " + req.params.dropdown;
-
+  
   db.query(sqlQuery, (err, results) => {
     if (err) next(err)
     res.send(results);

@@ -25,7 +25,7 @@ VALUES ('8 GB'),
        ('16 GB'),
        ('32 GB');
 
-INSERT INTO `condition`(options)
+INSERT INTO laptop_condition(options)
 VALUES ('A'),
        ('B'),
        ('C');
