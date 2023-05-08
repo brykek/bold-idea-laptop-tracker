@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import DropdownManager from './DropdownManager';
-import {convertOptionstoListHelper} from '../util/helpers';
+import {convertOptionstoListHelper, formatHeader} from '../util/helpers';
 import axios from "axios";
 
 // MATERIAL-UI COMPONENTS
@@ -8,16 +8,6 @@ import {
     Typography,
     Box,
 } from '@mui/material';
-
-const dummyOptionData = {
-    manufacturer: ['Apple', 'PC'],
-    status: ['UNPROCESSED', 'DONATED', 'READY', 'INTERNAL', 'RECYCLE', 'REINSTALL', 'SOLD'],
-    donated_by: ['BetterUP', 'OrderMyGear'],
-    screen_size: ['12"', '13"', '15"', '16"'],
-    memory: ['8 GB', '16 GB', '32 GB'],
-    disk_size: ['128 GB', '256 GB', '512 GB', '1024 GB', '1 TB'],
-    laptop_condition: ['A', 'B', 'C'],
-};
 
 const emptyOptionsData = {
     manufacturer: [],
@@ -85,55 +75,17 @@ function DropdownManagement() {
     return <>
         <Typography variant='h6' sx={{ color: 'primary.dark', fontWeight: 'bold' }} gutterBottom >Manage Dropdown Options</Typography>
         <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: 'repeat(5, 1fr)' }} >
-            <DropdownManager
-                header='Status'
-                id='status'
-                options={options?.status}
-                addOption={addOption}
-                removeOption={removeOption}
-            />
-            <DropdownManager
-                header='Disk Size'
-                id='disk_size'
-                options={options?.disk_size}
-                addOption={addOption}
-                removeOption={removeOption}
-            />
-            <DropdownManager
-                header='Screen Size'
-                id='screen_size'
-                options={options?.screen_size}
-                addOption={addOption}
-                removeOption={removeOption}
-            />
-            <DropdownManager
-                header='Memory'
-                id='memory'
-                options={options?.memory}
-                addOption={addOption}
-                removeOption={removeOption}
-            />
-            <DropdownManager
-                header='Condition'
-                id='laptop_condition'
-                options={options?.laptop_condition}
-                addOption={addOption}
-                removeOption={removeOption}
-            />
-            <DropdownManager
-                header='Manufacturer'
-                id='manufacturer'
-                options={options?.manufacturer}
-                addOption={addOption}
-                removeOption={removeOption}
-            />
-            <DropdownManager
-                header='Donated By'
-                id='donated_by'
-                options={options?.donated_by}
-                addOption={addOption}
-                removeOption={removeOption}
-            />
+            {options && Object.keys(options).map((key) => (
+                <DropdownManager
+                    key = {key}
+                    header={formatHeader(key)}
+                    id={key}
+                    options={options[key]}
+                    addOption={addOption}
+                    removeOption={removeOption}
+                />
+            ))}
+
         </Box>
     </>;
 }

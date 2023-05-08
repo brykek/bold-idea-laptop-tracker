@@ -31,8 +31,6 @@ import {
 } from '@mui/icons-material';
 import dayjs from 'dayjs';
 
-import DropdownManagement from './DropdownManagement';
-
 const emptyOptionsData = {
     manufacturer: [],
     status: [],

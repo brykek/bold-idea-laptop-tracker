@@ -22,7 +22,6 @@ function DropdownManager(props) {
 
     useEffect(() => {
         setOptions(props.options)
-        //console.log(props.options);
     }, [props.options])
 
     function handleSubmit() {

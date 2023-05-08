@@ -22,18 +22,18 @@ import {
 } from '@mui/icons-material'
 
 function AppBarMenu(props) {
-    const [anchorElUser, setAnchorElUser] = useState(null);
+    const [anchorElUser, setAnchorElUser] = useState(false);
     const page = window.location.pathname.split('/')[1];
 
     const handleOpenUserMenu = (e) => setAnchorElUser(e.currentTarget);
-    const handleCloseUserMenu = () => setAnchorElUser(null);
+    const handleCloseUserMenu = () => setAnchorElUser(false);
     const handlePasswordChange = () => {
         // Password change action here (trigger modal open?)
-        setAnchorElUser(null);
+        setAnchorElUser(false);
     }
     const handleLogout = () => {
         // Logout action here
-        setAnchorElUser(null);
+        setAnchorElUser(false);
     }
 
     return (
