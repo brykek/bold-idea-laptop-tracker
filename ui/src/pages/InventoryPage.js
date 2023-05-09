@@ -15,21 +15,21 @@ const InventoryPage = () => {
     search: "",
     manufacturer: "",
     status: "",
-    donatedBy: "",
+    donated_by: "",
     screen_size: "",
     memory: "",
     disk_size: "",
-    condition: "",
+    laptop_condition: "",
     charger_included: "",
   });
   const [options, setOptions] = useState({
     manufacturer: [],
     status: [],
-    donatedBy: [],
+    donated_by: [],
     screen_size: [],
     memory: [],
     disk_size: [],
-    condition: [],
+    laptop_condition: [],
     charger_included: [],
   });
   const [modalOpen, setModalOpen] = useState(false);
@@ -38,14 +38,14 @@ const InventoryPage = () => {
     manufacturer: "",
     laptop_id: "",
     status: "UNPROCESSED",
-    donatedBy: "",
+    donated_by: "",
     date_donated: "",
     model: "",
     screen_size: "",
     cpu_type: "",
     memory: "",
     disk_size: "",
-    condition: "",
+    laptop_condition: "",
     charger_type: "",
     charger_included: false,
     value: "",
@@ -76,8 +76,8 @@ const InventoryPage = () => {
           opts.manufacturer.push(laptop.manufacturer);
         if (opts.status.indexOf(laptop.status) === -1)
           opts.status.push(laptop.status);
-        if (opts.donatedBy.indexOf(laptop.donatedBy) === -1)
-          opts.donatedBy.push(laptop.donatedBy);
+        if (opts.donated_by.indexOf(laptop.donated_by) === -1)
+          opts.donated_by.push(laptop.donated_by);
         if (opts.screen_size.indexOf(laptop.screen_size) === -1)
           opts.screen_size.push(laptop.screen_size);
         if (opts.memory.indexOf(laptop.memory) === -1)
@@ -106,9 +106,9 @@ const InventoryPage = () => {
     if (filters.status) {
       newList = newList.filter((laptop) => laptop.status === filters.status);
     }
-    if (filters.donatedBy) {
+    if (filters.donated_by) {
       newList = newList.filter(
-        (laptop) => laptop.donatedBy === filters.donatedBy
+        (laptop) => laptop.donated_by === filters.donated_by
       );
     }
     if (filters.screen_size) {
@@ -144,7 +144,7 @@ const InventoryPage = () => {
     if (laptop.manufacturer?.toLowerCase().includes(text)) return true;
     if (laptop.laptop_id?.toLowerCase().includes(text)) return true;
     if (laptop.status?.toLowerCase().includes(text)) return true;
-    if (laptop.donatedBy?.toLowerCase().includes(text)) return true;
+    if (laptop.donated_by?.toLowerCase().includes(text)) return true;
     if (laptop.date_donated?.toLowerCase().includes(text)) return true;
     if (laptop.model?.toLowerCase().includes(text)) return true;
     if (laptop.screen_size?.toLowerCase().includes(text)) return true;
@@ -171,14 +171,14 @@ const InventoryPage = () => {
       manufacturer: "",
       laptop_id: "",
       status: "UNPROCESSED",
-      donatedBy: "",
+      donated_by: "",
       date_donated: "",
       model: "",
       screen_size: "",
       cpu_type: "",
       memory: "",
       disk_size: "",
-      condition: "",
+      laptop_condition: "",
       charger_type: "",
       charger_included: false,
       value: "",
@@ -215,7 +215,7 @@ const InventoryPage = () => {
         `"${laptop.manufacturer?.replace(`"`, `""`)}"`,
         `"${laptop.laptop_id?.replace(`"`, `""`)}"`,
         `"${laptop.status?.replace(`"`, `""`)}"`,
-        `"${laptop.donatedBy?.replace(`"`, `""`)}"`,
+        `"${laptop.donated_by?.replace(`"`, `""`)}"`,
         `"${laptop.date_donated?.replace(`"`, `""`)}"`,
         `"${laptop.model?.replace(`"`, `""`)}"`,
         `"${laptop.screen_size?.replace(`"`, `""`)}"`,

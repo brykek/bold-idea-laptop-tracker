@@ -35,6 +35,35 @@ CREATE TABLE users (
   id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   username VARCHAR(255) NOT NULL unique,
   password VARCHAR(255) NOT NULL,
-  viewOnlyAccess BOOLEAN NOT NULL
+  isAdmin BOOLEAN NOT NULL
+);
+
+-- Create the dropdown options table
+CREATE TABLE status (
+  options VARCHAR(255) PRIMARY KEY
+);
+
+CREATE TABLE disk_size (
+  options VARCHAR(255) PRIMARY KEY
+);
+
+CREATE TABLE screen_size (
+  options VARCHAR(255) PRIMARY KEY
+);
+
+CREATE TABLE memory (
+  options VARCHAR(255) PRIMARY KEY
+);
+
+CREATE TABLE `condition` (
+  options VARCHAR(255) PRIMARY KEY
+);
+
+CREATE TABLE manufacturer (
+  options VARCHAR(255) PRIMARY KEY
+);
+
+CREATE TABLE donated_by (
+  options VARCHAR(255) PRIMARY KEY
 );
 

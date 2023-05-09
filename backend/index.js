@@ -11,6 +11,7 @@ app.options("*", cors()); // enable pre-flight
 app.use(bodyParser.json());
 app.use(express.json());
 
+// Note: Backend is vulnerable to SQL Injection
 
 const db = mysql.createConnection({
   host: "127.0.0.1",
@@ -27,6 +28,7 @@ db.connect((err) => {
   }
 });
 
+// Sign up user (should be put?)
 app.post("/signup", (req, res, next) => {
   const username = req.body.username;
   const password = req.body.password;
@@ -45,6 +47,12 @@ app.post("/signup", (req, res, next) => {
   );
 });
 
+// Toggle admin flag
+app.post("/:username/", (req,res,) => {
+
+});
+
+// Login user
 app.post("/login", (req, res) => {
   const username = req.body.username;
   const password = req.body.password;
@@ -117,7 +125,6 @@ function createLaptopBody(req){
 // Create laptop
 app.post("/add", (req, res, next) => {
   let data = {...createLaptopBody(req),created_date:new Date()}
-
   let sqlQuery = "INSERT INTO laptops SET ?";
 
   db.query(sqlQuery, data, (err, results) => {
@@ -131,6 +138,36 @@ app.put("/edit/:id", (req, res, next) => {
     let body = createLaptopBody(req)
     let sqlQuery = "UPDATE laptops SET ? WHERE id=?"
   db.query(sqlQuery,[body,req.params.id], (err, results) => {
+    if (err) next(err)
+    else res.status(204).send(results);
+  });
+});
+
+// Get dropdown options
+app.get("/:dropdown", (req, res) => {
+  let sqlQuery = "SELECT * FROM " + req.params.dropdown;
+  
+  db.query(sqlQuery, (err, results) => {
+    if (err) next(err)
+    res.send(results);
+  });
+});
+
+// Add dropdown option
+app.put("/:dropdown/:option", (req, res, next) => {    
+  let sqlQuery = `INSERT INTO ${req.params.dropdown}(options) VALUES (\'${req.params.option}\')`;
+
+  db.query(sqlQuery, (err, results) => {
+    if (err) next(err)
+    else res.status(204).send(results);
+  });
+});
+
+// Delete dropdown option
+app.delete("/:dropdown/:option", (req, res, next) => {    
+  let sqlQuery = `DELETE FROM ${req.params.dropdown} WHERE options = \'${req.params.option}\'`;
+
+  db.query(sqlQuery, (err, results) => {
     if (err) next(err)
     else res.status(204).send(results);
   });

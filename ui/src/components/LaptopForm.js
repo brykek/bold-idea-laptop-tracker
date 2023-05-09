@@ -1,4 +1,6 @@
 import React, { useState,useEffect } from 'react';
+import {convertOptionstoListHelper} from '../util/helpers';
+import axios from "axios";
 
 // MATERIAL-UI COMPONENTS
 import {
@@ -29,6 +31,15 @@ import {
 } from '@mui/icons-material';
 import dayjs from 'dayjs';
 
+const emptyOptionsData = {
+    manufacturer: [],
+    status: [],
+    donated_by: [],
+    screen_size: [],
+    memory: [],
+    disk_size: [],
+    laptop_condition: [],
+};
 
 function LaptopForm(props) {
     const [formData, setFormData] = useState(createDefaultForm);
@@ -36,6 +47,35 @@ function LaptopForm(props) {
     const [missingDonor, setMissingDonor] = useState(false);
     const [missingStatus, setMissingStatus] = useState(false);
     const [showError, setShowError] = useState(false);
+    const [options, setOptions] = useState();
+
+    // ------------------------------------------------------------------
+    // Copied from DropdownManager.js to get allOptions at the beginnning
+    useEffect(() => {
+        console.log(`Getting options...`)
+        getAllOptions();
+    }, []);
+
+    async function getAllOptions() {
+        let optionsData = emptyOptionsData;
+      
+        for (const key of Object.keys(optionsData)) {
+          const value = await getOptionsForDropdown(key);
+          optionsData[key] = value;
+        }
+        setOptions(optionsData);
+    }
+    
+    async function getOptionsForDropdown(dropdown) {
+        try {
+            const response = await axios.get("http://localhost:3001/" + dropdown);
+            return convertOptionstoListHelper(response.data);
+        } catch (err) {
+            console.error("Failed to load inventory");
+            throw err;
+        }
+    }
+    // ------------------------------------------------------------------
 
     function createDefaultForm(){
         return JSON.parse(JSON.stringify({
@@ -69,15 +109,15 @@ function LaptopForm(props) {
       setFormData({...data,date_donated:data.date_donated?formatDateString(data.date_donated):''});
     }, [props.laptopData]);
 
-    const options = {
-        manufacturer: ['Apple', 'PC'],
-        status: ['UNPROCESSED', 'DONATED', 'READY', 'INTERNAL', 'RECYCLE', 'REINSTALL', 'SOLD'],
-        donatedBy: ['BetterUP', 'OrderMyGear'],
-        screen_size: ['12"', '13"', '15"', '16"'],
-        memory: ['8 GB', '16 GB', '32 GB'],
-        disk_size: ['128 GB', '256 GB', '512 GB', '1024 GB'],
-        laptop_condition: ['A', 'B', 'C'],
-    };
+    // const options = {
+    //     manufacturer: ['Apple', 'Windows'],
+    //     status: ['UNPROCESSED', 'DONATED', 'READY', 'INTERNAL', 'RECYCLE', 'REINSTALL', 'SOLD'],
+    //     donated_by: ['BetterUP', 'OrderMyGear'],
+    //     screen_size: ['12"', '13"', '15"', '16"'],
+    //     memory: ['8 GB', '16 GB', '32 GB'],
+    //     disk_size: ['128 GB', '256 GB', '512 GB', '1024 GB'],
+    //     laptop_condition: ['A', 'B', 'C'],
+    // };
 
     function checkRequiredFields() {
         setMissingSerial(!formData.serial_number);
@@ -132,8 +172,9 @@ function LaptopForm(props) {
                     value={formData.manufacturer}
                     onChange={(event) => handleInputChange(event.target.value, 'manufacturer')}
                 >
-                    <ToggleButton disableRipple value='Apple' >Apple</ToggleButton>
-                    <ToggleButton disableRipple value='PC' >PC</ToggleButton>
+                {options?.manufacturer.map(option => (
+                    <ToggleButton disableRipple value={option}>{option}</ToggleButton>
+                ))}
                 </ToggleButtonGroup>
              <TextField
                     id='serial-field'
@@ -179,7 +220,7 @@ function LaptopForm(props) {
                         label='Status'
                         onChange={(event) => handleInputChange(event.target.value, 'status')}
                     >
-                        {options.status.map(option => {
+                        {options?.status.map(option => {
                             if (['ready', 'donated', 'sold'].includes(option.toLowerCase()) && !formData.value) {
                                 return (
                                     <Tooltip followCursor title={`${option} requires Trade-In Value`} >
@@ -203,16 +244,16 @@ function LaptopForm(props) {
                 </FormControl>
 
                 <FormControl size='small' required error={missingDonor} >
-                    <InputLabel id='donatedBy-select-label'>Donated By</InputLabel>
+                    <InputLabel id='donated_by-select-label'>Donated By</InputLabel>
                     <Select
                         required
-                        labelId='donatedBy-select-label'
-                        id='donatedBy-select'
+                        labelId='donated_by-select-label'
+                        id='donated_by-select'
                         value={formData.donor}
                         label='Donated By'
                         onChange={(event) => handleInputChange(event.target.value, 'donor')}
                     >
-                        {options.donatedBy.map(option => (
+                        {options?.donated_by.map(option => (
                             <MenuItem value={option}>{option}</MenuItem>
                         ))}
                     </Select>
@@ -251,7 +292,7 @@ function LaptopForm(props) {
                         label='Screen Size'
                         onChange={(event) => handleInputChange(event.target.value, 'screen_size')}
                     >
-                        {options.screen_size.map(option => (
+                        {options?.screen_size.map(option => (
                             <MenuItem value={option.slice(0,-1)}>{option}</MenuItem>
                         ))}
                     </Select>
@@ -275,7 +316,7 @@ function LaptopForm(props) {
                         label='Memory'
                         onChange={(event) => handleInputChange(event.target.value, 'memory')}
                     >
-                        {options.memory.map(option => (
+                        {options?.memory.map(option => (
                             <MenuItem value={option.slice(0,-3)}>{option}</MenuItem>
                         ))}
                     </Select>
@@ -291,23 +332,23 @@ function LaptopForm(props) {
                         label='Disk Size'
                         onChange={(event) => handleInputChange(event.target.value, 'disk_size')}
                     >
-                        {options.disk_size.map(option => (
+                        {options?.disk_size.map(option => (
                             <MenuItem value={option.slice(0,-3)}>{option}</MenuItem>
                         ))}
                     </Select>
                 </FormControl>
 
                 <FormControl size='small' >
-                    <InputLabel id='condition-select-label'>Condition</InputLabel>
+                    <InputLabel id='laptop_condition-select-label'>Condition</InputLabel>
                     <Select
                         required
-                        labelId='condition-select-label'
-                        id='condition-select'
+                        labelId='laptop_condition-select-label'
+                        id='laptop_condition-select'
                         value={formData.laptop_condition}
                         label='Condition'
                         onChange={(event) => handleInputChange(event.target.value, 'laptop_condition')}
                     >
-                        {options.laptop_condition.map(option => (
+                        {options?.laptop_condition.map(option => (
                             <MenuItem value={option}>{option}</MenuItem>
                         ))}
                     </Select>

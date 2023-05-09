@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import UserManager from '../components/UserManager';
 import DropdownManager from '../components/DropdownManager';
+import DropdownManagement from '../components/DropdownManagement';
 
 // MATERIAL-UI COMPONENTS
 import {
@@ -16,7 +17,6 @@ import {
 import {
     RemoveCircle as RemoveIcon,
 } from '@mui/icons-material';
-
 
 const dummyUserData = [
     {
@@ -36,20 +36,9 @@ const dummyUserData = [
     },
 ];
 
-const dummyOptionData = {
-    manufacturer: ['Apple', 'PC'],
-    status: ['UNPROCESSED', 'DONATED', 'READY', 'INTERNAL', 'RECYCLE', 'REINSTALL', 'SOLD'],
-    donatedBy: ['BetterUP', 'OrderMyGear'],
-    screen_size: ['12"', '13"', '15"', '16"'],
-    memory: ['8 GB', '16 GB', '32 GB'],
-    disk_size: ['128 GB', '256 GB', '512 GB', '1024 GB', '1 TB'],
-    condition: ['A', 'B', 'C'],
-};
-
 function SettingsPage() {
-    const [users, setUsers] = useState();
-    const [isAdmin, setIsAdmin] = useState()
-    const [options, setOptions] = useState();
+    const [users, setUsers] = useState(dummyUserData);
+    const [isAdmin, setIsAdmin] = useState(false)
     const currentUserEmail = 'sheridan@test.org'; // get the current user's email from session storage
     const [showRemoveUserModal, setShowRemoveUserModal] = useState(false);
     const [showAddUserModal, setShowAddUserModal] = useState(false);
@@ -66,14 +55,6 @@ function SettingsPage() {
             setUsers(dummyUserData);
         }
     }, [users]);
-
-    useEffect(() => {
-        if (!options) {
-            // invoke get api call for options table
-            console.log(`Getting options...`)
-            setOptions(dummyOptionData);
-        }
-    }, [options])
 
     useEffect(() => {
         if (currentUserEmail && users) {
@@ -140,20 +121,6 @@ function SettingsPage() {
         setShowAddUserModal(false);
     }
 
-    function addOption(value, category) {
-        const newOptions = { ...options };
-        newOptions[category].push(value);
-        setOptions(newOptions);
-        console.log(`Adding ${value} to the list of ${category} options...`)
-    }
-
-    function removeOption(value, category) {
-        const newOptions = { ...options };
-        newOptions[category] = newOptions[category].filter(option => option !== value);
-        setOptions(newOptions);
-        console.log(`Removing ${value} from the list of ${category} options...`)
-    }
-
     function handleUserChange(value, field) {
         const updatedData = { ...newUserData };
         updatedData[field] = value;
@@ -174,59 +141,7 @@ function SettingsPage() {
                 resetPassword={resetPasswordModal}
                 addUser={addUserModal}
             />
-
-            <Typography variant='h6' sx={{ color: 'primary.dark', fontWeight: 'bold' }} gutterBottom >Manage Dropdown Options</Typography>
-            <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: 'repeat(5, 1fr)' }} >
-                <DropdownManager
-                    header='Status'
-                    id='status'
-                    options={options?.status}
-                    addOption={addOption}
-                    removeOption={removeOption}
-                />
-                <DropdownManager
-                    header='Disk Size'
-                    id='disk_size'
-                    options={options?.disk_size}
-                    addOption={addOption}
-                    removeOption={removeOption}
-                />
-                <DropdownManager
-                    header='Screen Size'
-                    id='screen_size'
-                    options={options?.screen_size}
-                    addOption={addOption}
-                    removeOption={removeOption}
-                />
-                <DropdownManager
-                    header='Memory'
-                    id='memory'
-                    options={options?.memory}
-                    addOption={addOption}
-                    removeOption={removeOption}
-                />
-                <DropdownManager
-                    header='Condition'
-                    id='condition'
-                    options={options?.laptop_condition}
-                    addOption={addOption}
-                    removeOption={removeOption}
-                />
-                <DropdownManager
-                    header='Manufacturer'
-                    id='manufacturer'
-                    options={options?.manufacturer}
-                    addOption={addOption}
-                    removeOption={removeOption}
-                />
-                <DropdownManager
-                    header='Donated By'
-                    id='donatedBy'
-                    options={options?.donatedBy}
-                    addOption={addOption}
-                    removeOption={removeOption}
-                />
-            </Box>
+            <DropdownManagement/>
         </Container>
 
         {/* Add User Modal */}

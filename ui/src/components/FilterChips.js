@@ -44,13 +44,13 @@ function FilterChips(props) {
                     onDelete={() => handleDelete('status')}
                 />
             }
-            {props.filters.donatedBy &&
+            {props.filters.donated_by &&
                 <Chip
-                    label={<span>Donated By: <strong>{props.filters.donatedBy}</strong></span>}
+                    label={<span>Donated By: <strong>{props.filters.donated_by}</strong></span>}
                     variant='contained'
                     color='primary'
                     sx={{ mr: 1, mb: 1, width: 'fit-content' }}
-                    onDelete={() => handleDelete('donatedBy')}
+                    onDelete={() => handleDelete('donated_by')}
                 />
             }
             {props.filters.screen_size &&
@@ -86,7 +86,7 @@ function FilterChips(props) {
                     variant='contained'
                     color='primary'
                     sx={{ mr: 1, mb: 1, width: 'fit-content' }}
-                    onDelete={() => handleDelete('condition')}
+                    onDelete={() => handleDelete('laptop_condition')}
                 />
             }
             {props.filters.charger_included &&

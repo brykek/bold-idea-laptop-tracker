@@ -65,15 +65,15 @@ function FilterFields(props) {
                 </FormControl>
 
                 <FormControl variant='outlined' size='small' >
-                    <InputLabel id='donatedBy-select-label'>Donated By</InputLabel>
+                    <InputLabel id='donated_by-select-label'>Donated By</InputLabel>
                     <Select
-                        labelId='donatedBy-select-label'
-                        id='donatedBy-select'
-                        value={props.filters.donatedBy}
+                        labelId='donated_by-select-label'
+                        id='donated_by-select'
+                        value={props.filters.donated_by}
                         label='Donated By'
-                        onChange={(event) => handleChange(event.target.value, 'donatedBy')}
+                        onChange={(event) => handleChange(event.target.value, 'donated_by')}
                     >
-                        {props.options?.donatedBy.map(option => (
+                        {props.options?.donated_by.map(option => (
                             <MenuItem value={option}>{option}</MenuItem>
                         ))}
                     </Select>
@@ -125,13 +125,13 @@ function FilterFields(props) {
                 </FormControl>
 
                 <FormControl variant='outlined' size='small' >
-                    <InputLabel id='condition-select-label'>Condition</InputLabel>
+                    <InputLabel id='laptop_condition-select-label'>Condition</InputLabel>
                     <Select
-                        labelId='condition-select-label'
-                        id='condition-select'
+                        labelId='laptop_condition-select-label'
+                        id='laptop_condition-select'
                         value={props.filters.laptop_condition}
                         label='Condition'
-                        onChange={(event) => handleChange(event.target.value, 'condition')}
+                        onChange={(event) => handleChange(event.target.value, 'laptop_condition')}
                     >
                         {props.options?.laptop_condition.map(option => (
                             <MenuItem value={option}>{option}</MenuItem>

@@ -48,7 +48,7 @@ function EnhancedTableHead(props) {
     { id: 'status', label: 'Status' },
     { id: 'model', label: 'Model' },
     { id: 'screen_size', label: 'Screen Size' },
-    { id: 'donatedBy', label: 'Donated By' },
+    { id: 'donated_by', label: 'Donated By' },
     { id: 'value', label: 'Value' },
   ];
 
