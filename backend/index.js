@@ -103,7 +103,7 @@ function createLaptopBody(req){
     manufacturer: req.body.manufacturer,
     laptop_id: req.body.laptop_id,
     status: req.body.status,
-    donor: req.body.donor,
+    donated_by: req.body.donated_by,
     date_donated: req.body.date_donated,
     model: req.body.model,
     screen_size: req.body.screen_size,
@@ -146,7 +146,7 @@ app.put("/edit/:id", (req, res, next) => {
 // Get dropdown options
 app.get("/:dropdown", (req, res) => {
   let sqlQuery = "SELECT * FROM " + req.params.dropdown;
-  
+
   db.query(sqlQuery, (err, results) => {
     if (err) next(err)
     res.send(results);

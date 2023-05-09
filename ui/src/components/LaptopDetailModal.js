@@ -45,8 +45,8 @@ function LaptopDetailModal(props) {
                         <Typography color={props.laptop?.status ? 'primary.dark' : 'default.light'} >
                             Status: <Chip color='primary' label={props.laptop?.status} />
                         </Typography>
-                        <Typography color={props.laptop?.donor ? 'primary.dark' : 'default.light'} >
-                            Donated By: <Chip color='primary' label={props.laptop?.donor} />
+                        <Typography color={props.laptop?.donated_by ? 'primary.dark' : 'default.light'} >
+                            Donated By: <Chip color='primary' label={props.laptop?.donated_by} />
                         </Typography>
                         <Typography color={props.laptop?.date_donated ? 'primary.dark' : 'default.light'} >
                             Date Donated: {props.laptop.date_donated&&<strong>{dayjs(props.laptop?.date_donated).format('MM/DD/YYYY')}</strong>}
