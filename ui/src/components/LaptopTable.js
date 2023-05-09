@@ -116,7 +116,7 @@ function LaptopTable(props) {
                       <TableCell>{laptop.status}</TableCell>
                       <TableCell>{laptop.model}</TableCell>
                       <TableCell>{laptop.screen_size}</TableCell>
-                      <TableCell>{laptop.donor}</TableCell>
+                      <TableCell>{laptop.donated_by}</TableCell>
                       <TableCell>{laptop.trade_in_value?'$'+laptop.trade_in_value:''}</TableCell>
                       <TableCell>
                         <IconButton

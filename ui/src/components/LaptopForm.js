@@ -62,6 +62,15 @@ function LaptopForm(props) {
         for (const key of Object.keys(optionsData)) {
           const value = await getOptionsForDropdown(key);
           optionsData[key] = value;
+
+          // Slight modification here to add current laptop value as a possible option
+          // so that it can be preselected when user edits a laptop
+          if(props.laptopData) {
+            console.log(key + " : " + props.laptopData[key]);
+            if(!optionsData[key].includes(props.laptopData[key])) {
+                optionsData[key].push(props.laptopData[key]);
+            }
+          }
         }
         setOptions(optionsData);
     }
@@ -83,7 +92,7 @@ function LaptopForm(props) {
             manufacturer: '',
             laptop_id: '',
             status: 'UNPROCESSED',
-            donor: '',
+            donated_by: '',
             date_donated: '',
             model: '',
             screen_size: '',
@@ -97,15 +106,15 @@ function LaptopForm(props) {
             list_price: '',
             sold_price: '',
             notes: '',
-        }))
+        }));
     }
 
     useEffect(() => {
         if(!props.laptopData){return}
-        let data = {}
+        let data = {};
         for (const [key, value] of Object.entries(props.laptopData)) {
-            data[key]=value??''
-          }
+            data[key]=value??'';
+        }
       setFormData({...data,date_donated:data.date_donated?formatDateString(data.date_donated):''});
     }, [props.laptopData]);
 
@@ -121,7 +130,7 @@ function LaptopForm(props) {
 
     function checkRequiredFields() {
         setMissingSerial(!formData.serial_number);
-        setMissingDonor(!formData.donor);
+        setMissingDonor(!formData.donated_by);
         setMissingStatus(!formData.status);
     }
 
@@ -144,7 +153,7 @@ function LaptopForm(props) {
     function handleSaveClick() {
         console.log('attempting')
         checkRequiredFields();
-        if (!formData.serial_number || !formData.donor || !formData.status) {
+        if (!formData.serial_number || !formData.donated_by || !formData.status) {
             setShowError(true);
         } else {
             setShowError(false);
@@ -249,9 +258,9 @@ function LaptopForm(props) {
                         required
                         labelId='donated_by-select-label'
                         id='donated_by-select'
-                        value={formData.donor}
+                        value={formData.donated_by}
                         label='Donated By'
-                        onChange={(event) => handleInputChange(event.target.value, 'donor')}
+                        onChange={(event) => handleInputChange(event.target.value, 'donated_by')}
                     >
                         {options?.donated_by.map(option => (
                             <MenuItem value={option}>{option}</MenuItem>
@@ -293,7 +302,7 @@ function LaptopForm(props) {
                         onChange={(event) => handleInputChange(event.target.value, 'screen_size')}
                     >
                         {options?.screen_size.map(option => (
-                            <MenuItem value={option.slice(0,-1)}>{option}</MenuItem>
+                            <MenuItem value={option}>{option}</MenuItem>
                         ))}
                     </Select>
                 </FormControl>
@@ -317,7 +326,7 @@ function LaptopForm(props) {
                         onChange={(event) => handleInputChange(event.target.value, 'memory')}
                     >
                         {options?.memory.map(option => (
-                            <MenuItem value={option.slice(0,-3)}>{option}</MenuItem>
+                            <MenuItem value={option}>{option}</MenuItem>
                         ))}
                     </Select>
                 </FormControl>
@@ -333,7 +342,7 @@ function LaptopForm(props) {
                         onChange={(event) => handleInputChange(event.target.value, 'disk_size')}
                     >
                         {options?.disk_size.map(option => (
-                            <MenuItem value={option.slice(0,-3)}>{option}</MenuItem>
+                            <MenuItem value={option}>{option}</MenuItem>
                         ))}
                     </Select>
                 </FormControl>
