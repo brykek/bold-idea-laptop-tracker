@@ -47,11 +47,6 @@ app.post("/signup", (req, res, next) => {
   );
 });
 
-// Toggle admin flag
-app.post("/:username/", (req,res,) => {
-
-});
-
 // Login user
 app.post("/login", (req, res) => {
   const username = req.body.username;
@@ -124,10 +119,9 @@ function createLaptopBody(req){
 
 // Create laptop
 app.post("/add", (req, res, next) => {
-  let data = {...createLaptopBody(req),created_date:new Date()}
   let sqlQuery = "INSERT INTO laptops SET ?";
 
-  db.query(sqlQuery, data, (err, results) => {
+  db.query(sqlQuery, createLaptopBody(req), (err, results) => {
     if (err) {next(err)}
     else res.status(201).send();
   });

@@ -149,7 +149,7 @@ function FilterFields(props) {
                         onChange={(event) => handleChange(event.target.value, 'charger_included')}
                     >
                         {props.options?.charger_included.map(option => (
-                            <MenuItem value={option === true ? 'Yes' : 'No'}>{option === true ? 'Yes' : 'No'}</MenuItem>
+                            <MenuItem value={option === 1 ? 'Yes' : 'No'}>{option === 1 ? 'Yes' : 'No'}</MenuItem>
                         ))}
                     </Select>
                 </FormControl>

@@ -25,9 +25,9 @@ CREATE TABLE laptops (
   list_price DECIMAL(10,2),
   sold_price DECIMAL(10,2),
   notes VARCHAR(255),
-  created_date DATE,
-  last_edited DATE,
-  archived_date DATE
+  created_date TIMESTAMP DEFAULT NOW(),
+  last_edited TIMESTAMP,
+  archived_date TIMESTAMP
 );
 
 -- Create the users table
