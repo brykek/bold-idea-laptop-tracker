@@ -35,7 +35,7 @@ CREATE TABLE users (
   id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   username VARCHAR(255) NOT NULL unique,
   password VARCHAR(255) NOT NULL,
-  isAdmin BOOLEAN NOT NULL
+  isAdmin BOOLEAN NOT NULL DEFAULT FALSE
 );
 
 -- Create the dropdown options table
