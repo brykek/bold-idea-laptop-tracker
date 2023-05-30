@@ -30,7 +30,7 @@ const InventoryPage = () => {
     memory: [],
     disk_size: [],
     laptop_condition: [],
-    charger_included: [],
+    charger_included: [0,1],
   });
   const [modalOpen, setModalOpen] = useState(false);
   const [modalData, setModalLaptopData] = useState({
@@ -72,21 +72,27 @@ const InventoryPage = () => {
     setOptions(prevOptions=>{
       const opts ={...prevOptions}
       allLaptops.forEach((laptop) => {
-        if (opts.manufacturer.indexOf(laptop.manufacturer) === -1)
+        if (laptop.manufacturer && opts.manufacturer.indexOf(laptop.manufacturer) === -1)
           opts.manufacturer.push(laptop.manufacturer);
-        if (opts.status.indexOf(laptop.status) === -1)
+        if (laptop.status && opts.status.indexOf(laptop.status) === -1)
           opts.status.push(laptop.status);
-        if (opts.donated_by.indexOf(laptop.donated_by) === -1)
+        if (laptop.donated_by && opts.donated_by.indexOf(laptop.donated_by) === -1)
           opts.donated_by.push(laptop.donated_by);
-        if (opts.screen_size.indexOf(laptop.screen_size) === -1)
+        if (laptop.screen_size && opts.screen_size.indexOf(laptop.screen_size) === -1)
           opts.screen_size.push(laptop.screen_size);
-        if (opts.memory.indexOf(laptop.memory) === -1)
+        if (laptop.memory && opts.memory.indexOf(laptop.memory) === -1)
           opts.memory.push(laptop.memory);
-        if (opts.disk_size.indexOf(laptop.disk_size) === -1)
+        if (laptop.disk_size && opts.disk_size.indexOf(laptop.disk_size) === -1)
           opts.disk_size.push(laptop.disk_size);
-        //if (opts.laptop_condition.indexOf(laptop.laptop_condition) === -1) opts.laptop_condition.push(laptop.laptop_condition);
+        if (laptop.laptop_condition && opts.laptop_condition.indexOf(laptop.laptop_condition) === -1) 
+          opts.laptop_condition.push(laptop.laptop_condition);
         //if (opts.charger_included.indexOf(laptop.charger_included) === -1) opts.charger_included.push(laptop.charger_included);
       });
+
+      for (const key in opts) {
+        opts[key].sort();
+      }
+
       return opts
     });
   }, [allLaptops]);
@@ -225,9 +231,9 @@ const InventoryPage = () => {
         `"${laptop.laptop_condition?.replace(`"`, `""`)}"`,
         `"${laptop.charger_type?.replace(`"`, `""`)}"`,
         `"${laptop.charger_included}"`,
-        `"${laptop.value?.replace(`"`, `""`)}"`,
-        `"${laptop.list_price?.replace(`"`, `""`)}"`,
-        `"${laptop.sold_price?.replace(`"`, `""`)}"`,
+        `"${laptop.trade_in_value}"`,
+        `"${laptop.list_price}"`,
+        `"${laptop.sold_price}"`,
         `"${laptop.notes?.replace(`"`, `""`)}"`,
       ]),
     ]
