@@ -55,7 +55,7 @@ CREATE TABLE memory (
   options VARCHAR(255) PRIMARY KEY
 );
 
-CREATE TABLE `condition` (
+CREATE TABLE laptop_condition (
   options VARCHAR(255) PRIMARY KEY
 );
 
