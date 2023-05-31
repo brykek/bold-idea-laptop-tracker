@@ -2,15 +2,19 @@
 This is a simple web application built with Node.js and React for tracking laptop inventory. The application uses MySQL as a database and exposes REST APIs for retrieving, adding, editing and deleting laptop data.
 
 ## Prerequisites
-- Node.js and npm installed on your system
+Before getting started, ensure you have the following tools installed:
+
+- Node.js v18.13.0
+- npm v8.19.3
 
 ## Installation
-Install the required dependencies by running `npm install`
+Install the required dependencies by running `npm install`.
 
-Create a MySQL database and update the database configuration in the app.js file with your database credentials.
+Create a MySQL database and update the database configuration in the `index.js` file with your database credentials.
+Refer to the README in db project directory for additional details. 
 
 ## Running the application
-Run the application using `node index.js`
+Run the application using `node index.js`.
 
 ## API Endpoints
 The following API endpoints are available in the application:
