@@ -6,3 +6,17 @@ export function convertOptionstoListHelper(data) {
 export function formatHeader(str) {
     return str.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
 }
+
+export function loggedIn() {
+    if (sessionStorage.getItem('user')) {
+        return true;
+    }
+    return false;
+}
+
+export const ProtectedComponent = ({ children }) => {
+    if (!loggedIn()) {
+        return <></>
+    }
+    return children;
+}

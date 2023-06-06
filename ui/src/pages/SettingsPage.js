@@ -171,7 +171,7 @@ function SettingsPage() {
                         required
                         id='password-field'
                         type='password'
-                        autoComplete="new-password"
+                        // autoComplete="new-password"
                         value={newUserData.password}
                         label='Temporary Password'
                         size='small'

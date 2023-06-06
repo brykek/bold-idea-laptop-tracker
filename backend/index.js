@@ -1,22 +1,34 @@
 const express = require("express");
-const app = express();
 const mysql = require("mysql");
 const bodyParser = require("body-parser");
+const passport = require("passport");
+const LocalStrategy = require('passport-local');
+const JwtStrategy = require("passport-jwt").Strategy;
+const ExtractJwt = require("passport-jwt").ExtractJwt;
+const jwt = require("jsonwebtoken");
+const crypto = require("crypto");
 
-// Add cors
+const JWT_SECRET = "Thisisasecret";
+
+const app = express();
+
+// Configure universal app settings 
 const cors = require("cors");
 app.use(cors());
 app.options("*", cors()); // enable pre-flight
-
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
 app.use(express.json());
+app.use(passport.initialize());
 
+// Configure DB connection
 // Note: Backend is vulnerable to SQL Injection
-
 const db = mysql.createConnection({
   host: "127.0.0.1",
   user: "root",
-  password: "Pariveda1!",
+  password: "password",
   database: "LaptopTracker",
 });
 
@@ -28,43 +40,103 @@ db.connect((err) => {
   }
 });
 
-// Sign up user (should be put?)
+// Configure LocalStrategy for username + password login
+const localStrategy = new LocalStrategy(function verify(username, password, done) {
+  console.log("Username and Password!");
+  db.query('SELECT * FROM users WHERE username = ?', [ username ], function(err, row) {
+    if (err) { return done(err); }
+    if (!row || row.length == 0) { return done(null, false); };
+
+    var user = row[0];
+
+    crypto.pbkdf2(password, user.salt, 310000, 32, 'sha256', function(err, hashedPassword) {
+      if (err) { return cb(err); }
+      if (!crypto.timingSafeEqual(user.password, hashedPassword)) {
+        return done(null, false);
+      }
+      return done(null, user);
+    });
+  });
+});
+
+// Configure JWTStrategy for JWT auth on requests after login
+const opts = {
+  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+  secretOrKey: JWT_SECRET
+};
+
+const jwtStrategy = new JwtStrategy(opts, (token, done) => {
+  try {
+    db.query("SELECT * FROM users WHERE id = ?", [ token.id ], function(err, user) {
+      if (err) { return done(err); }
+      if (!user) { return done(null, false); }
+      return done(null, user);
+    });
+  } catch (e) {
+    return done(e, false);
+  }
+});
+
+passport.use(localStrategy);
+passport.use(jwtStrategy);
+
+const authLocal = passport.authenticate("local", { session: false });
+const authJwt = passport.authenticate("jwt", { session: false });
+
+createToken = (user) => {
+  return jwt.sign(
+    {
+      iss: "Bold Idea Laptop Tracker API",
+      iat: Math.floor(Date.now() / 1000),
+      exp: Math.floor(Date.now() / 1000) + 1200, // 20 min expiry
+      id: user.id,
+      admin: user.isAdmin
+    },
+    JWT_SECRET
+  );
+}
+
+createJwt = (user) => {
+  return {
+    id: user.id,
+    username: user.username,
+    token: createToken(user)
+  }
+}
+
+app.post("/login", authLocal, (req, res, next) => {
+  console.log(req);
+  var token = createJwt(req.user);
+  res.status(200).send(token);
+  return next();
+});
+
+// Routes
+// Create new user 
 app.post("/signup", (req, res, next) => {
   const username = req.body.username;
   const password = req.body.password;
-  db.query(
-    "INSERT INTO users (username, password, viewOnlyAccess) VALUES (?,?,?)",
-    [username, password,false],
-    (err, result) => {
-      if (err) {
-        if (err.code === "ER_DUP_ENTRY") {
-          res.status(409).send("Username already exists");
-        } else next(err);
-      } else {
-        res.status(201).send();
-      }
-    }
-  );
-});
+  const salt = crypto.randomBytes(16);
 
-// Login user
-app.post("/login", (req, res) => {
-  const username = req.body.username;
-  const password = req.body.password;
+  crypto.pbkdf2(password, salt, 310000, 32, 'sha256', function(err, hashedPassword) {
+    if (err) { return cb(err); }
 
-  db.query(
-    "SELECT * FROM users WHERE username = ? AND password = ?",
-    [username, password],
-    (err, result) => {
-      if (err) {
-        next(err);
-      } else if (result.length > 0) {
-        res.json({username,viewOnlyAccess:result[0].viewOnlyAccess});
-      } else {
-        res.status(401).send("Wrong username/password.");
+    db.query(
+      "INSERT INTO users (username, password, salt, isAdmin) VALUES (?, ?, ?, ?)",
+      [username, hashedPassword, salt, false],
+      (err, result) => {
+        if (err) {
+          if (err.code === "ER_DUP_ENTRY") {
+            res.status(409).send("Username already exists");
+          } else {
+            next(err);
+          };
+        } else {
+          res.status(201).send();
+        }
       }
-    }
-  );
+    );
+  }); 
 });
 
 // Get all laptops
@@ -77,7 +149,6 @@ app.get("/inventory", (req, res) => {
   });
 });
 
-
 app.get("/inventory/:id", (req, res) => {
   let sqlQuery = "SELECT * FROM laptops where id = ? limit 1";
 
@@ -86,13 +157,11 @@ app.get("/inventory/:id", (req, res) => {
 
     if(results.length ===0) return res.status(404).send('Laptop with serial number',req.params.id,'not found')
     
-      return res.send(results[0]);
-    
-    
+      return res.send(results[0]);    
   });
 });
 
-function createLaptopBody(req){
+function createLaptopBody(req) {
   return {
     serial_number: req.body.serial_number,
     manufacturer: req.body.manufacturer,
@@ -167,10 +236,10 @@ app.delete("/:dropdown/:option", (req, res, next) => {
   });
 });
 
+ 
 app.listen(3001, () => {
   console.log("Server running on port 3001");
 });
-
 
 app.use((err, req, res, next) => {
   console.error(err)
