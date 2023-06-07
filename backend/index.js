@@ -8,6 +8,9 @@ const ExtractJwt = require("passport-jwt").ExtractJwt;
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 
+const roles = require("./enums/roles");
+
+// Secret needs to be passed as app setting or env var during deployment 
 const JWT_SECRET = "Thisisasecret";
 
 const app = express();
@@ -25,6 +28,7 @@ app.use(passport.initialize());
 
 // Configure DB connection
 // Note: Backend is vulnerable to SQL Injection
+// DB credentials needs to be passed as app settings or env var during deployment
 const db = mysql.createConnection({
   host: "127.0.0.1",
   user: "root",
@@ -42,7 +46,6 @@ db.connect((err) => {
 
 // Configure LocalStrategy for username + password login
 const localStrategy = new LocalStrategy(function verify(username, password, done) {
-  console.log("Username and Password!");
   db.query('SELECT * FROM users WHERE username = ?', [ username ], function(err, row) {
     if (err) { return done(err); }
     if (!row || row.length == 0) { return done(null, false); };
@@ -90,7 +93,7 @@ createToken = (user) => {
       iat: Math.floor(Date.now() / 1000),
       exp: Math.floor(Date.now() / 1000) + 1200, // 20 min expiry
       id: user.id,
-      admin: user.isAdmin
+      role: user.role
     },
     JWT_SECRET
   );
@@ -104,14 +107,13 @@ createJwt = (user) => {
   }
 }
 
+// Login using username + password
 app.post("/login", authLocal, (req, res, next) => {
-  console.log(req);
   var token = createJwt(req.user);
   res.status(200).send(token);
   return next();
 });
 
-// Routes
 // Create new user 
 app.post("/signup", (req, res, next) => {
   const username = req.body.username;
@@ -122,8 +124,8 @@ app.post("/signup", (req, res, next) => {
     if (err) { return cb(err); }
 
     db.query(
-      "INSERT INTO users (username, password, salt, isAdmin) VALUES (?, ?, ?, ?)",
-      [username, hashedPassword, salt, false],
+      "INSERT INTO users (username, password, salt, role) VALUES (?, ?, ?, ?)",
+      [username, hashedPassword, salt, roles.USER],
       (err, result) => {
         if (err) {
           if (err.code === "ER_DUP_ENTRY") {
@@ -139,25 +141,37 @@ app.post("/signup", (req, res, next) => {
   }); 
 });
 
-// Get all laptops
-app.get("/inventory", (req, res) => {
-  let sqlQuery = "SELECT * FROM laptops";
+// Get all users 
+app.get("/users", authJwt, (req, res, next) => {
+  let query = "SELECT id, username, role FROM users";
 
-  db.query(sqlQuery, (err, results) => {
-    if (err) next(err)
+  db.query(query, (err, results) => { 
+    if (err) next(err);
     res.send(results);
   });
 });
 
-app.get("/inventory/:id", (req, res) => {
-  let sqlQuery = "SELECT * FROM laptops where id = ? limit 1";
+// Get all laptops
+app.get("/inventory", authJwt, (req, res) => {
+  let sqlQuery = "SELECT * FROM laptops";
+
+  db.query(sqlQuery, (err, results) => {
+    if (err) next(err);
+    res.send(results);
+  });
+});
+
+// Get laptop by Id
+app.get("/inventory/:id", authJwt, (req, res) => {
+  let sqlQuery = "SELECT * FROM laptops WHERE id = ? LIMIT 1";
 
   db.query(sqlQuery, [req.params.id], (err, results) => {
     if (err) return next(err)
 
-    if(results.length ===0) return res.status(404).send('Laptop with serial number',req.params.id,'not found')
-    
-      return res.send(results[0]);    
+    if (results.length === 0) {
+      return res.status(404).send('Laptop with serial number', req.params.id, 'not found.');
+    }
+    return res.send(results[0]);    
   });
 });
 
@@ -186,8 +200,8 @@ function createLaptopBody(req) {
   }
 }
 
-// Create laptop
-app.post("/add", (req, res, next) => {
+// Add a new laptop 
+app.post("/add", authJwt, (req, res, next) => {
   let sqlQuery = "INSERT INTO laptops SET ?";
 
   db.query(sqlQuery, createLaptopBody(req), (err, results) => {
@@ -196,8 +210,8 @@ app.post("/add", (req, res, next) => {
   });
 });
 
-// Updates laptop
-app.put("/edit/:id", (req, res, next) => {
+// Update laptop by Id
+app.put("/edit/:id", authJwt, (req, res, next) => {
     let body = createLaptopBody(req)
     let sqlQuery = "UPDATE laptops SET ? WHERE id=?"
   db.query(sqlQuery,[body,req.params.id], (err, results) => {
@@ -207,7 +221,7 @@ app.put("/edit/:id", (req, res, next) => {
 });
 
 // Get dropdown options
-app.get("/:dropdown", (req, res) => {
+app.get("/:dropdown", authJwt, (req, res) => {
   let sqlQuery = "SELECT * FROM " + req.params.dropdown;
 
   db.query(sqlQuery, (err, results) => {
@@ -216,8 +230,8 @@ app.get("/:dropdown", (req, res) => {
   });
 });
 
-// Add dropdown option
-app.put("/:dropdown/:option", (req, res, next) => {    
+// Add dropdown option 
+app.put("/:dropdown/:option", authJwt, (req, res, next) => {    
   let sqlQuery = `INSERT INTO ${req.params.dropdown}(options) VALUES (\'${req.params.option}\')`;
 
   db.query(sqlQuery, (err, results) => {
@@ -227,7 +241,7 @@ app.put("/:dropdown/:option", (req, res, next) => {
 });
 
 // Delete dropdown option
-app.delete("/:dropdown/:option", (req, res, next) => {    
+app.delete("/:dropdown/:option", authJwt, (req, res, next) => {    
   let sqlQuery = `DELETE FROM ${req.params.dropdown} WHERE options = \'${req.params.option}\'`;
 
   db.query(sqlQuery, (err, results) => {
