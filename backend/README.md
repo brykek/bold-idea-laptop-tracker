@@ -25,6 +25,11 @@ The following API endpoints are available in the application:
 - POST /add: This endpoint is used for adding a new laptop to the inventory.
 - PUT /edit/laptop/:serial_number: This endpoint is used for editing the details of an existing laptop in the inventory.
 
+## Future Enhancements 
+Some enhancements that can improve the application at a later date:
+- Refactor to create RESTful APIs
+- Introduce models
+
 ## Usage
 Once the application is running, you can access it at http://localhost:3001. From there, you can use the API endpoints to add, edit, or retrieve laptop data.
 
