@@ -10,7 +10,7 @@ const crypto = require("crypto");
 
 const roles = require("./enums/roles");
 
-// Secret needs to be passed as app setting or env var during deployment 
+// TODO: Secret needs to be passed as app setting or env var during deployment 
 const JWT_SECRET = "Thisisasecret";
 
 const app = express();
@@ -28,7 +28,7 @@ app.use(passport.initialize());
 
 // Configure DB connection
 // Note: Backend is vulnerable to SQL Injection
-// DB credentials needs to be passed as app settings or env var during deployment
+// TODO: DB credentials needs to be passed as app settings or env var during deployment
 const db = mysql.createConnection({
   host: "127.0.0.1",
   user: "root",
@@ -38,12 +38,13 @@ const db = mysql.createConnection({
 
 db.connect((err) => {
   if (err) {
-    console.log(err);
+    console.err(err);
   } else {
     console.log("MySQL db connected");
   }
 });
 
+// Middleware
 // Configure LocalStrategy for username + password login
 const localStrategy = new LocalStrategy(function verify(username, password, done) {
   db.query('SELECT * FROM users WHERE username = ?', [ username ], function(err, row) {
@@ -107,6 +108,15 @@ createJwt = (user) => {
   }
 }
 
+const isAdmin = async (req, res, next) => {
+  var userRole = req.user[0].role;
+  if (userRole === roles.USER) {
+    return res.status(401).send();
+  }
+  next();
+}
+
+// API Endpoints
 // Login using username + password
 app.post("/login", authLocal, (req, res, next) => {
   var token = createJwt(req.user);
@@ -118,14 +128,16 @@ app.post("/login", authLocal, (req, res, next) => {
 app.post("/signup", (req, res, next) => {
   const username = req.body.username;
   const password = req.body.password;
+  const firstName = req.body.firstName;
+  const lastName = req.body.lastName;
   const salt = crypto.randomBytes(16);
 
   crypto.pbkdf2(password, salt, 310000, 32, 'sha256', function(err, hashedPassword) {
     if (err) { return cb(err); }
 
     db.query(
-      "INSERT INTO users (username, password, salt, role) VALUES (?, ?, ?, ?)",
-      [username, hashedPassword, salt, roles.USER],
+      "INSERT INTO users (firstName, lastName, username, password, salt, role) VALUES (?, ?, ?, ?, ?, ?)",
+      [firstName, lastName, username, hashedPassword, salt, roles.USER],
       (err, result) => {
         if (err) {
           if (err.code === "ER_DUP_ENTRY") {
@@ -142,13 +154,66 @@ app.post("/signup", (req, res, next) => {
 });
 
 // Get all users 
-app.get("/users", authJwt, (req, res, next) => {
-  let query = "SELECT id, username, role FROM users";
+app.get("/users", authJwt, isAdmin, (req, res, next) => {
+  let query = "SELECT id, firstName, lastName, username, role FROM users";
 
   db.query(query, (err, results) => { 
     if (err) next(err);
     res.send(results);
   });
+});
+
+// Update user role or password
+app.put("/users/:id", authJwt, (req, res, next) => {
+  const id = parseInt(req.params.id);
+  const role = req.body.role;
+  const requestUserId = parseInt(req.user[0].id);
+
+  if (req.body.password) { 
+    // Password changes only allowed on self or on others by admin
+    if (requestUserId === id || 
+      req.user[0].role === roles.ADMIN || 
+      req.user[0].role === roles.SUPERADMIN) 
+    { 
+      const password = req.body.password;
+      const salt = crypto.randomBytes(16);
+      crypto.pbkdf2(password, salt, 310000, 32, 'sha256', function(err, hashedPassword) {
+        if (err) { return cb(err); }
+        let query = "UPDATE users SET password = ?, salt = ? WHERE id = ?";
+        db.query(query, [hashedPassword, salt, id], (err, result) => {
+          if (err) next(err);
+          res.send();
+        });
+      });
+    } else { 
+      res.status(401).send();
+    }
+  } else { 
+    if (req.user[0].role === roles.ADMIN || req.user[0].role === roles.SUPERADMIN) {
+      // Do not allow role changes to self
+      if (requestUserId === id) { 
+        res.status(400).send({ message: 'Unable to apply changes to user,' });
+      }
+
+      let query = "UPDATE users SET role = ? WHERE id = ?";
+      db.query(query, [role, id], (err, result) => {
+        if (err) next(err);
+        res.send();
+      });
+    } else {
+      res.status(401).send();
+    }
+  }
+});
+
+// Delete user
+app.delete("/users/:id", authJwt, isAdmin, (req, res, next) => {
+  let query = "DELETE FROM users WHERE id = ?";
+
+  db.query(query, [req.params.id], (err, result) => {
+    if (err) next(err);
+    res.send();
+  })
 });
 
 // Get all laptops

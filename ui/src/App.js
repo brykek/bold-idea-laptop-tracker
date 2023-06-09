@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { BrowserRouter, Route, Routes, redirect } from 'react-router-dom';
+import React from 'react';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 import AppBarMenu from './components/AppBarMenu';
@@ -7,11 +7,10 @@ import AddLaptopPage from './pages/AddLaptopPage';
 import EditLaptopPage from './pages/EditLaptopPage';
 import InventoryPage from './pages/InventoryPage';
 import SettingsPage from './pages/SettingsPage';
+import Signup from './pages/Signup';
 import Login from './pages/Login';
 import Protected from './pages/ProtectedPage';
-import Signup from './pages/Signup';
-
-import { loggedIn } from './util/helpers';
+import NotFoundPage from './pages/NotFoundPage'
 
 import './App.css';
 import './react-app.css';
@@ -47,8 +46,8 @@ function App() {
         <AppBarMenu />
         <BrowserRouter>
           <Routes>
-            <Route path='/signup' element={<Signup />} />
             <Route path='/' element={<Login />} />
+            <Route path='/signup' element={<Signup />} />
             <Route 
               path='/add'
               element={
@@ -81,6 +80,7 @@ function App() {
                 </Protected>
               } 
             />
+            <Route path='*' element={<NotFoundPage />} />
           </Routes>
         </BrowserRouter>
       </div>

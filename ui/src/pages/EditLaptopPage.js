@@ -6,6 +6,7 @@ import {
     Typography,
 } from '@mui/material';
 import axios from 'axios';
+import { bearerTokenConfig } from '../util/helpers';
 
 
 const dummyDataLaptop = {
@@ -39,7 +40,7 @@ function EditLaptopPage(props) {
     const {id}  = useParams();
     useEffect(() => {
         if (!laptopData) {
-            axios.get(`http://localhost:3001/inventory/${id}`).then((res)=>{
+            axios.get(`http://localhost:3001/inventory/${id}`, bearerTokenConfig).then((res)=>{
                 console.log('setting to',res.data)
                 setLaptopData(res.data);
                 setLoading(false)
@@ -53,7 +54,7 @@ function EditLaptopPage(props) {
     function updateLaptop(laptopData) {
         console.log('Updating laptop...');
         console.log('Laptop Data:', laptopData)
-        axios.put(`http://localhost:3001/edit/${id}`,laptopData).then((res)=>{
+        axios.put(`http://localhost:3001/edit/${id}`, laptopData, bearerTokenConfig).then((res)=>{
             alert('Laptop Updated Successfully!')
             navigate('/inventory')
         }).catch(err=>{ alert("Something went wrong.")})

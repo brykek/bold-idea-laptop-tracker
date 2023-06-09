@@ -27,8 +27,9 @@ The following API endpoints are available in the application:
 
 ## Future Enhancements 
 Some enhancements that can improve the application at a later date:
-- Refactor to create RESTful APIs
+- Rename endpoints to resource centric names
 - Introduce models
+- Refactor application into separate folders (e.g., routes, middleware, etc.)
 
 ## Usage
 Once the application is running, you can access it at http://localhost:3001. From there, you can use the API endpoints to add, edit, or retrieve laptop data.

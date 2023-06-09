@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import Cookies from 'js-cookie';
-import jwtDecode from 'jwt-decode';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import Cookies from 'js-cookie';
+import jwtDecode from 'jwt-decode';
 import {
   Container,
   Paper,
@@ -10,7 +10,11 @@ import {
   Box,
   TextField,
   Button,
+  Modal
 } from '@mui/material';
+
+import { loggedIn } from '../util/helpers';
+import Errors from '../enums/errors';
 
 
 function Login() {
@@ -18,12 +22,21 @@ function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
- 
+  const [showForgotPasswordModal, setShowForgotPasswordModal] = useState(false);
+
+  // Redirect to Inventory page if already logged in
+  useEffect(() => {
+    if (loggedIn()) { 
+      navigate('/inventory');
+    }
+  });
+  
 	const login = () => {
     if (!username.length > 0 || !password.length > 0) {
-      setErrorMessage("Please enter valid credentials before submitting.");
+      setErrorMessage(Errors.EMPTY_FIELD);
       return;
     }
+
 		axios.post('http://localhost:3001/login', {
 			username: username,
 			password: password
@@ -46,8 +59,7 @@ function Login() {
 		});
 	}
 
-  return (
-    <>
+  return <>
       <Container sx={{ display: 'flex', alignContent: 'center', justifyContent: 'center', maxWidth: '1220px', margin: '24px auto 0;' }} >
         <Paper sx={{ mt: 4, p: 3, display: 'flex', flexDirection: 'column', gap: 2, minWidth: '375px' }} >
           <Typography variant='h5' color='primary' >Log In</Typography>
@@ -63,7 +75,6 @@ function Login() {
               autofocus
               onChange={(e) => setUsername(e.target.value)}
             />
-
             <TextField
               label='Password'
               required
@@ -75,25 +86,35 @@ function Login() {
               autofocus
               onChange={(e) => setPassword(e.target.value)}
             />
-
             <Button
               fullWidth
               variant='contained'
               color='secondary'
-              sx={{ mt: 2 }}
+              sx={{ my: 2 }}
               onClick={login}
             >
               Log In
             </Button>
 
-            <Typography color='primary' component='a' href='/reset-password' >Forgot your password?</Typography>
-            <Typography color='primary' component='a' href='/signup' >Don't have an account?</Typography>
-            <Typography color='red'>{errorMessage}</Typography>
+            <Typography align='center' color='primary' sx={{ cursor: 'pointer' }} component='a' onClick={() => setShowForgotPasswordModal(true)}>Forgot your password?</Typography>
+            <Typography align='center' color='primary' component='a' href='/signup' >Don't have an account?</Typography>
+            <Typography align='center' color='red'>{errorMessage}</Typography>
           </Box>
         </Paper>
       </Container>
-    </>
-  );
+    
+      {/* Forgot Password Modal */}
+      <Modal open={showForgotPasswordModal} onClose={() => setShowForgotPasswordModal(false)} >
+        <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 600, bgcolor: 'background.paper', borderRadius: '16px', boxShadow: 24, p: 4, alignContent: 'center' }} >
+            <Typography align='center' variant='h5' component='h2' sx={{ color: 'primary.dark', fontWeight: 'bold', mb: 3 }} >
+                Forgot your password?
+            </Typography>
+            <Typography align='center' component='h2' sx={{ color: 'primary.dark' }} >
+                Contact an administrator for help resetting your password.
+            </Typography>
+        </Box>
+      </Modal>
+  </>
 }
 
 export default Login;

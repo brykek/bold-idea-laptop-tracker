@@ -1,6 +1,5 @@
 import React from 'react';
-
-// MATERIAL-UI COMPONENTS
+import jwtDecode from 'jwt-decode';
 import {
     Typography,
     Paper,
@@ -14,14 +13,13 @@ import {
     Box,
     Skeleton,
 } from '@mui/material';
+import { PersonAdd as AddIcon } from '@mui/icons-material'
 
-// MATERIAL ICONS
-import {
-    PersonAdd as AddIcon,
-} from '@mui/icons-material'
+import roles from '../enums/roles';
 
 
 function UserManager(props) {
+    const currentUser = jwtDecode(props.currentUserToken);
 
     if (props.isAdmin === false) {
         return <></>;
@@ -40,7 +38,7 @@ function UserManager(props) {
                 <Table size="small" >
                     <TableHead>
                         <TableRow sx={{ backgroundColor: 'primary' }} >
-                            <TableCell sx={{ fontWeight: 'bold' }} >User Name</TableCell>
+                            <TableCell sx={{ fontWeight: 'bold' }} >Name</TableCell>
                             <TableCell sx={{ fontWeight: 'bold' }} >Email</TableCell>
                             <TableCell sx={{ fontWeight: 'bold' }} >Access Level</TableCell>
                             <TableCell></TableCell>
@@ -49,21 +47,21 @@ function UserManager(props) {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {props.users.map(user => (
-                            <TableRow key={user.email} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                                <TableCell component='th' scope='row'>{user.name}</TableCell>
-                                <TableCell>{user.email}</TableCell>
-                                <TableCell>{user.isAdmin ? 'Admin' : 'User'}</TableCell>
-                                <TableCell>{user.isAdmin ?
-                                    <Button disabled={user.email === props.currentUserEmail} fullWidth variant='outlined' color='warning' onClick={() => props.revokeAdmin(user.email)} >Revoke Admin Status</Button>
+                        {props.users && props.users.map(user => (
+                            <TableRow key={user.username} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                                <TableCell component='th' scope='row'>{`${user.firstName} ${user.lastName}`}</TableCell>
+                                <TableCell>{user.username}</TableCell>
+                                <TableCell>{user.role.toUpperCase()}</TableCell>
+                                <TableCell>{(user.role === roles.SUPERADMIN || user.role === roles.ADMIN) ?
+                                    <Button disabled={user.id === currentUser.id || user.role === roles.SUPERADMIN} fullWidth variant='outlined' color='warning' onClick={() => props.revokeAdmin(user)} >Revoke Admin Status</Button>
                                     :
-                                    <Button disabled={user.email === props.currentUserEmail} fullWidth variant='outlined' color='secondary' onClick={() => props.grantAdmin(user.email)} >Grant Admin Status</Button>
+                                    <Button disabled={user.id === currentUser.id} fullWidth variant='outlined' color='secondary' onClick={() => props.grantAdmin(user)} >Grant Admin Status</Button>
                                 }</TableCell>
-                                <TableCell>
-                                    <Button disabled={user.email === props.currentUserEmail} fullWidth variant='outlined' color='error' onClick={() => props.removeUser(user.email)} >Remove User</Button>
+                                <TableCell>          
+                                    <Button disabled={user.id === currentUser.id || user.role === roles.SUPERADMIN} fullWidth variant='outlined' color='error' onClick={() => props.removeUser(user)} >Remove User</Button>
                                 </TableCell>
                                 <TableCell>
-                                    <Button fullWidth variant='outlined' color='primary' onClick={() => props.resetPassword(user.email)} >Reset Password</Button>
+                                    <Button fullWidth variant='outlined' color='primary' onClick={() => props.resetPassword(user)} >Reset Password</Button>
                                 </TableCell>
                             </TableRow>
                         ))}

@@ -1,3 +1,5 @@
+import Cookies from 'js-cookie';
+
 export function convertOptionstoListHelper(data) {
     const options = data.map(item => item.options);
     return options;
@@ -19,4 +21,8 @@ export const ProtectedComponent = ({ children }) => {
         return <></>
     }
     return children;
+}
+
+export const bearerTokenConfig = {
+    headers: { Authorization: `Bearer ${Cookies.get('token')}` }
 }

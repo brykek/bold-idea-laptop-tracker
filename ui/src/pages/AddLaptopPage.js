@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import LaptopForm from '../components/LaptopForm';
 import { useNavigate } from "react-router-dom";
 import {
     Container,
@@ -7,13 +6,16 @@ import {
 } from '@mui/material';
 import axios from 'axios';
 
+import LaptopForm from '../components/LaptopForm';
+import { bearerTokenConfig } from '../util/helpers';
+
 function AddLaptopPage(props) {
     const navigate = useNavigate()
     function createLaptop(laptopData,cb) {
         console.log('Creating new laptop...');
         console.log('Laptop Data:', laptopData)
         
-        axios.post('http://localhost:3001/add', laptopData).then(res => {
+        axios.post('http://localhost:3001/add', laptopData, bearerTokenConfig).then(res => {
                 alert('Laptop Added Successfully!');
                 cb()
         })

@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import {
   Container,
   Paper,
@@ -8,27 +9,40 @@ import {
   TextField,
   Button,
 } from '@mui/material';
-import axios from 'axios';
+
+import { loggedIn } from '../util/helpers';
+import Error from '../enums/errors';
+
 
 function Signup() {
   const navigate = useNavigate();
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
+  useEffect(() => {
+    if (loggedIn()) { 
+      navigate('/inventory');
+    }
+  });
+
   const register = () => {
-    if (!username.length > 0 || !password.length > 0) {
-      setErrorMessage("Please enter valid credentials before submitting.");
+    if (!username.length > 0 || !password.length > 0 || !firstName.length > 0 || !lastName.length > 0) {
+      setErrorMessage(Error.EMPTY_FIELD);
       return;
     }
     axios.post('http://localhost:3001/signup', {
       username: username,
-      password: password
+      password: password, 
+      firstName: firstName,
+      lastName: lastName
     }).then(() => {
       navigate('/');
     }).catch((err) => {
       if (err.response.status === 409) { 
-        setErrorMessage('Username already taken.');
+        setErrorMessage(Error.USER_EXISTS);
       } else { 
         setErrorMessage(err.message);
       }
@@ -40,19 +54,31 @@ function Signup() {
       <Container sx={{ display: 'flex', alignContent: 'center', justifyContent: 'center', maxWidth: '1220px', margin: '24px auto 0;' }} >
         <Paper sx={{ mt: 4, p: 3, display: 'flex', flexDirection: 'column', gap: 2, minWidth: '375px' }} >
           <Typography variant='h5' color='primary' >Sign Up</Typography>
-
           <Box component="form"  sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <TextField
+              label='First Name'
+              required
+              id='firstName'
+              name='firstName'
+              onChange={(e) => setFirstName(e.target.value)}
+            />
+            <TextField
+              label='Last Name'
+              required
+              id='lastName'
+              name='lastName'
+              onChange={(e) => setLastName(e.target.value)}
+            />
             <TextField
               label='Email'
               required
               fullWidth
-              id='email'
-              name='email'
+              id='username'
+              name='username'
               autocomplete='email'
               autofocus
               onChange={(e) => setUsername(e.target.value)}
             />
-
             <TextField
               label='Password'
               required
@@ -64,7 +90,6 @@ function Signup() {
               autofocus
               onChange={(e) => setPassword(e.target.value)}
             />
-
             <Button
               fullWidth
               variant='contained'
@@ -74,8 +99,9 @@ function Signup() {
             >
               Sign Up
             </Button>
-            <Typography color='red'>{errorMessage}</Typography>
           </Box>
+          <Typography align='center' color='primary' component='a' href='/' >Back to login</Typography>
+          <Typography align='center' color='red'>{errorMessage}</Typography>
         </Paper>
       </Container>
     </>

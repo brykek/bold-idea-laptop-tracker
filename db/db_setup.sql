@@ -36,7 +36,9 @@ CREATE TABLE users (
   username VARCHAR(255) NOT NULL unique,
   password BLOB NOT NULL,
   salt BLOB NOT NULL,
-  role VARCHAR(25) NOT NULL
+  role VARCHAR(25) NOT NULL,
+  firstName VARCHAR(255) NOT NULL,
+  lastName VARCHAR(255) NOT NULL
 );
 
 -- Create the dropdown options table

@@ -1,5 +1,5 @@
 import React, { useState,useEffect } from 'react';
-import {convertOptionstoListHelper} from '../util/helpers';
+import {bearerTokenConfig, convertOptionstoListHelper} from '../util/helpers';
 import axios from 'axios';
 
 // MATERIAL-UI COMPONENTS
@@ -77,14 +77,13 @@ function LaptopForm(props) {
     
     async function getOptionsForDropdown(dropdown) {
         try {
-            const response = await axios.get("http://localhost:3001/" + dropdown);
+            const response = await axios.get("http://localhost:3001/" + dropdown, bearerTokenConfig);
             return convertOptionstoListHelper(response.data);
         } catch (err) {
             console.error("Failed to load inventory");
             throw err;
         }
     }
-    // ------------------------------------------------------------------
 
     function createDefaultForm(){
         return JSON.parse(JSON.stringify({
