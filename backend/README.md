@@ -39,6 +39,8 @@ Append the token as a Bearer token on all subsequent requests to secure endpoint
 
 Login and user creation endpoints are the only ones publicly accessible.
 
+Note that at time of deployment, a SUPERADMIN user will need to be created manually and entered into the system. A JavaScript code snippet can be created to generate the required information to be inserted into MySQL.
+
 ## Future Enhancements 
 Some enhancements that can improve the application at a later date:
 - Rename endpoints to resource centric names 
