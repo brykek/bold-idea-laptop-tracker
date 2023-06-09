@@ -1,31 +1,32 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from "react-router-dom";
+import axios from 'axios';
 import {
     Container,
     Typography,
 } from '@mui/material';
-import axios from 'axios';
 
 import LaptopForm from '../components/LaptopForm';
 import { bearerTokenConfig } from '../util/helpers';
 
 function AddLaptopPage(props) {
     const navigate = useNavigate()
-    function createLaptop(laptopData,cb) {
-        console.log('Creating new laptop...');
-        console.log('Laptop Data:', laptopData)
-        
-        axios.post('http://localhost:3001/add', laptopData, bearerTokenConfig).then(res => {
-                alert('Laptop Added Successfully!');
-                cb()
-        })
-        .catch(err => alert("Something went wrong."))
+    function createLaptop(laptopData, cb) {
+        axios.post(
+            'http://localhost:3001/add', 
+            laptopData, 
+            bearerTokenConfig
+        ).then(() => {
+            alert('Laptop Added Successfully!');
+            cb();
+        }).catch((err) => {
+            console.err(err);
+            alert("Something went wrong.");
+        });
     }
 
     function discardEntry() {
-        console.log('Discard laptop.')
-        navigate('/inventory')
-        
+        navigate('/inventory');
     }
 
     return (

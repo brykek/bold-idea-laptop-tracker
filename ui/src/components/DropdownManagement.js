@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import DropdownManager from './DropdownManager';
-import {bearerTokenConfig, convertOptionstoListHelper, formatHeader} from '../util/helpers';
 import axios from "axios";
-
-// MATERIAL-UI COMPONENTS
 import {
     Typography,
     Box,
 } from '@mui/material';
+
+import DropdownManager from './DropdownManager';
+import {bearerTokenConfig, convertOptionstoListHelper, formatHeader} from '../util/helpers';
 
 const emptyOptionsData = {
     manufacturer: [],
@@ -23,7 +22,6 @@ function DropdownManagement() {
     const [options, setOptions] = useState();
 
     useEffect(() => {
-        console.log(`Getting options...`)
         getAllOptions();
     }, []);
 
@@ -48,7 +46,7 @@ function DropdownManagement() {
     }
 
     async function addOption(value, category) {
-        console.log(`Adding \"${value}\" to the list of \"${category}\" options...`);
+
         try {
             await axios.put("http://localhost:3001/" + category + "/" + value, bearerTokenConfig);
             getAllOptions();

@@ -1,8 +1,5 @@
 import React, { useState,useEffect } from 'react';
-import {bearerTokenConfig, convertOptionstoListHelper} from '../util/helpers';
 import axios from 'axios';
-
-// MATERIAL-UI COMPONENTS
 import {
     Typography,
     Box,
@@ -21,8 +18,6 @@ import {
     Paper,
     Alert
 } from '@mui/material';
-
-// MATERIAL ICONS
 import {
     Launch as LaunchIcon,
     Info as InfoIcon,
@@ -30,6 +25,9 @@ import {
     Save as SaveIcon,
 } from '@mui/icons-material';
 import dayjs from 'dayjs';
+
+import { bearerTokenConfig, convertOptionstoListHelper } from '../util/helpers';
+
 
 const emptyOptionsData = {
     manufacturer: [],
@@ -52,7 +50,6 @@ function LaptopForm(props) {
     // ------------------------------------------------------------------
     // Copied from DropdownManager.js to get allOptions at the beginnning
     useEffect(() => {
-        console.log(`Getting options...`)
         getAllOptions();
     }, []);
 
@@ -66,7 +63,6 @@ function LaptopForm(props) {
           // Slight modification here to add current laptop value as a possible option
           // so that it can be preselected when user edits a laptop
           if(props.laptopData) {
-            console.log(key + " : " + props.laptopData[key]);
             if(!optionsData[key].includes(props.laptopData[key])) {
                 optionsData[key].push(props.laptopData[key]);
             }
@@ -117,16 +113,6 @@ function LaptopForm(props) {
       setFormData({...data,date_donated:data.date_donated?formatDateString(data.date_donated):''});
     }, [props.laptopData]);
 
-    // const options = {
-    //     manufacturer: ['Apple', 'Windows'],
-    //     status: ['UNPROCESSED', 'DONATED', 'READY', 'INTERNAL', 'RECYCLE', 'REINSTALL', 'SOLD'],
-    //     donated_by: ['BetterUP', 'OrderMyGear'],
-    //     screen_size: ['12"', '13"', '15"', '16"'],
-    //     memory: ['8 GB', '16 GB', '32 GB'],
-    //     disk_size: ['128 GB', '256 GB', '512 GB', '1024 GB'],
-    //     laptop_condition: ['A', 'B', 'C'],
-    // };
-
     function checkRequiredFields() {
         setMissingSerial(!formData.serial_number);
         setMissingDonor(!formData.donated_by);
@@ -150,7 +136,6 @@ function LaptopForm(props) {
     }
 
     function handleSaveClick() {
-        console.log('attempting')
         checkRequiredFields();
         if (!formData.serial_number || !formData.donated_by || !formData.status) {
             setShowError(true);
