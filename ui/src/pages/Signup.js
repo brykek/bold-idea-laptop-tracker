@@ -33,7 +33,7 @@ function Signup() {
       setErrorMessage(Error.EMPTY_FIELD);
       return;
     }
-    axios.post('http://localhost:3001/signup', {
+    axios.post('http://localhost:3001/users', {
       username: username,
       password: password, 
       firstName: firstName,

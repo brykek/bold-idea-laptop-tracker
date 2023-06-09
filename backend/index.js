@@ -125,7 +125,7 @@ app.post("/login", authLocal, (req, res, next) => {
 });
 
 // Create new user 
-app.post("/signup", (req, res, next) => {
+app.post("/users", (req, res, next) => {
   const username = req.body.username;
   const password = req.body.password;
   const firstName = req.body.firstName;
