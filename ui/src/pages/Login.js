@@ -50,7 +50,7 @@ function Login() {
       navigate('/inventory');
 			window.location.reload(false);
 		}).catch((err) => {
-      console.log(err);
+      console.error(err);
       if (err.response.status === 401) {
 			  setErrorMessage('Incorrect username or password.');
       } else { 

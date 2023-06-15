@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import axios from "axios";
+import axios from 'axios';
 import {
     Typography,
     Box,
 } from '@mui/material';
 
 import DropdownManager from './DropdownManager';
-import {bearerTokenConfig, convertOptionstoListHelper, formatHeader} from '../util/helpers';
+import { bearerTokenConfig, convertOptionstoListHelper, formatHeader } from '../util/helpers';
 
 const emptyOptionsData = {
     manufacturer: [],
@@ -46,20 +46,17 @@ function DropdownManagement() {
     }
 
     async function addOption(value, category) {
-
         try {
-            await axios.put("http://localhost:3001/" + category + "/" + value, bearerTokenConfig);
+            await axios.put("http://localhost:3001/" + category + "/" + value, {}, bearerTokenConfig);
             getAllOptions();
             Promise.resolve();
         } catch (err) {
             console.error("Failed to add option");
             throw err;
         }
-
     }
 
     async function removeOption(value, category) {
-        console.log(`Removing \"${value}\" from the list of \"${category}\" options...`);
         try {
             await axios.delete("http://localhost:3001/" + category + "/" + value, bearerTokenConfig);
             getAllOptions();

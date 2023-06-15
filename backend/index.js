@@ -7,16 +7,20 @@ const JwtStrategy = require("passport-jwt").Strategy;
 const ExtractJwt = require("passport-jwt").ExtractJwt;
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
-
-const roles = require("./enums/roles");
+const cors = require("cors");
+const ROLES = require("./enums/roles");
+const ERRORS = require("./enums/errors");
 
 // TODO: Secret needs to be passed as app setting or env var during deployment 
 const JWT_SECRET = "Thisisasecret";
 
+// Passwords must be at least 8 chars long and contain 1 lowercase letter, 1 uppercase letter, 1 digit, 1 special character
+const PASSWORD_REGEX = new RegExp("(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{8,})");
+const ALPHANUMERIC_REGEX = new RegExp(/^[a-z0-9]+$/i);
+
 const app = express();
 
 // Configure universal app settings 
-const cors = require("cors");
 app.use(cors());
 app.options("*", cors()); // enable pre-flight
 app.use(bodyParser.json());
@@ -27,10 +31,10 @@ app.use(express.json());
 app.use(passport.initialize());
 
 // Configure DB connection
-// Note: Backend is vulnerable to SQL Injection
+// Note: Backend may be vulnerable to SQL Injection
 // TODO: DB credentials needs to be passed as app settings or env var during deployment
 const db = mysql.createConnection({
-  host: "127.0.0.1",
+  host: "localhost",
   user: "root",
   password: "password",
   database: "LaptopTracker",
@@ -47,7 +51,7 @@ db.connect((err) => {
 // Middleware
 // Configure LocalStrategy for username + password login
 const localStrategy = new LocalStrategy(function verify(username, password, done) {
-  db.query('SELECT * FROM users WHERE username = ?', [ username ], function(err, row) {
+  db.query('SELECT * FROM users WHERE username = ?', [username], function(err, row) {
     if (err) { return done(err); }
     if (!row || row.length == 0) { return done(null, false); };
 
@@ -71,7 +75,7 @@ const opts = {
 
 const jwtStrategy = new JwtStrategy(opts, (token, done) => {
   try {
-    db.query("SELECT * FROM users WHERE id = ?", [ token.id ], function(err, user) {
+    db.query("SELECT * FROM users WHERE id = ?", [token.id], function(err, user) {
       if (err) { return done(err); }
       if (!user) { return done(null, false); }
       return done(null, user);
@@ -87,6 +91,7 @@ passport.use(jwtStrategy);
 const authLocal = passport.authenticate("local", { session: false });
 const authJwt = passport.authenticate("jwt", { session: false });
 
+// Authentication Utils
 createToken = (user) => {
   return jwt.sign(
     {
@@ -110,7 +115,7 @@ createJwt = (user) => {
 
 const isAdmin = async (req, res, next) => {
   var userRole = req.user[0].role;
-  if (userRole === roles.USER) {
+  if (userRole === ROLES.USER) {
     return res.status(401).send();
   }
   next();
@@ -132,16 +137,28 @@ app.post("/users", (req, res, next) => {
   const lastName = req.body.lastName;
   const salt = crypto.randomBytes(16);
 
+  if (typeof username !== 'string' || typeof password !== 'string' || typeof firstName !== 'string' || typeof lastName !== 'string') {
+    res.status(400).send(ERRORS.INVALID_PARAMETERS);
+    return;
+  }
+  if (!ALPHANUMERIC_REGEX.test(firstName) || !ALPHANUMERIC_REGEX.test(lastName)) { 
+    res.status(400).send(ERRORS.ALPHANUMERIC_ONLY);
+    return;
+  }
+  if (!PASSWORD_REGEX.test(password)) { 
+    res.status(400).send(ERRORS.PASSWORD_COMPLEXITY);
+    return;
+  }
+
   crypto.pbkdf2(password, salt, 310000, 32, 'sha256', function(err, hashedPassword) {
     if (err) { return cb(err); }
-
     db.query(
       "INSERT INTO users (firstName, lastName, username, password, salt, role) VALUES (?, ?, ?, ?, ?, ?)",
-      [firstName, lastName, username, hashedPassword, salt, roles.USER],
+      [firstName, lastName, username, hashedPassword, salt, ROLES.USER],
       (err, result) => {
         if (err) {
           if (err.code === "ER_DUP_ENTRY") {
-            res.status(409).send("Username already exists");
+            res.status(409).send(ERRORS.USER_EXISTS);
           } else {
             next(err);
           };
@@ -169,14 +186,26 @@ app.put("/users/:id", authJwt, (req, res, next) => {
   const role = req.body.role;
   const requestUserId = parseInt(req.user[0].id);
 
+  if (typeof id !== 'number') {
+    res.status(400).send(ERRORS.INVALID_PARAMETERS);
+  }
+
   if (req.body.password) { 
     // Password changes only allowed on self or on others by admin
     if (requestUserId === id || 
-      req.user[0].role === roles.ADMIN || 
-      req.user[0].role === roles.SUPERADMIN) 
+      req.user[0].role === ROLES.ADMIN || 
+      req.user[0].role === ROLES.SUPERADMIN) 
     { 
       const password = req.body.password;
       const salt = crypto.randomBytes(16);
+
+      if (typeof password !== 'string') { 
+        res.status(400).send(ERRORS.INVALID_PARAMETERS);
+      }
+      if (!PASSWORD_REGEX.test(password)) { 
+        res.status(400).send(ERRORS.PASSWORD_COMPLEXITY);
+      }
+
       crypto.pbkdf2(password, salt, 310000, 32, 'sha256', function(err, hashedPassword) {
         if (err) { return cb(err); }
         let query = "UPDATE users SET password = ?, salt = ? WHERE id = ?";
@@ -189,10 +218,15 @@ app.put("/users/:id", authJwt, (req, res, next) => {
       res.status(401).send();
     }
   } else { 
-    if (req.user[0].role === roles.ADMIN || req.user[0].role === roles.SUPERADMIN) {
+    if (req.user[0].role === ROLES.ADMIN || req.user[0].role === ROLES.SUPERADMIN) {
+      
       // Do not allow role changes to self
       if (requestUserId === id) { 
-        res.status(400).send({ message: 'Unable to apply changes to user,' });
+        res.status(400).send(ERRORS.USER_CHANGES_FAIL);
+      }
+
+      if (typeof role !== 'string') { 
+        res.status(400).send(ERRORS.INVALID_PARAMETERS);
       }
 
       let query = "UPDATE users SET role = ? WHERE id = ?";
@@ -208,9 +242,15 @@ app.put("/users/:id", authJwt, (req, res, next) => {
 
 // Delete user
 app.delete("/users/:id", authJwt, isAdmin, (req, res, next) => {
+  const id = req.params.id;
+
+  if (typeof id !== 'number') {
+    res.status(400).send(ERRORS.INVALID_PARAMETERS);
+  }
+
   let query = "DELETE FROM users WHERE id = ?";
 
-  db.query(query, [req.params.id], (err, result) => {
+  db.query(query, [id], (err, result) => {
     if (err) next(err);
     res.send();
   })
@@ -228,9 +268,15 @@ app.get("/inventory", authJwt, (req, res) => {
 
 // Get laptop by Id
 app.get("/inventory/:id", authJwt, (req, res) => {
+  const id = req.params.id;
+
+  if (typeof id !== 'number') { 
+    res.status(400).send(ERRORS.INVALID_PARAMETERS);
+  }
+
   let sqlQuery = "SELECT * FROM laptops WHERE id = ? LIMIT 1";
 
-  db.query(sqlQuery, [req.params.id], (err, results) => {
+  db.query(sqlQuery, [id], (err, results) => {
     if (err) return next(err)
 
     if (results.length === 0) {
@@ -266,6 +312,7 @@ function createLaptopBody(req) {
 }
 
 // Add a new laptop 
+// TODO: type checking on variables to be inserted
 app.post("/add", authJwt, (req, res, next) => {
   let sqlQuery = "INSERT INTO laptops SET ?";
 
@@ -276,9 +323,10 @@ app.post("/add", authJwt, (req, res, next) => {
 });
 
 // Update laptop by Id
+// TODO: typechecking
 app.put("/edit/:id", authJwt, (req, res, next) => {
-    let body = createLaptopBody(req)
-    let sqlQuery = "UPDATE laptops SET ? WHERE id=?"
+    let body = createLaptopBody(req);
+    let sqlQuery = "UPDATE laptops SET ? WHERE id = ?";
   db.query(sqlQuery,[body,req.params.id], (err, results) => {
     if (err) next(err)
     else res.status(204).send(results);
@@ -287,7 +335,15 @@ app.put("/edit/:id", authJwt, (req, res, next) => {
 
 // Get dropdown options
 app.get("/:dropdown", authJwt, (req, res) => {
-  let sqlQuery = "SELECT * FROM " + req.params.dropdown;
+  const dropdown = req.params.dropdown;
+
+  if (typeof dropdown !== 'string') { 
+    res.status(400).send(ERRORS.INVALID_PARAMETERS);
+    return;
+  }
+
+  let sql = "SELECT * FROM ??";
+  let sqlQuery = mysql.format(sql, [dropdown]);
 
   db.query(sqlQuery, (err, results) => {
     if (err) next(err)
@@ -297,9 +353,16 @@ app.get("/:dropdown", authJwt, (req, res) => {
 
 // Add dropdown option 
 app.put("/:dropdown/:option", authJwt, (req, res, next) => {    
-  let sqlQuery = `INSERT INTO ${req.params.dropdown}(options) VALUES (\'${req.params.option}\')`;
+  const dropdown = req.params.dropdown;
+  const option = req.params.option;
 
-  db.query(sqlQuery, (err, results) => {
+  if (typeof dropdown !== 'string' || typeof option !== 'string') { 
+    res.status(400).send(ERRORS.INVALID_PARAMETERS);
+  }
+
+  let sqlQuery = `INSERT INTO ${dropdown}(options) VALUES (?)`;
+
+  db.query(sqlQuery, [option], (err, results) => {
     if (err) next(err)
     else res.status(204).send(results);
   });
@@ -307,9 +370,16 @@ app.put("/:dropdown/:option", authJwt, (req, res, next) => {
 
 // Delete dropdown option
 app.delete("/:dropdown/:option", authJwt, (req, res, next) => {    
-  let sqlQuery = `DELETE FROM ${req.params.dropdown} WHERE options = \'${req.params.option}\'`;
+  const dropdown = req.params.dropdown;
+  const option = req.params.option; 
 
-  db.query(sqlQuery, (err, results) => {
+  if (typeof dropdown !== 'string' || typeof option !== 'string') {
+    req.status(400).send(ERRORS.INVALID_PARAMETERS);
+  }
+
+  let sqlQuery = `DELETE FROM ${dropdown} WHERE options = ?`;
+
+  db.query(sqlQuery, [option], (err, results) => {
     if (err) next(err)
     else res.status(204).send(results);
   });
