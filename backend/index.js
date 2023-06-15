@@ -20,6 +20,7 @@ const ALPHANUMERIC_REGEX = new RegExp(/^[a-z0-9]+$/i);
 
 const app = express();
 
+
 // Configure universal app settings 
 app.use(cors());
 app.options("*", cors()); // enable pre-flight
@@ -29,6 +30,7 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(express.json());
 app.use(passport.initialize());
+
 
 // Configure DB connection
 // Note: Backend may be vulnerable to SQL Injection
@@ -47,6 +49,7 @@ db.connect((err) => {
     console.log("MySQL db connected");
   }
 });
+
 
 // Middleware
 // Configure LocalStrategy for username + password login
@@ -91,6 +94,7 @@ passport.use(jwtStrategy);
 const authLocal = passport.authenticate("local", { session: false });
 const authJwt = passport.authenticate("jwt", { session: false });
 
+
 // Authentication Utils
 createToken = (user) => {
   return jwt.sign(
@@ -120,6 +124,59 @@ const isAdmin = async (req, res, next) => {
   }
   next();
 }
+
+
+// Utils 
+function createLaptopBody(req) {
+  return {
+    serial_number: req.body.serial_number,
+    manufacturer: req.body.manufacturer,
+    laptop_id: req.body.laptop_id,
+    status: req.body.status,
+    donated_by: req.body.donated_by,
+    date_donated: req.body.date_donated,
+    model: req.body.model,
+    screen_size: req.body.screen_size,
+    cpu_type: req.body.cpu_type,
+    memory: req.body.memory,
+    disk_size: req.body.disk_size,
+    laptop_condition: req.body.laptop_condition,
+    charger_type: req.body.charger_type,
+    charger_included: req.body.charger_included,
+    trade_in_value: req.body.trade_in_value,
+    list_price: req.body.list_price,
+    sold_price: req.body.sold_price,
+    notes: req.body.notes,
+    last_edited: new Date(),
+    archived_date: req.body.archived_date ?? null
+  }
+}
+
+const laptopFieldTypeCheck = (laptop) => {
+  return (
+    typeof laptop.serial_number !== 'string' ||
+    typeof laptop.manufacturer !== 'string' ||
+    typeof laptop.laptop_id !== 'string' ||
+    typeof laptop.status !== 'string' ||
+    typeof laptop.donated_by !== 'string' ||
+    typeof laptop.date_donated !== 'object'||
+    typeof laptop.model !== 'string' ||
+    typeof laptop.screen_size !== "string" ||
+    typeof laptop.cpu_type !== "string" ||
+    typeof laptop.memory !== "string" ||
+    typeof laptop.disk_size !== "string" ||
+    typeof laptop.laptop_condition !== "string" ||
+    typeof laptop.charger_type !== "string" || 
+    typeof laptop.charger_included !== "boolean" || 
+    typeof laptop.trade_in_value !== "number" ||
+    typeof laptop.list_price !== "number" ||
+    typeof laptop.sold_price !== "number" ||
+    typeof laptop.notes !== "string" ||
+    typeof laptop.last_edited !== "object" ||
+    typeof laptop.archived_date !== "object"
+  );
+}
+
 
 // API Endpoints
 // Login using username + password
@@ -224,8 +281,10 @@ app.put("/users/:id", authJwt, (req, res, next) => {
       if (requestUserId === id) { 
         res.status(400).send(ERRORS.USER_CHANGES_FAIL);
       }
-
       if (typeof role !== 'string') { 
+        res.status(400).send(ERRORS.INVALID_PARAMETERS);
+      }
+      if (!ALPHANUMERIC_REGEX.test(role)) { 
         res.status(400).send(ERRORS.INVALID_PARAMETERS);
       }
 
@@ -286,58 +345,46 @@ app.get("/inventory/:id", authJwt, (req, res) => {
   });
 });
 
-function createLaptopBody(req) {
-  return {
-    serial_number: req.body.serial_number,
-    manufacturer: req.body.manufacturer,
-    laptop_id: req.body.laptop_id,
-    status: req.body.status,
-    donated_by: req.body.donated_by,
-    date_donated: req.body.date_donated,
-    model: req.body.model,
-    screen_size: req.body.screen_size,
-    cpu_type: req.body.cpu_type,
-    memory: req.body.memory,
-    disk_size: req.body.disk_size,
-    laptop_condition: req.body.laptop_condition,
-    charger_type: req.body.charger_type,
-    charger_included: req.body.charger_included,
-    trade_in_value: req.body.trade_in_value,
-    list_price: req.body.list_price,
-    sold_price: req.body.sold_price,
-    notes: req.body.notes,
-    last_edited: new Date(),
-    archived_date: req.body.archived_date??null,
-  }
-}
-
 // Add a new laptop 
-// TODO: type checking on variables to be inserted
 app.post("/add", authJwt, (req, res, next) => {
   let sqlQuery = "INSERT INTO laptops SET ?";
+  let laptop = createLaptopBody(req);
 
-  db.query(sqlQuery, createLaptopBody(req), (err, results) => {
+  if (laptopFieldTypeCheck) { 
+    res.status(400).send(ERRORS.INVALID_PARAMETERS);
+  }
+
+  db.query(sqlQuery, laptop, (err, results) => {
     if (err) {next(err)}
     else res.status(201).send();
   });
 });
 
 // Update laptop by Id
-// TODO: typechecking
 app.put("/edit/:id", authJwt, (req, res, next) => {
-    let body = createLaptopBody(req);
-    let sqlQuery = "UPDATE laptops SET ? WHERE id = ?";
-  db.query(sqlQuery,[body,req.params.id], (err, results) => {
+  const id = req.params.id; 
+  let laptop = createLaptopBody(req);
+
+  if (typeof id !== "number") {
+    res.status(400).send(ERRORS.INVALID_PARAMETERS);
+  }
+  if (laptopFieldTypeCheck) { 
+    res.status(400).send(ERRORS.INVALID_PARAMETERS);
+  }
+
+  let sqlQuery = "UPDATE laptops SET ? WHERE id = ?";
+  db.query(sqlQuery,[laptop, id], (err, results) => {
     if (err) next(err)
     else res.status(204).send(results);
   });
 });
 
 // Get dropdown options
+// Consider adding regex to check dropdown and option values
 app.get("/:dropdown", authJwt, (req, res) => {
   const dropdown = req.params.dropdown;
 
-  if (typeof dropdown !== 'string') { 
+  if (typeof dropdown !== "string") { 
     res.status(400).send(ERRORS.INVALID_PARAMETERS);
     return;
   }
