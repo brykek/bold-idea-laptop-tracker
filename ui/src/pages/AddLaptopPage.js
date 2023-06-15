@@ -20,7 +20,7 @@ function AddLaptopPage(props) {
             alert('Laptop Added Successfully!');
             cb();
         }).catch((err) => {
-            console.err(err);
+            console.error(err);
             alert("Something went wrong.");
         });
     }

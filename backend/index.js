@@ -2,12 +2,13 @@ const express = require("express");
 const mysql = require("mysql");
 const bodyParser = require("body-parser");
 const passport = require("passport");
-const LocalStrategy = require('passport-local');
+const LocalStrategy = require("passport-local");
 const JwtStrategy = require("passport-jwt").Strategy;
 const ExtractJwt = require("passport-jwt").ExtractJwt;
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const cors = require("cors");
+
 const ROLES = require("./enums/roles");
 const ERRORS = require("./enums/errors");
 
@@ -44,7 +45,7 @@ const db = mysql.createConnection({
 
 db.connect((err) => {
   if (err) {
-    console.err(err);
+    console.error(err);
   } else {
     console.log("MySQL db connected");
   }
@@ -54,13 +55,13 @@ db.connect((err) => {
 // Middleware
 // Configure LocalStrategy for username + password login
 const localStrategy = new LocalStrategy(function verify(username, password, done) {
-  db.query('SELECT * FROM users WHERE username = ?', [username], function(err, row) {
+  db.query("SELECT * FROM users WHERE username = ?", [username], function(err, row) {
     if (err) { return done(err); }
     if (!row || row.length == 0) { return done(null, false); };
 
     var user = row[0];
 
-    crypto.pbkdf2(password, user.salt, 310000, 32, 'sha256', function(err, hashedPassword) {
+    crypto.pbkdf2(password, user.salt, 310000, 32, "sha256", function(err, hashedPassword) {
       if (err) { return cb(err); }
       if (!crypto.timingSafeEqual(user.password, hashedPassword)) {
         return done(null, false);
@@ -143,38 +144,13 @@ function createLaptopBody(req) {
     laptop_condition: req.body.laptop_condition,
     charger_type: req.body.charger_type,
     charger_included: req.body.charger_included,
-    trade_in_value: req.body.trade_in_value,
-    list_price: req.body.list_price,
-    sold_price: req.body.sold_price,
+    trade_in_value: parseFloat(req.body.trade_in_value),
+    list_price: parseFloat(req.body.list_price),
+    sold_price: parseFloat(req.body.sold_price),
     notes: req.body.notes,
     last_edited: new Date(),
     archived_date: req.body.archived_date ?? null
   }
-}
-
-const laptopFieldTypeCheck = (laptop) => {
-  return (
-    typeof laptop.serial_number !== 'string' ||
-    typeof laptop.manufacturer !== 'string' ||
-    typeof laptop.laptop_id !== 'string' ||
-    typeof laptop.status !== 'string' ||
-    typeof laptop.donated_by !== 'string' ||
-    typeof laptop.date_donated !== 'object'||
-    typeof laptop.model !== 'string' ||
-    typeof laptop.screen_size !== "string" ||
-    typeof laptop.cpu_type !== "string" ||
-    typeof laptop.memory !== "string" ||
-    typeof laptop.disk_size !== "string" ||
-    typeof laptop.laptop_condition !== "string" ||
-    typeof laptop.charger_type !== "string" || 
-    typeof laptop.charger_included !== "boolean" || 
-    typeof laptop.trade_in_value !== "number" ||
-    typeof laptop.list_price !== "number" ||
-    typeof laptop.sold_price !== "number" ||
-    typeof laptop.notes !== "string" ||
-    typeof laptop.last_edited !== "object" ||
-    typeof laptop.archived_date !== "object"
-  );
 }
 
 
@@ -194,7 +170,7 @@ app.post("/users", (req, res, next) => {
   const lastName = req.body.lastName;
   const salt = crypto.randomBytes(16);
 
-  if (typeof username !== 'string' || typeof password !== 'string' || typeof firstName !== 'string' || typeof lastName !== 'string') {
+  if (typeof username !== "string" || typeof password !== "string" || typeof firstName !== "string" || typeof lastName !== "string") {
     res.status(400).send(ERRORS.INVALID_PARAMETERS);
     return;
   }
@@ -207,7 +183,7 @@ app.post("/users", (req, res, next) => {
     return;
   }
 
-  crypto.pbkdf2(password, salt, 310000, 32, 'sha256', function(err, hashedPassword) {
+  crypto.pbkdf2(password, salt, 310000, 32, "sha256", function(err, hashedPassword) {
     if (err) { return cb(err); }
     db.query(
       "INSERT INTO users (firstName, lastName, username, password, salt, role) VALUES (?, ?, ?, ?, ?, ?)",
@@ -243,7 +219,7 @@ app.put("/users/:id", authJwt, (req, res, next) => {
   const role = req.body.role;
   const requestUserId = parseInt(req.user[0].id);
 
-  if (typeof id !== 'number') {
+  if (typeof id !== "number") {
     res.status(400).send(ERRORS.INVALID_PARAMETERS);
   }
 
@@ -256,14 +232,14 @@ app.put("/users/:id", authJwt, (req, res, next) => {
       const password = req.body.password;
       const salt = crypto.randomBytes(16);
 
-      if (typeof password !== 'string') { 
+      if (typeof password !== "string") { 
         res.status(400).send(ERRORS.INVALID_PARAMETERS);
       }
       if (!PASSWORD_REGEX.test(password)) { 
         res.status(400).send(ERRORS.PASSWORD_COMPLEXITY);
       }
 
-      crypto.pbkdf2(password, salt, 310000, 32, 'sha256', function(err, hashedPassword) {
+      crypto.pbkdf2(password, salt, 310000, 32, "sha256", function(err, hashedPassword) {
         if (err) { return cb(err); }
         let query = "UPDATE users SET password = ?, salt = ? WHERE id = ?";
         db.query(query, [hashedPassword, salt, id], (err, result) => {
@@ -281,7 +257,7 @@ app.put("/users/:id", authJwt, (req, res, next) => {
       if (requestUserId === id) { 
         res.status(400).send(ERRORS.USER_CHANGES_FAIL);
       }
-      if (typeof role !== 'string') { 
+      if (typeof role !== "string") { 
         res.status(400).send(ERRORS.INVALID_PARAMETERS);
       }
       if (!ALPHANUMERIC_REGEX.test(role)) { 
@@ -301,9 +277,9 @@ app.put("/users/:id", authJwt, (req, res, next) => {
 
 // Delete user
 app.delete("/users/:id", authJwt, isAdmin, (req, res, next) => {
-  const id = req.params.id;
+  const id = parseInt(req.params.id);
 
-  if (typeof id !== 'number') {
+  if (typeof id !== "number") {
     res.status(400).send(ERRORS.INVALID_PARAMETERS);
   }
 
@@ -327,9 +303,9 @@ app.get("/inventory", authJwt, (req, res) => {
 
 // Get laptop by Id
 app.get("/inventory/:id", authJwt, (req, res) => {
-  const id = req.params.id;
+  const id = parseInt(req.params.id);
 
-  if (typeof id !== 'number') { 
+  if (typeof id !== "number") { 
     res.status(400).send(ERRORS.INVALID_PARAMETERS);
   }
 
@@ -339,54 +315,50 @@ app.get("/inventory/:id", authJwt, (req, res) => {
     if (err) return next(err)
 
     if (results.length === 0) {
-      return res.status(404).send('Laptop with serial number', req.params.id, 'not found.');
+      return res.status(404).send("Laptop with serial number", id, "not found.");
     }
     return res.send(results[0]);    
   });
 });
 
 // Add a new laptop 
+// TODO: Consider adding type checks once laptop class is better defined
 app.post("/add", authJwt, (req, res, next) => {
   let sqlQuery = "INSERT INTO laptops SET ?";
   let laptop = createLaptopBody(req);
-
-  if (laptopFieldTypeCheck) { 
-    res.status(400).send(ERRORS.INVALID_PARAMETERS);
-  }
-
   db.query(sqlQuery, laptop, (err, results) => {
     if (err) {next(err)}
-    else res.status(201).send();
+    else return res.status(201).send();
   });
 });
 
 // Update laptop by Id
 app.put("/edit/:id", authJwt, (req, res, next) => {
-  const id = req.params.id; 
+  const id = parseInt(req.params.id); 
   let laptop = createLaptopBody(req);
 
   if (typeof id !== "number") {
-    res.status(400).send(ERRORS.INVALID_PARAMETERS);
-  }
-  if (laptopFieldTypeCheck) { 
-    res.status(400).send(ERRORS.INVALID_PARAMETERS);
+    return res.status(400).send(ERRORS.INVALID_PARAMETERS);
   }
 
   let sqlQuery = "UPDATE laptops SET ? WHERE id = ?";
   db.query(sqlQuery,[laptop, id], (err, results) => {
-    if (err) next(err)
-    else res.status(204).send(results);
+    if (err) {
+      console.log(err);
+      next(err);
+    } else {
+      return res.status(204).send(results);
+    }
   });
 });
 
 // Get dropdown options
-// Consider adding regex to check dropdown and option values
+// TODO: Consider adding regex to check dropdown and option values
 app.get("/:dropdown", authJwt, (req, res) => {
   const dropdown = req.params.dropdown;
 
   if (typeof dropdown !== "string") { 
-    res.status(400).send(ERRORS.INVALID_PARAMETERS);
-    return;
+    return res.status(400).send(ERRORS.INVALID_PARAMETERS);
   }
 
   let sql = "SELECT * FROM ??";
@@ -394,7 +366,7 @@ app.get("/:dropdown", authJwt, (req, res) => {
 
   db.query(sqlQuery, (err, results) => {
     if (err) next(err)
-    res.send(results);
+    return res.send(results);
   });
 });
 
@@ -403,7 +375,7 @@ app.put("/:dropdown/:option", authJwt, (req, res, next) => {
   const dropdown = req.params.dropdown;
   const option = req.params.option;
 
-  if (typeof dropdown !== 'string' || typeof option !== 'string') { 
+  if (typeof dropdown !== "string" || typeof option !== "string") { 
     res.status(400).send(ERRORS.INVALID_PARAMETERS);
   }
 
@@ -420,7 +392,7 @@ app.delete("/:dropdown/:option", authJwt, (req, res, next) => {
   const dropdown = req.params.dropdown;
   const option = req.params.option; 
 
-  if (typeof dropdown !== 'string' || typeof option !== 'string') {
+  if (typeof dropdown !== "string" || typeof option !== "string") {
     req.status(400).send(ERRORS.INVALID_PARAMETERS);
   }
 

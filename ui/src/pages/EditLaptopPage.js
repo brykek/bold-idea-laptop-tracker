@@ -24,7 +24,7 @@ function EditLaptopPage(props) {
                 setLaptopData(res.data);
                 setLoading(false)
             }).catch((err) => {
-                console.err(err);
+                console.error(err);
                 alert('Something went wrong!');
                 navigate('/inventory');
             });
@@ -40,7 +40,7 @@ function EditLaptopPage(props) {
             alert('Laptop Updated Successfully!');
             navigate('/inventory');
         }).catch((err) => {
-            console.err(err);
+            console.error(err);
             alert("Something went wrong.");
         });
     }
