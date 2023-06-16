@@ -16,6 +16,8 @@ import {
 import { loggedIn } from '../util/helpers';
 import Errors from '../enums/errors';
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
 
 function Login() {
   const navigate = useNavigate();
@@ -37,7 +39,7 @@ function Login() {
       return;
     }
 
-		axios.post('http://localhost:3001/login', {
+		axios.post(`${API_BASE_URL}/login`, {
 			username: username,
 			password: password
 		}).then((response) => {

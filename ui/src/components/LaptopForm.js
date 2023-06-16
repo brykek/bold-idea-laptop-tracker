@@ -28,6 +28,7 @@ import dayjs from 'dayjs';
 
 import { bearerTokenConfig, convertOptionstoListHelper } from '../util/helpers';
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
 const emptyOptionsData = {
     manufacturer: [],
@@ -73,7 +74,7 @@ function LaptopForm(props) {
     
     async function getOptionsForDropdown(dropdown) {
         try {
-            const response = await axios.get("http://localhost:3001/" + dropdown, bearerTokenConfig);
+            const response = await axios.get(`${API_BASE_URL}/${dropdown}`, bearerTokenConfig);
             return convertOptionstoListHelper(response.data);
         } catch (err) {
             console.error("Failed to load inventory");

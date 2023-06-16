@@ -8,6 +8,8 @@ import {
 import DropdownManager from './DropdownManager';
 import { bearerTokenConfig, convertOptionstoListHelper, formatHeader } from '../util/helpers';
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
 const emptyOptionsData = {
     manufacturer: [],
     status: [],
@@ -37,7 +39,7 @@ function DropdownManagement() {
     
     async function getOptionsForDropdown(dropdown) {
         try {
-            const response = await axios.get("http://localhost:3001/" + dropdown, bearerTokenConfig);
+            const response = await axios.get(`${API_BASE_URL}/${dropdown}`, bearerTokenConfig);
             return convertOptionstoListHelper(response.data);
         } catch (err) {
             console.error("Failed to load inventory");
@@ -47,7 +49,7 @@ function DropdownManagement() {
 
     async function addOption(value, category) {
         try {
-            await axios.put("http://localhost:3001/" + category + "/" + value, {}, bearerTokenConfig);
+            await axios.put(`${API_BASE_URL}/${category}/${value}`, {}, bearerTokenConfig);
             getAllOptions();
             Promise.resolve();
         } catch (err) {
@@ -58,7 +60,7 @@ function DropdownManagement() {
 
     async function removeOption(value, category) {
         try {
-            await axios.delete("http://localhost:3001/" + category + "/" + value, bearerTokenConfig);
+            await axios.delete(`${API_BASE_URL}/${category}/${value}`, bearerTokenConfig);
             getAllOptions();
             Promise.resolve();
         } catch (err) {

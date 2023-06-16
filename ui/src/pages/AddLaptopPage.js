@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import {
     Container,
@@ -9,11 +9,14 @@ import {
 import LaptopForm from '../components/LaptopForm';
 import { bearerTokenConfig } from '../util/helpers';
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
+
 function AddLaptopPage(props) {
     const navigate = useNavigate()
     function createLaptop(laptopData, cb) {
         axios.post(
-            'http://localhost:3001/add', 
+            `${API_BASE_URL}/add`, 
             laptopData, 
             bearerTokenConfig
         ).then(() => {
@@ -21,7 +24,7 @@ function AddLaptopPage(props) {
             cb();
         }).catch((err) => {
             console.error(err);
-            alert("Something went wrong.");
+            alert('Something went wrong.');
         });
     }
 

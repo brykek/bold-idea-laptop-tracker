@@ -9,6 +9,9 @@ import {
 import LaptopForm from '../components/LaptopForm';
 import { bearerTokenConfig } from '../util/helpers';
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
+
 function EditLaptopPage(props) {
     const navigate = useNavigate()
     const [loading,setLoading] = useState(true)
@@ -18,13 +21,13 @@ function EditLaptopPage(props) {
     useEffect(() => {
         if (!laptopData) {
             axios.get(
-                `http://localhost:3001/inventory/${id}`,
+                `${API_BASE_URL}/inventory/${id}`,
                 bearerTokenConfig
             ).then((res)=> { 
                 setLaptopData(res.data);
                 setLoading(false)
             }).catch((err) => {
-                console.error(err);
+                console.err(err);
                 alert('Something went wrong!');
                 navigate('/inventory');
             });
@@ -33,7 +36,7 @@ function EditLaptopPage(props) {
 
     function updateLaptop(laptopData) {
         axios.put(
-            `http://localhost:3001/edit/${id}`,
+            `${API_BASE_URL}/edit/${id}`,
             laptopData,
             bearerTokenConfig
         ).then(()=>{

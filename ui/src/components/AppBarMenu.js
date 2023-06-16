@@ -25,6 +25,8 @@ import Error from '../enums/errors';
 import { bearerTokenConfig, ProtectedComponent } from '../util/helpers';
 import logo from '../assets/logo.png';
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
 
 function AppBarMenu() {
     const [anchorElUser, setAnchorElUser] = useState(false);  
@@ -56,7 +58,7 @@ function AppBarMenu() {
         }
 
         axios.put(
-            `http://localhost:3001/users/${currentUserId}`,
+            `${API_BASE_URL}/${currentUserId}`,
             targetUser,
             bearerTokenConfig
         ).then(() => {

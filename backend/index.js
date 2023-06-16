@@ -8,6 +8,7 @@ const ExtractJwt = require("passport-jwt").ExtractJwt;
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const cors = require("cors");
+const dotenv = require("dotenv");
 
 const ROLES = require("./enums/roles");
 const ERRORS = require("./enums/errors");
@@ -15,7 +16,6 @@ const ERRORS = require("./enums/errors");
 // TODO: Secret needs to be passed as app setting or env var during deployment 
 const JWT_SECRET = "Thisisasecret";
 
-// Passwords must be at least 8 chars long and contain 1 lowercase letter, 1 uppercase letter, 1 digit, 1 special character
 const PASSWORD_REGEX = new RegExp("(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{8,})");
 const ALPHANUMERIC_REGEX = new RegExp(/^[a-z0-9]+$/i);
 
@@ -23,6 +23,7 @@ const app = express();
 
 
 // Configure universal app settings 
+dotenv.config();
 app.use(cors());
 app.options("*", cors()); // enable pre-flight
 app.use(bodyParser.json());
@@ -33,21 +34,22 @@ app.use(express.json());
 app.use(passport.initialize());
 
 
+
 // Configure DB connection
 // Note: Backend may be vulnerable to SQL Injection
 // TODO: DB credentials needs to be passed as app settings or env var during deployment
 const db = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "password",
-  database: "LaptopTracker",
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASS,
+  database: process.env.DB_NAME
 });
 
 db.connect((err) => {
   if (err) {
     console.error(err);
   } else {
-    console.log("MySQL db connected");
+    console.log(`Connected to MySQL DB: ${process.env.DB_NAME}`);
   }
 });
 
@@ -405,8 +407,8 @@ app.delete("/:dropdown/:option", authJwt, (req, res, next) => {
 });
 
  
-app.listen(3001, () => {
-  console.log("Server running on port 3001");
+app.listen(process.env.PORT, () => {
+  console.log(`Server running on port ${process.env.PORT}`);
 });
 
 app.use((err, req, res, next) => {

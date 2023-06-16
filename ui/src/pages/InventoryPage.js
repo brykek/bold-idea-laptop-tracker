@@ -8,6 +8,7 @@ import LaptopTable from "../components/LaptopTable";
 import LaptopDetailModal from "../components/LaptopDetailModal";
 import { bearerTokenConfig } from "../util/helpers";
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
 const InventoryPage = () => {
   const [allLaptops, setAllLaptops] = useState([]);
@@ -57,7 +58,7 @@ const InventoryPage = () => {
 
   useEffect(() => {
       axios.get(
-        "http://localhost:3001/inventory", 
+        `${API_BASE_URL}/inventory`, 
         bearerTokenConfig
       ).then((response) => {
         setAllLaptops(response.data);

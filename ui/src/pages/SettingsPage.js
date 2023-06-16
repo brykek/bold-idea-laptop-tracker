@@ -19,6 +19,8 @@ import { bearerTokenConfig } from '../util/helpers';
 import roles from '../enums/roles';
 import Error from '../enums/errors';
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
 
 function SettingsPage() {
     const [users, setUsers] = useState(null);
@@ -51,7 +53,7 @@ function SettingsPage() {
 
     function refreshUserList() {
         axios.get(
-            'http://localhost:3001/users',
+            `${API_BASE_URL}/users`,
             bearerTokenConfig
         ).then((response) => {
             setUsers(response.data);
@@ -73,7 +75,7 @@ function SettingsPage() {
     function grantAdmin(targetUser) {
         targetUser.role = roles.ADMIN;
         axios.put(
-            `http://localhost:3001/users/${targetUser.id}`,
+            `${API_BASE_URL}/users/${targetUser.id}`,
             targetUser,
             bearerTokenConfig
         ).then(() => {
@@ -87,7 +89,7 @@ function SettingsPage() {
     function revokeAdmin(targetUser) {
         targetUser.role = roles.USER;
         axios.put(
-            `http://localhost:3001/users/${targetUser.id}`,
+            `${API_BASE_URL}/users/${targetUser.id}`,
             targetUser,
             bearerTokenConfig
         ).then(() => {
@@ -109,7 +111,7 @@ function SettingsPage() {
 
     function removeUser(targetUser) {
         axios.delete(
-            `http://localhost:3001/users/${targetUser.id}`,
+            `${API_BASE_URL}/users/${targetUser.id}`,
             bearerTokenConfig
         ).then(() => {
             refreshUserList();
@@ -132,7 +134,7 @@ function SettingsPage() {
             return;
         }
         axios.put(
-            `http://localhost:3001/users/${targetUser.id}`,
+            `${API_BASE_URL}/users/${targetUser.id}`,
             targetUser,
             bearerTokenConfig
         ).catch((err) => {
@@ -148,12 +150,12 @@ function SettingsPage() {
         }
 
         axios.post(
-            'http://localhost:3001/signup',
+            `${API_BASE_URL}/signup`,
             newUserData,
             bearerTokenConfig
         ).then(() => {
             axios.get(
-                'http://localhost:3001/users',
+                `${API_BASE_URL}/users`,
                 bearerTokenConfig
             ).then((response) => {
                 setUsers(response.data);

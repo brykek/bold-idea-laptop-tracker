@@ -13,6 +13,8 @@ import {
 import { loggedIn } from '../util/helpers';
 import Error from '../enums/errors';
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
 
 function Signup() {
   const navigate = useNavigate();
@@ -33,7 +35,7 @@ function Signup() {
       setErrorMessage(Error.EMPTY_FIELD);
       return;
     }
-    axios.post('http://localhost:3001/users', {
+    axios.post(`${API_BASE_URL}/users`, {
       username: username,
       password: password, 
       firstName: firstName,
