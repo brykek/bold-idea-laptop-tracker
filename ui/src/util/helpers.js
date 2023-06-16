@@ -10,7 +10,7 @@ export function formatHeader(str) {
 }
 
 export function loggedIn() {
-    if (sessionStorage.getItem('user')) {
+    if (Cookies.get('token')) {
         return true;
     }
     return false;

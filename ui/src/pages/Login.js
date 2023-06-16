@@ -45,8 +45,7 @@ function Login() {
       var expiry = new Date(decoded.exp * 1000);
 
       Cookies.set('token', response.data.token, { expires: expiry });
-			sessionStorage.setItem('user', response.data.username);
-			
+      
       navigate('/inventory');
 			window.location.reload(false);
 		}).catch((err) => {

@@ -70,8 +70,6 @@ function AppBarMenu() {
     
     const handleLogout = () => {
         Cookies.remove('token');
-        sessionStorage.removeItem('user');
-        sessionStorage.clear(); 
         setAnchorElUser(false);
         window.location.reload(false);
     };
