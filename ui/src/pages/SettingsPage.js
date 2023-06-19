@@ -160,7 +160,7 @@ function SettingsPage() {
         }
       
         axios.post(
-            `${API_BASE_URL}/signup`,
+            `${API_BASE_URL}/users`,
             newUserData,
             bearerTokenConfig
         ).then(() => {
@@ -173,10 +173,15 @@ function SettingsPage() {
                 setNewUserData(newUserTemplate);
                 setShowAddUserModal(false);
             }).catch((err) => {
+                setMessage(err.message);
                 console.error(err);
             });
         }).catch((err) => {
-            setMessage(Error.USER_EXISTS);
+            if (err.response.status === 409) { 
+                setMessage(Error.USER_EXISTS);
+              } else { 
+                setMessage(err.message);
+              }
             console.error(err);
         });
     }

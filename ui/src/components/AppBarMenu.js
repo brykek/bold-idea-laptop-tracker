@@ -69,7 +69,7 @@ function AppBarMenu() {
             setMessage('');
             setTargetUser({ id: '', firstName: '', lastName: '', username: '', password: '', role: '' });
         }).catch((err) => {
-            setMessage(err);
+            setMessage(err.message);
             console.error(err);
         });
         setShowResetPasswordModal(false);
