@@ -13,9 +13,7 @@ const dotenv = require("dotenv");
 const ROLES = require("./enums/roles");
 const ERRORS = require("./enums/errors");
 
-// TODO: Secret needs to be passed as app setting or env var during deployment 
-const JWT_SECRET = "Thisisasecret";
-
+const JWT_SECRET = crypto.randomBytes(256).toString("base64");
 const PASSWORD_REGEX = new RegExp("(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{8,})");
 const ALPHANUMERIC_REGEX = new RegExp(/^[a-z0-9]+$/i);
 
@@ -37,7 +35,6 @@ app.use(passport.initialize());
 
 // Configure DB connection
 // Note: Backend may be vulnerable to SQL Injection
-// TODO: DB credentials needs to be passed as app settings or env var during deployment
 const db = mysql.createConnection({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
@@ -104,7 +101,7 @@ createToken = (user) => {
     {
       iss: "Bold Idea Laptop Tracker API",
       iat: Math.floor(Date.now() / 1000),
-      exp: Math.floor(Date.now() / 1000) + 1200, // 20 min expiry
+      exp: Math.floor(Date.now() / 1000) + parseInt(process.env.JWT_EXPIRY),
       id: user.id,
       role: user.role
     },
