@@ -43,6 +43,8 @@ Note that at time of deployment, a SUPERADMIN user will need to be created manua
 
 ## Future Enhancements 
 Some enhancements that can improve the application at a later date:
+- Introduce type and character checks on Laptop and Dropdown types to strengthen against SQL injection vulnerabilities
+- Introduce checks to verify resource exists for PUT/DELETE requests
 - Rename endpoints to resource centric names 
 - Introduce models
 - Update application architecture using separate folders (e.g., routes, middleware, etc.)
