@@ -21,7 +21,7 @@ The following API endpoints are available in the application:
 
 - GET /users - Get list of all users.
 - POST /users - Create a new user.
-- PUT /users: - Edit a user's role or password.
+- PUT /users/:id - Edit a user's role or password.
 - DELETE /users/:id - Delete user by Id.
 - POST /login - User authentication using username and password.
 - GET /inventory - Get list of all laptops in inventory.
@@ -39,8 +39,8 @@ Append the token as a Bearer token on all subsequent requests to secure endpoint
 
 Login and user creation endpoints are the only ones publicly accessible.
 
-Note that at time of deployment, a SUPERADMIN user will need to be created manually and entered into the system. A JavaScript code snippet can be created to generate the required information to be inserted into MySQL.
-
+Upon deployment, an initial superadmin user will need to be created and inserted into the database 
+using a script that has been included as part of the DB project.
 ## Future Enhancements 
 Some enhancements that can improve the application at a later date:
 - Introduce type and character checks on Laptop and Dropdown types to strengthen against SQL injection vulnerabilities

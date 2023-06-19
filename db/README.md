@@ -29,4 +29,6 @@ Before getting started, ensure you have the following tools installed:
 
 5. Create a superadmin user using the `create_admin.js` script. You will need to set values for database credentials and the superadmin user's credentials. Set the role to "superadmin". 
 
+    `node create_admin.js`
+
 Congratulations! You have successfully set up the MySQL database and created the necessary tables for the LaptopTracker app.
