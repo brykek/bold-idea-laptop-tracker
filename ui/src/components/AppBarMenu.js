@@ -26,7 +26,7 @@ import { bearerTokenConfig, ProtectedComponent } from '../util/helpers';
 import logo from '../assets/logo.png';
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
-
+const PASSWORD_REGEX = new RegExp('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{8,})');
 
 function AppBarMenu() {
     const [anchorElUser, setAnchorElUser] = useState(false);  
@@ -56,15 +56,20 @@ function AppBarMenu() {
             setMessage(Error.EMPTY_FIELD);
             return;
         }
-
+        if (!PASSWORD_REGEX.test(targetUser.password)) { 
+            setMessage(Error.PASSWORD_COMPLEXITY);
+            return;
+        }
+      
         axios.put(
-            `${API_BASE_URL}/${currentUserId}`,
+            `${API_BASE_URL}/users/${currentUserId}`,
             targetUser,
             bearerTokenConfig
         ).then(() => {
             setMessage('');
             setTargetUser({ id: '', firstName: '', lastName: '', username: '', password: '', role: '' });
         }).catch((err) => {
+            setMessage(err);
             console.error(err);
         });
         setShowResetPasswordModal(false);

@@ -13,14 +13,13 @@ import {
 import { RemoveCircle as RemoveIcon } from '@mui/icons-material';
 
 import UserManager from '../components/UserManager';
-import DropdownManager from '../components/DropdownManager';
 import DropdownManagement from '../components/DropdownManagement';
 import { bearerTokenConfig } from '../util/helpers';
 import roles from '../enums/roles';
 import Error from '../enums/errors';
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
-
+const PASSWORD_REGEX = new RegExp('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{8,})');
 
 function SettingsPage() {
     const [users, setUsers] = useState(null);
@@ -133,14 +132,21 @@ function SettingsPage() {
             setMessage(Error.EMPTY_FIELD);
             return;
         }
+        if (!PASSWORD_REGEX.test(targetUser.password)) { 
+            setMessage(Error.PASSWORD_COMPLEXITY);
+            return;
+        }
+
         axios.put(
             `${API_BASE_URL}/users/${targetUser.id}`,
             targetUser,
             bearerTokenConfig
-        ).catch((err) => {
+        ).then(() => {
+            setShowResetPasswordModal(false);
+        }).catch((err) => {
+            setMessage(err.message);
             console.error(err);
         });
-        setShowResetPasswordModal(false);
     }
 
     function createUser() {
@@ -148,7 +154,11 @@ function SettingsPage() {
             setMessage(Error.EMPTY_FIELD);
             return;
         }
-
+        if (!PASSWORD_REGEX.test(newUserData.password)) { 
+            setMessage(Error.PASSWORD_COMPLEXITY);
+            return;
+        }
+      
         axios.post(
             `${API_BASE_URL}/signup`,
             newUserData,

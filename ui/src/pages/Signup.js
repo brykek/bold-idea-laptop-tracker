@@ -14,7 +14,7 @@ import { loggedIn } from '../util/helpers';
 import Error from '../enums/errors';
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
-
+const PASSWORD_REGEX = new RegExp('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{8,})');
 
 function Signup() {
   const navigate = useNavigate();
@@ -35,6 +35,11 @@ function Signup() {
       setErrorMessage(Error.EMPTY_FIELD);
       return;
     }
+    if (!PASSWORD_REGEX.test(password)) { 
+      setErrorMessage(Error.PASSWORD_COMPLEXITY);
+      return;
+    }
+
     axios.post(`${API_BASE_URL}/users`, {
       username: username,
       password: password, 
