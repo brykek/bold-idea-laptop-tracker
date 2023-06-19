@@ -285,12 +285,22 @@ app.delete("/users/:id", authJwt, isAdmin, (req, res, next) => {
     res.status(400).send(ERRORS.INVALID_PARAMETERS);
   }
 
-  let query = "DELETE FROM users WHERE id = ?";
+  let getUserQuery = "SELECT id, role FROM users WHERE id = ?";
+  db.query(getUserQuery, [id], (err, result) => {
+    if (result.length === 0) { 
+      res.status(404).send(ERRORS.INVALID_PARAMETERS);
+    }  
+    else if (result[0].role === ROLES.SUPERADMIN) { 
+        res.status(400).send(ERRORS.INVALID_PARAMETERS);
+      } else {
+        let deleteUserQuery = "DELETE FROM users WHERE id = ?";
 
-  db.query(query, [id], (err, result) => {
-    if (err) next(err);
-    res.send();
-  })
+        db.query(deleteUserQuery, [id], (err, result) => {
+          if (err) next(err);
+          res.send();
+        })
+      }
+  }); 
 });
 
 // Get all laptops
