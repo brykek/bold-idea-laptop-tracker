@@ -25,6 +25,7 @@ function Login() {
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [showForgotPasswordModal, setShowForgotPasswordModal] = useState(false);
+  const [showSignUpModal, setShowSignUpModal] = useState(false);
 
   // Redirect to Inventory page if already logged in
   useEffect(() => {
@@ -98,7 +99,7 @@ function Login() {
             </Button>
 
             <Typography align='center' color='primary' sx={{ cursor: 'pointer' }} component='a' onClick={() => setShowForgotPasswordModal(true)}>Forgot your password?</Typography>
-            <Typography align='center' color='primary' component='a' href='/signup' >Don't have an account?</Typography>
+            <Typography align='center' color='primary' sx={{ cursor: 'pointer' }} component='a' onClick={() => setShowSignUpModal(true)}>Don't have an account?</Typography>
             <Typography align='center' color='red'>{errorMessage}</Typography>
           </Box>
         </Paper>
@@ -112,6 +113,18 @@ function Login() {
             </Typography>
             <Typography align='center' component='h2' sx={{ color: 'primary.dark' }} >
                 Contact an administrator for help resetting your password.
+            </Typography>
+        </Box>
+      </Modal>
+
+      {/* Sign Up Modal  */}
+      <Modal open={showSignUpModal} onClose={() => setShowSignUpModal(false)} >
+        <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 600, bgcolor: 'background.paper', borderRadius: '16px', boxShadow: 24, p: 4, alignContent: 'center' }} >
+            <Typography align='center' variant='h5' component='h2' sx={{ color: 'primary.dark', fontWeight: 'bold', mb: 3 }} >
+                Don't have an account?
+            </Typography>
+            <Typography align='center' component='h2' sx={{ color: 'primary.dark' }} >
+                Contact an administrator to register for an account.
             </Typography>
         </Box>
       </Modal>

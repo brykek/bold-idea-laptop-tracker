@@ -7,7 +7,6 @@ import AddLaptopPage from './pages/AddLaptopPage';
 import EditLaptopPage from './pages/EditLaptopPage';
 import InventoryPage from './pages/InventoryPage';
 import SettingsPage from './pages/SettingsPage';
-import Signup from './pages/Signup';
 import Login from './pages/Login';
 import Protected from './pages/ProtectedPage';
 import NotFoundPage from './pages/NotFoundPage'
@@ -47,7 +46,6 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route path='/' element={<Login />} />
-            <Route path='/signup' element={<Signup />} />
             <Route 
               path='/add'
               element={
