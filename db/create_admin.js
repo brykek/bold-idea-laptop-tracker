@@ -3,20 +3,20 @@ const crypto = require("crypto");
 const mysql = require("mysql");
 
 // Update these fields as needed
-const username = "";
-const password = "";
-const firstName = "";
-const lastName = "";
-const role = "";
+const username = "admin";
+const password = "P@ssw0rd";
+const firstName = "admin";
+const lastName = "admin";
+const role = "superadmin";
 
 const salt = crypto.randomBytes(16);
 
 // Update with DB credentials
 const db = mysql.createConnection({
-    host: "",
-    user: "",
-    password: "",
-    database: ""
+    host: "localhost",
+    user: "root",
+    password: "password",
+    database: "LaptopTracker"
   });
   
   db.connect((err) => {
@@ -40,7 +40,7 @@ if (!ALPHANUMERIC_REGEX.test(firstName) || !ALPHANUMERIC_REGEX.test(lastName)) {
   return;
 }
 if (!PASSWORD_REGEX.test(password)) { 
-  console.log("Password does not meet complexity requirements.");
+  console.log("Passwords must be at least 8 characters long and contain 1 lowercase letter, 1 uppercase letter, 1 digit, and 1 special character.");
   return;
 }
 
