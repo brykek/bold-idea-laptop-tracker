@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import DropdownManager from './DropdownManager';
-import {convertOptionstoListHelper, formatHeader} from '../util/helpers';
-import axios from "axios";
-
-// MATERIAL-UI COMPONENTS
+import axios from 'axios';
 import {
     Typography,
     Box,
 } from '@mui/material';
+
+import DropdownManager from './DropdownManager';
+import { bearerTokenConfig, convertOptionstoListHelper, formatHeader } from '../util/helpers';
+
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
 const emptyOptionsData = {
     manufacturer: [],
@@ -23,7 +24,6 @@ function DropdownManagement() {
     const [options, setOptions] = useState();
 
     useEffect(() => {
-        console.log(`Getting options...`)
         getAllOptions();
     }, []);
 
@@ -39,7 +39,7 @@ function DropdownManagement() {
     
     async function getOptionsForDropdown(dropdown) {
         try {
-            const response = await axios.get("http://localhost:3001/" + dropdown);
+            const response = await axios.get(`${API_BASE_URL}/${dropdown}`, bearerTokenConfig);
             return convertOptionstoListHelper(response.data);
         } catch (err) {
             console.error("Failed to load inventory");
@@ -48,22 +48,19 @@ function DropdownManagement() {
     }
 
     async function addOption(value, category) {
-        console.log(`Adding \"${value}\" to the list of \"${category}\" options...`);
         try {
-            await axios.put("http://localhost:3001/" + category + "/" + value);
+            await axios.put(`${API_BASE_URL}/${category}/${value}`, {}, bearerTokenConfig);
             getAllOptions();
             Promise.resolve();
         } catch (err) {
             console.error("Failed to add option");
             throw err;
         }
-
     }
 
     async function removeOption(value, category) {
-        console.log(`Removing \"${value}\" from the list of \"${category}\" options...`);
         try {
-            await axios.delete("http://localhost:3001/" + category + "/" + value);
+            await axios.delete(`${API_BASE_URL}/${category}/${value}`, bearerTokenConfig);
             getAllOptions();
             Promise.resolve();
         } catch (err) {

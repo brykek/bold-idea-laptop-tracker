@@ -34,8 +34,11 @@ CREATE TABLE laptops (
 CREATE TABLE users (
   id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   username VARCHAR(255) NOT NULL unique,
-  password VARCHAR(255) NOT NULL,
-  isAdmin BOOLEAN NOT NULL DEFAULT FALSE
+  password BLOB NOT NULL,
+  salt BLOB NOT NULL,
+  role VARCHAR(25) NOT NULL,
+  firstName VARCHAR(255) NOT NULL,
+  lastName VARCHAR(255) NOT NULL
 );
 
 -- Create the dropdown options table
@@ -55,7 +58,7 @@ CREATE TABLE memory (
   options VARCHAR(255) PRIMARY KEY
 );
 
-CREATE TABLE `condition` (
+CREATE TABLE laptop_condition (
   options VARCHAR(255) PRIMARY KEY
 );
 
@@ -67,3 +70,6 @@ CREATE TABLE donated_by (
   options VARCHAR(255) PRIMARY KEY
 );
 
+CREATE TABLE roles ( 
+  options VARCHAR(255) PRIMARY KEY
+);

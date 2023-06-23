@@ -1,67 +1,55 @@
 import React, { useState, useEffect } from 'react';
 import { useParams,useNavigate } from 'react-router-dom';
-import LaptopForm from '../components/LaptopForm';
+import axios from 'axios';
 import {
     Container,
     Typography,
 } from '@mui/material';
-import axios from 'axios';
 
+import LaptopForm from '../components/LaptopForm';
+import { bearerTokenConfig } from '../util/helpers';
 
-const dummyDataLaptop = {
-    archived_date: "",
-    charger_included: true,
-    charger_type: "87W USB-C",
-    laptop_condition: "A",
-    cpu_type: "2.6GHz i7",
-    created_date: "2022-09-30",
-    date_donated: "2022-03-08",
-    disk_size: "256 GB",
-    donated_by: "OrderMyGear",
-    laptop_id: "L6Q3",
-    last_updated: "2022-10-01",
-    list_price: "",
-    manufacturer: "Apple",
-    memory: "16 GB",
-    model: "MacBook Pro",
-    notes: "",
-    screen_size: "15\"",
-    serial: "C02YL6Q3LVCF",
-    sold_price: "",
-    status: "READY",
-    value: "800.00",
-  }
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
 
 function EditLaptopPage(props) {
     const navigate = useNavigate()
     const [loading,setLoading] = useState(true)
     const [laptopData, setLaptopData] = useState(null);
     const {id}  = useParams();
+
     useEffect(() => {
         if (!laptopData) {
-            axios.get(`http://localhost:3001/inventory/${id}`).then((res)=>{
-                console.log('setting to',res.data)
+            axios.get(
+                `${API_BASE_URL}/inventory/${id}`,
+                bearerTokenConfig
+            ).then((res)=> { 
                 setLaptopData(res.data);
                 setLoading(false)
-            }).catch(err=>{
-                navigate('/inventory')
-            })
-            
+            }).catch((err) => {
+                console.err(err);
+                alert('Something went wrong!');
+                navigate('/inventory');
+            });
         }
     }, [id])
 
     function updateLaptop(laptopData) {
-        console.log('Updating laptop...');
-        console.log('Laptop Data:', laptopData)
-        axios.put(`http://localhost:3001/edit/${id}`,laptopData).then((res)=>{
-            alert('Laptop Updated Successfully!')
-            navigate('/inventory')
-        }).catch(err=>{ alert("Something went wrong.")})
+        axios.put(
+            `${API_BASE_URL}/edit/${id}`,
+            laptopData,
+            bearerTokenConfig
+        ).then(()=>{
+            alert('Laptop Updated Successfully!');
+            navigate('/inventory');
+        }).catch((err) => {
+            console.error(err);
+            alert("Something went wrong.");
+        });
     }
 
     function discardChanges() {
-        console.log('Discard changes.')
-        navigate('/inventory')
+        navigate('/inventory');
     }
 
     return (

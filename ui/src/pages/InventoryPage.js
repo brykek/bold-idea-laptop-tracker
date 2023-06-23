@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { Container } from "@mui/material";
+
 import FilterFields from "../components/FilterFields";
 import FilterChips from "../components/FilterChips";
 import LaptopTable from "../components/LaptopTable";
 import LaptopDetailModal from "../components/LaptopDetailModal";
+import { bearerTokenConfig } from "../util/helpers";
 
-// MATERIAL-UI COMPONENTS
-import { Container } from "@mui/material";
-import axios from "axios";
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
 const InventoryPage = () => {
   const [allLaptops, setAllLaptops] = useState([]);
@@ -55,17 +57,16 @@ const InventoryPage = () => {
   });
 
   useEffect(() => {
-      axios.get("http://localhost:3001/inventory")
-        .then((response) => {
-          setAllLaptops(response.data);
-        })
-        .catch((err) => {
-          console.error("Failed to load inventory");
-        });
+      axios.get(
+        `${API_BASE_URL}/inventory`, 
+        bearerTokenConfig
+      ).then((response) => {
+        setAllLaptops(response.data);
+      }).catch((err) => {
+        console.error("Failed to load inventory");
+      });
   }, []);
   
-
-
   useEffect(() => {
     // Loop through laptops and populate options dropdowns
   

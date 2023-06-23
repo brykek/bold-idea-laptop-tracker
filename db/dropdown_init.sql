@@ -37,3 +37,8 @@ VALUES ('Apple'),
 INSERT INTO donated_by(options)
 VALUES ('BetterUp'),
        ('OrderMyGear');
+
+INSERT INTO roles(options)
+VALUES ('superadmin'),
+       ('admin'), 
+       ('user');

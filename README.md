@@ -2,9 +2,9 @@
 This is a simple web application built with React, Node.js Express, and MySQL for tracking laptop inventory.
 
 # Prerequisites
-- MySQL
-- Node.js
-- npm
+- MySQL v8.0.33.0
+- Node.js v18.13.0
+- npm v8.19.3
 
 # Components
 

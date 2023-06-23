@@ -103,9 +103,3 @@ function FilterChips(props) {
 }
 
 export default FilterChips;
-
-
-
-
-
-

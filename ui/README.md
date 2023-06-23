@@ -2,6 +2,17 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Prerequisites
+Before getting started, ensure you have the following tools installed:
+
+- Node.js v18.13.0
+- npm v8.19.3
+
+## Installation
+
+To install dependencies, navigate to the UI project directory and run `npm install`.
+To start the application, run `npm start`.
+
 ## Available Scripts
 
 In the project directory, you can run:
