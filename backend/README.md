@@ -13,6 +13,18 @@ Install the required dependencies by running `npm install`.
 Create a MySQL database and update the database configuration in the `index.js` file with your database credentials.
 Refer to the README in db project directory for additional details. 
 
+## Setup (Local)
+
+Rename the .env.example file to .env
+Add the following values to the .env file.
+
+`DB_HOST=localhost`
+`DB_USER=root`
+`DB_PASS=<--password-here-->`
+`DB_NAME=laptoptracker`
+`JWT_EXPIRY=1200`
+`PORT=3001`
+
 ## Running the application
 Run the application using `node index.js`.
 
