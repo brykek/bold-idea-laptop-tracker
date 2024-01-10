@@ -17,7 +17,7 @@ To start the application, run `npm start`.
 
 Rename the .env.example file to .env \
 Add the following values to the .env file.\
-`REACT_APP_API_BASE_URL=http://localhost:3001`\
+`REACT_APP_API_BASE_URL=http://localhost:3001`
 
 ## Available Scripts
 
