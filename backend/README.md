@@ -15,7 +15,7 @@ Refer to the README in db project directory for additional details.
 
 ## Setup (Local)
 
-Rename the .env.example file to .env
+Rename the .env.example file to .env \
 Add the following values to the .env file.
 
 `DB_HOST=localhost`
