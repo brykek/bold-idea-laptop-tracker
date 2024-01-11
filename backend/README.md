@@ -23,7 +23,7 @@ Add the following values to the .env file.
 `DB_PASS=<--password-here-->`\
 `DB_NAME=laptoptracker`\
 `JWT_EXPIRY=1200`\
-`PORT=3001`\
+`PORT=3001`
 
 ## Running the application
 Run the application using `node index.js`.
