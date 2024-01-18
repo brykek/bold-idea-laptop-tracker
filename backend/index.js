@@ -31,25 +31,8 @@ app.use(bodyParser.urlencoded({
 app.use(express.json());
 app.use(passport.initialize());
 
-
-
 // Configure DB connection
 // Note: Backend may be vulnerable to SQL Injection
-// const db = mysql.createConnection({
-//   host: process.env.DB_HOST,
-//   user: process.env.DB_USER,
-//   password: process.env.DB_PASS,
-//   database: process.env.DB_NAME
-// });
-
-// db.connect((err) => {
-//   if (err) {
-//     console.error(err);
-//   } else {
-//     console.log(`Connected to MySQL DB: ${process.env.DB_NAME}`);
-//   }
-// });
-
 var mysqlPool = mysql.createPool({
   connectionLimit: 100,
   host: process.env.DB_HOST,
