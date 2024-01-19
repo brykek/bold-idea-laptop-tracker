@@ -352,7 +352,7 @@ app.delete("/users/:id", authJwt, isAdmin, (req, res, next) => {
 
   let getUserQuery = "SELECT id, role FROM users WHERE id = ?";
 
-  mysql.getConnection(
+  mysqlPool.getConnection(
 
     function(err, connection){
       try {
